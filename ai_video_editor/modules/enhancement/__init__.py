@@ -1,0 +1,1 @@
+"""Enhancement module for visual and audio improvements."""

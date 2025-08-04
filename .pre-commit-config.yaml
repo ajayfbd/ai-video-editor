@@ -1,0 +1,112 @@
+# .pre-commit-config.yaml
+# Pre-commit hooks for AI Video Editor
+# Ensures code quality and test coverage before commits
+
+repos:
+  # Code formatting and linting
+  - repo: https://github.com/psf/black
+    rev: 24.1.1
+    hooks:
+      - id: black
+        language_version: python3.12
+        args: [--line-length=100]
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: [--profile=black, --line-length=100]
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        args: [--max-line-length=100, --extend-ignore=E203,W503]
+
+  # Type checking
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-requests]
+        args: [--ignore-missing-imports]
+
+  # Security checks
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.5
+    hooks:
+      - id: bandit
+        args: [-r, ai_video_editor/, -f, json, -o, bandit-report.json]
+        pass_filenames: false
+
+  # Test execution and coverage
+  - repo: local
+    hooks:
+      - id: pytest-unit-tests
+        name: Run unit tests
+        entry: pytest
+        language: system
+        args: [tests/unit/, -v, --tb=short, -x, --cov=ai_video_editor, --cov-fail-under=90]
+        pass_filenames: false
+        stages: [commit]
+
+      - id: pytest-integration-tests
+        name: Run integration tests
+        entry: pytest
+        language: system
+        args: [tests/integration/, -v, --tb=short, -x]
+        pass_filenames: false
+        stages: [push]
+
+      - id: pytest-performance-quick
+        name: Run quick performance tests
+        entry: pytest
+        language: system
+        args: [tests/performance/, -v, -m, "not slow", --tb=short]
+        pass_filenames: false
+        stages: [push]
+
+      # ContentContext integrity validation
+      - id: validate-content-context
+        name: Validate ContentContext integrity
+        entry: python
+        language: system
+        args: [-m, tests.validation.validate_content_context]
+        pass_filenames: false
+        stages: [commit]
+
+      # Mock consistency validation
+      - id: validate-mock-consistency
+        name: Validate mock data consistency
+        entry: python
+        language: system
+        args: [-m, tests.validation.validate_mock_consistency]
+        pass_filenames: false
+        stages: [commit]
+
+      # API integration validation
+      - id: validate-api-mocks
+        name: Validate API mock completeness
+        entry: python
+        language: system
+        args: [-m, tests.validation.validate_api_mocks]
+        pass_filenames: false
+        stages: [commit]
+
+  # Documentation and configuration validation
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=1000]
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+
+# Global configuration
+default_stages: [commit]
+fail_fast: true
+minimum_pre_commit_version: 3.0.0

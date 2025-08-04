@@ -1,0 +1,1 @@
+"""Thumbnail generation module for creating optimized video thumbnails."""
