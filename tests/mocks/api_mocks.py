@@ -41,9 +41,14 @@ class GeminiAPIMock:
         time.sleep(self.response_delay)
         
         # Return realistic response based on content type
-        base_response = get_sample_data("gemini_response", content_type)
+        # Use deepcopy to avoid modifying the original sample data
+        base_response = json.loads(json.dumps(get_sample_data("gemini_response", content_type)))
         
         # Customize response based on input content
+        # Add the call count to the concepts to ensure uniqueness for tests
+        custom_concepts = [f"concept_from_call_{self.call_count}"]
+        base_response["content_analysis"]["key_concepts"].extend(custom_concepts)
+
         if "financial" in content.lower():
             base_response["content_analysis"]["key_concepts"].extend(["financial planning", "budgeting"])
         if "investment" in content.lower():

@@ -96,7 +96,7 @@ class VisualHighlight:
 
 @dataclass
 class TrendingKeywords:
-    """Trending keywords research results."""
+    """Enhanced trending keywords research results with confidence and difficulty data."""
     primary_keywords: List[str]
     long_tail_keywords: List[str]
     trending_hashtags: List[str]
@@ -104,6 +104,14 @@ class TrendingKeywords:
     competitor_keywords: List[str]
     search_volume_data: Dict[str, int]
     research_timestamp: datetime
+    
+    # Enhanced analysis fields
+    keyword_difficulty: Dict[str, float] = field(default_factory=dict)
+    keyword_confidence: Dict[str, float] = field(default_factory=dict)
+    trending_topics: List[str] = field(default_factory=list)
+    competitor_analysis: Dict[str, Any] = field(default_factory=dict)
+    research_quality_score: float = 0.0
+    cache_hit_rate: float = 0.0
     
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -113,7 +121,13 @@ class TrendingKeywords:
             'seasonal_keywords': self.seasonal_keywords,
             'competitor_keywords': self.competitor_keywords,
             'search_volume_data': self.search_volume_data,
-            'research_timestamp': self.research_timestamp.isoformat()
+            'research_timestamp': self.research_timestamp.isoformat(),
+            'keyword_difficulty': self.keyword_difficulty,
+            'keyword_confidence': self.keyword_confidence,
+            'trending_topics': self.trending_topics,
+            'competitor_analysis': self.competitor_analysis,
+            'research_quality_score': self.research_quality_score,
+            'cache_hit_rate': self.cache_hit_rate
         }
     
     @classmethod
@@ -125,7 +139,13 @@ class TrendingKeywords:
             seasonal_keywords=data['seasonal_keywords'],
             competitor_keywords=data['competitor_keywords'],
             search_volume_data=data['search_volume_data'],
-            research_timestamp=datetime.fromisoformat(data['research_timestamp'])
+            research_timestamp=datetime.fromisoformat(data['research_timestamp']),
+            keyword_difficulty=data.get('keyword_difficulty', {}),
+            keyword_confidence=data.get('keyword_confidence', {}),
+            trending_topics=data.get('trending_topics', []),
+            competitor_analysis=data.get('competitor_analysis', {}),
+            research_quality_score=data.get('research_quality_score', 0.0),
+            cache_hit_rate=data.get('cache_hit_rate', 0.0)
         )
 
 
@@ -172,6 +192,186 @@ class ProcessingMetrics:
     
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'ProcessingMetrics':
+        return cls(**data)
+
+
+@dataclass
+class AudioSegment:
+    """Represents a segment of audio with timing, confidence, and analysis data."""
+    text: str
+    start: float
+    end: float
+    confidence: float
+    speaker_id: Optional[str] = None
+    language: Optional[str] = None
+    filler_words: List[str] = field(default_factory=list)
+    cleaned_text: Optional[str] = None
+    emotional_markers: List[str] = field(default_factory=list)
+    financial_concepts: List[str] = field(default_factory=list)
+    
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            'text': self.text,
+            'start': self.start,
+            'end': self.end,
+            'confidence': self.confidence,
+            'speaker_id': self.speaker_id,
+            'language': self.language,
+            'filler_words': self.filler_words,
+            'cleaned_text': self.cleaned_text,
+            'emotional_markers': self.emotional_markers,
+            'financial_concepts': self.financial_concepts
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'AudioSegment':
+        return cls(**data)
+
+
+@dataclass
+class AudioAnalysisResult:
+    """Complete audio analysis results with rich metadata."""
+    transcript_text: str
+    segments: List[AudioSegment]
+    overall_confidence: float
+    language: str
+    processing_time: float
+    model_used: str
+    
+    # Enhancement results
+    filler_words_removed: int = 0
+    segments_modified: int = 0
+    quality_improvement_score: float = 0.0
+    original_duration: float = 0.0
+    enhanced_duration: float = 0.0
+    
+    # Financial content analysis
+    financial_concepts: List[str] = field(default_factory=list)
+    explanation_segments: List[Dict[str, Any]] = field(default_factory=list)
+    data_references: List[Dict[str, Any]] = field(default_factory=list)
+    complexity_level: str = "medium"
+    
+    # Emotional analysis
+    detected_emotions: List[EmotionalPeak] = field(default_factory=list)
+    engagement_points: List[Dict[str, Any]] = field(default_factory=list)
+    
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            'transcript_text': self.transcript_text,
+            'segments': [segment.to_dict() for segment in self.segments],
+            'overall_confidence': self.overall_confidence,
+            'language': self.language,
+            'processing_time': self.processing_time,
+            'model_used': self.model_used,
+            'filler_words_removed': self.filler_words_removed,
+            'segments_modified': self.segments_modified,
+            'quality_improvement_score': self.quality_improvement_score,
+            'original_duration': self.original_duration,
+            'enhanced_duration': self.enhanced_duration,
+            'financial_concepts': self.financial_concepts,
+            'explanation_segments': self.explanation_segments,
+            'data_references': self.data_references,
+            'complexity_level': self.complexity_level,
+            'detected_emotions': [emotion.to_dict() for emotion in self.detected_emotions],
+            'engagement_points': self.engagement_points
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'AudioAnalysisResult':
+        segments = [AudioSegment.from_dict(seg) for seg in data.get('segments', [])]
+        detected_emotions = [EmotionalPeak.from_dict(emotion) for emotion in data.get('detected_emotions', [])]
+        
+        return cls(
+            transcript_text=data['transcript_text'],
+            segments=segments,
+            overall_confidence=data['overall_confidence'],
+            language=data['language'],
+            processing_time=data['processing_time'],
+            model_used=data['model_used'],
+            filler_words_removed=data.get('filler_words_removed', 0),
+            segments_modified=data.get('segments_modified', 0),
+            quality_improvement_score=data.get('quality_improvement_score', 0.0),
+            original_duration=data.get('original_duration', 0.0),
+            enhanced_duration=data.get('enhanced_duration', 0.0),
+            financial_concepts=data.get('financial_concepts', []),
+            explanation_segments=data.get('explanation_segments', []),
+            data_references=data.get('data_references', []),
+            complexity_level=data.get('complexity_level', 'medium'),
+            detected_emotions=detected_emotions,
+            engagement_points=data.get('engagement_points', [])
+        )
+
+
+@dataclass
+class VideoQualityMetrics:
+    """Video quality assessment metrics for AI Director decisions."""
+    # Resolution metrics
+    resolution_score: float = 0.0  # 0.0 to 1.0
+    actual_resolution: tuple = (0, 0)  # (width, height)
+    resolution_category: str = "unknown"  # "low", "medium", "high", "ultra"
+    
+    # Lighting metrics
+    lighting_score: float = 0.0  # 0.0 to 1.0
+    brightness_mean: float = 0.0
+    brightness_std: float = 0.0
+    exposure_quality: str = "unknown"  # "underexposed", "optimal", "overexposed"
+    
+    # Stability metrics
+    stability_score: float = 0.0  # 0.0 to 1.0
+    motion_blur_level: float = 0.0
+    camera_shake_detected: bool = False
+    stability_category: str = "unknown"  # "poor", "fair", "good", "excellent"
+    
+    # Color metrics
+    color_balance_score: float = 0.0  # 0.0 to 1.0
+    saturation_level: float = 0.0
+    contrast_score: float = 0.0
+    color_temperature: str = "unknown"  # "cool", "neutral", "warm"
+    
+    # Overall quality
+    overall_quality_score: float = 0.0  # 0.0 to 1.0
+    quality_category: str = "unknown"  # "poor", "fair", "good", "excellent"
+    
+    # Enhancement recommendations
+    enhancement_recommendations: List[str] = field(default_factory=list)
+    color_correction_needed: bool = False
+    lighting_adjustment_needed: bool = False
+    stabilization_needed: bool = False
+    
+    # Performance metrics
+    assessment_time: float = 0.0
+    frames_analyzed: int = 0
+    
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            'resolution_score': self.resolution_score,
+            'actual_resolution': list(self.actual_resolution),
+            'resolution_category': self.resolution_category,
+            'lighting_score': self.lighting_score,
+            'brightness_mean': self.brightness_mean,
+            'brightness_std': self.brightness_std,
+            'exposure_quality': self.exposure_quality,
+            'stability_score': self.stability_score,
+            'motion_blur_level': self.motion_blur_level,
+            'camera_shake_detected': self.camera_shake_detected,
+            'stability_category': self.stability_category,
+            'color_balance_score': self.color_balance_score,
+            'saturation_level': self.saturation_level,
+            'contrast_score': self.contrast_score,
+            'color_temperature': self.color_temperature,
+            'overall_quality_score': self.overall_quality_score,
+            'quality_category': self.quality_category,
+            'enhancement_recommendations': self.enhancement_recommendations,
+            'color_correction_needed': self.color_correction_needed,
+            'lighting_adjustment_needed': self.lighting_adjustment_needed,
+            'stabilization_needed': self.stabilization_needed,
+            'assessment_time': self.assessment_time,
+            'frames_analyzed': self.frames_analyzed
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'VideoQualityMetrics':
+        data['actual_resolution'] = tuple(data['actual_resolution'])
         return cls(**data)
 
 
@@ -259,6 +459,12 @@ class ContentContext:
     audio_transcript: Optional[str] = None
     video_metadata: Optional[Dict[str, Any]] = None
     
+    # Audio analysis results
+    audio_analysis: Optional[AudioAnalysisResult] = None
+    
+    # Video quality assessment
+    video_quality_metrics: Optional[VideoQualityMetrics] = None
+    
     # Analysis results
     emotional_markers: List[EmotionalPeak] = field(default_factory=list)
     key_concepts: List[str] = field(default_factory=list)
@@ -330,6 +536,188 @@ class ContentContext:
         """Get best visual highlights for thumbnail concepts."""
         return sorted(self.visual_highlights, key=lambda x: x.thumbnail_potential, reverse=True)[:count]
     
+    # Audio analysis methods
+    def set_audio_analysis(self, audio_analysis: AudioAnalysisResult):
+        """Set comprehensive audio analysis results."""
+        self.audio_analysis = audio_analysis
+        
+        # Update legacy audio_transcript for backward compatibility
+        self.audio_transcript = audio_analysis.transcript_text
+        
+        # Extract and add emotional markers to the main list
+        for emotion in audio_analysis.detected_emotions:
+            if emotion not in self.emotional_markers:
+                self.emotional_markers.append(emotion)
+        
+        # Extract and add key concepts
+        for concept in audio_analysis.financial_concepts:
+            if concept not in self.key_concepts:
+                self.key_concepts.append(concept)
+        
+        self._update_modified_time()
+    
+    def get_audio_segments_by_confidence(self, min_confidence: float = 0.8) -> List[AudioSegment]:
+        """Get audio segments with confidence above threshold."""
+        if not self.audio_analysis:
+            return []
+        
+        return [segment for segment in self.audio_analysis.segments 
+                if segment.confidence >= min_confidence]
+    
+    def get_audio_segments_by_timerange(self, start_time: float, end_time: float) -> List[AudioSegment]:
+        """Get audio segments within specified time range."""
+        if not self.audio_analysis:
+            return []
+        
+        return [segment for segment in self.audio_analysis.segments 
+                if segment.start >= start_time and segment.end <= end_time]
+    
+    def get_financial_concept_segments(self) -> List[AudioSegment]:
+        """Get audio segments that contain financial concepts."""
+        if not self.audio_analysis:
+            return []
+        
+        return [segment for segment in self.audio_analysis.segments 
+                if segment.financial_concepts]
+    
+    def get_explanation_segments(self) -> List[Dict[str, Any]]:
+        """Get segments identified as explanations for B-roll opportunities."""
+        if not self.audio_analysis:
+            return []
+        
+        return self.audio_analysis.explanation_segments
+    
+    def get_data_reference_segments(self) -> List[Dict[str, Any]]:
+        """Get segments that reference data/charts for visualization opportunities."""
+        if not self.audio_analysis:
+            return []
+        
+        return self.audio_analysis.data_references
+    
+    def get_enhanced_transcript(self) -> str:
+        """Get cleaned transcript with filler words removed."""
+        if not self.audio_analysis:
+            return self.audio_transcript or ""
+        
+        # Build enhanced transcript from cleaned segments
+        enhanced_segments = []
+        for segment in self.audio_analysis.segments:
+            text = segment.cleaned_text if segment.cleaned_text else segment.text
+            enhanced_segments.append(text.strip())
+        
+        return ' '.join(enhanced_segments)
+    
+    def get_audio_quality_metrics(self) -> Dict[str, Any]:
+        """Get audio quality and enhancement metrics."""
+        if not self.audio_analysis:
+            return {}
+        
+        return {
+            'overall_confidence': self.audio_analysis.overall_confidence,
+            'processing_time': self.audio_analysis.processing_time,
+            'model_used': self.audio_analysis.model_used,
+            'filler_words_removed': self.audio_analysis.filler_words_removed,
+            'segments_modified': self.audio_analysis.segments_modified,
+            'quality_improvement_score': self.audio_analysis.quality_improvement_score,
+            'original_duration': self.audio_analysis.original_duration,
+            'enhanced_duration': self.audio_analysis.enhanced_duration,
+            'language': self.audio_analysis.language,
+            'complexity_level': self.audio_analysis.complexity_level
+        }
+    
+    def get_audio_insights_for_ai_director(self) -> Dict[str, Any]:
+        """Get structured audio insights for AI Director decision making."""
+        if not self.audio_analysis:
+            return {}
+        
+        return {
+            'transcript': self.get_enhanced_transcript(),
+            'financial_concepts': self.audio_analysis.financial_concepts,
+            'explanation_opportunities': self.get_explanation_segments(),
+            'data_visualization_opportunities': self.get_data_reference_segments(),
+            'emotional_peaks': [emotion.to_dict() for emotion in self.audio_analysis.detected_emotions],
+            'engagement_points': self.audio_analysis.engagement_points,
+            'quality_metrics': self.get_audio_quality_metrics(),
+            'complexity_level': self.audio_analysis.complexity_level,
+            'high_confidence_segments': len(self.get_audio_segments_by_confidence(0.9)),
+            'total_segments': len(self.audio_analysis.segments) if self.audio_analysis.segments else 0
+        }
+    
+    # Video quality methods
+    def set_video_quality_metrics(self, quality_metrics: VideoQualityMetrics):
+        """Set comprehensive video quality assessment results."""
+        self.video_quality_metrics = quality_metrics
+        self._update_modified_time()
+    
+    def get_video_quality_insights_for_ai_director(self) -> Dict[str, Any]:
+        """Get structured video quality insights for AI Director decision making."""
+        if not self.video_quality_metrics:
+            return {}
+        
+        return {
+            'overall_quality_score': self.video_quality_metrics.overall_quality_score,
+            'quality_category': self.video_quality_metrics.quality_category,
+            'resolution_info': {
+                'score': self.video_quality_metrics.resolution_score,
+                'actual': self.video_quality_metrics.actual_resolution,
+                'category': self.video_quality_metrics.resolution_category
+            },
+            'lighting_info': {
+                'score': self.video_quality_metrics.lighting_score,
+                'exposure_quality': self.video_quality_metrics.exposure_quality,
+                'brightness_mean': self.video_quality_metrics.brightness_mean
+            },
+            'stability_info': {
+                'score': self.video_quality_metrics.stability_score,
+                'category': self.video_quality_metrics.stability_category,
+                'camera_shake_detected': self.video_quality_metrics.camera_shake_detected
+            },
+            'color_info': {
+                'balance_score': self.video_quality_metrics.color_balance_score,
+                'saturation_level': self.video_quality_metrics.saturation_level,
+                'contrast_score': self.video_quality_metrics.contrast_score,
+                'temperature': self.video_quality_metrics.color_temperature
+            },
+            'enhancement_recommendations': self.video_quality_metrics.enhancement_recommendations,
+            'corrections_needed': {
+                'color_correction': self.video_quality_metrics.color_correction_needed,
+                'lighting_adjustment': self.video_quality_metrics.lighting_adjustment_needed,
+                'stabilization': self.video_quality_metrics.stabilization_needed
+            }
+        }
+    
+    def needs_quality_enhancement(self) -> bool:
+        """Check if video needs quality enhancement based on assessment."""
+        if not self.video_quality_metrics:
+            return False
+        
+        return (self.video_quality_metrics.overall_quality_score < 0.6 or
+                self.video_quality_metrics.color_correction_needed or
+                self.video_quality_metrics.lighting_adjustment_needed or
+                self.video_quality_metrics.stabilization_needed)
+    
+    def get_priority_enhancements(self) -> List[str]:
+        """Get prioritized list of enhancements needed."""
+        if not self.video_quality_metrics:
+            return []
+        
+        enhancements = []
+        
+        # Prioritize based on impact and feasibility
+        if self.video_quality_metrics.lighting_adjustment_needed:
+            enhancements.append("lighting_adjustment")
+        
+        if self.video_quality_metrics.color_correction_needed:
+            enhancements.append("color_correction")
+        
+        if self.video_quality_metrics.stabilization_needed:
+            enhancements.append("stabilization")
+        
+        # Add specific recommendations
+        enhancements.extend(self.video_quality_metrics.enhancement_recommendations)
+        
+        return enhancements
+    
     def update_processing_stage(self, stage: str):
         """Update current processing stage."""
         self._processing_stage = stage
@@ -353,6 +741,8 @@ class ContentContext:
             'user_preferences': self.user_preferences.to_dict(),
             'audio_transcript': self.audio_transcript,
             'video_metadata': self.video_metadata,
+            'audio_analysis': self.audio_analysis.to_dict() if self.audio_analysis else None,
+            'video_quality_metrics': self.video_quality_metrics.to_dict() if self.video_quality_metrics else None,
             'emotional_markers': [marker.to_dict() for marker in self.emotional_markers],
             'key_concepts': self.key_concepts,
             'visual_highlights': [highlight.to_dict() for highlight in self.visual_highlights],
@@ -382,6 +772,8 @@ class ContentContext:
         processing_metrics = ProcessingMetrics.from_dict(data.get('processing_metrics', {}))
         cost_tracking = CostMetrics.from_dict(data.get('cost_tracking', {}))
         user_preferences = UserPreferences.from_dict(data.get('user_preferences', {}))
+        audio_analysis = AudioAnalysisResult.from_dict(data['audio_analysis']) if data.get('audio_analysis') else None
+        video_quality_metrics = VideoQualityMetrics.from_dict(data['video_quality_metrics']) if data.get('video_quality_metrics') else None
         
         # Create instance
         context = cls(
@@ -391,6 +783,8 @@ class ContentContext:
             user_preferences=user_preferences,
             audio_transcript=data.get('audio_transcript'),
             video_metadata=data.get('video_metadata'),
+            audio_analysis=audio_analysis,
+            video_quality_metrics=video_quality_metrics,
             emotional_markers=emotional_markers,
             key_concepts=data.get('key_concepts', []),
             visual_highlights=visual_highlights,

@@ -225,12 +225,15 @@ class CacheManager:
     
     def _get_persistent_path(self, key: str) -> Path:
         """Get persistent storage path for cache key."""
+        # Sanitize key for use as a filename
+        safe_key = key.replace(":", "_")
+        
         # Use first two characters of key for directory structure
-        subdir = key[:2] if len(key) >= 2 else "00"
+        subdir = safe_key[:2] if len(safe_key) >= 2 else "00"
         cache_subdir = self.cache_dir / subdir
         cache_subdir.mkdir(exist_ok=True)
         
-        return cache_subdir / f"{key}.cache"
+        return cache_subdir / f"{safe_key}.cache"
     
     def _load_from_persistent(self, key: str) -> Optional[CacheEntry]:
         """Load cache entry from persistent storage."""

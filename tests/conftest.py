@@ -525,11 +525,14 @@ def api_mocker():
                     "engagement_predictions": {"estimated_ctr": 0.1}
                 }
             
+            mock_client_instance = MagicMock()
+            mock_client_instance.analyze_content.return_value = response_data
+
             def mock_call(*args, **kwargs):
                 self.call_counts["gemini"] = self.call_counts.get("gemini", 0) + 1
-                return response_data
+                return mock_client_instance
             
-            patcher = patch('ai_video_editor.modules.content_analysis.gemini_api.analyze_content', side_effect=mock_call)
+            patcher = patch('ai_video_editor.modules.intelligence.ai_director.GeminiClient', side_effect=mock_call)
             self.patches.append(patcher)
             return patcher.start()
         

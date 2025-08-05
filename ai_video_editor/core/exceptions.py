@@ -158,7 +158,7 @@ class ContextIntegrityError(ContentContextError):
     """Raised when ContentContext data is corrupted or invalid."""
     
     def __init__(self, message: str, **kwargs):
-        super().__init__(message, error_code="CONTEXT_INTEGRITY_ERROR", **kwargs)
+        super().__init__(message, **kwargs)
 
 
 class ModuleIntegrationError(ContentContextError):
@@ -168,7 +168,7 @@ class ModuleIntegrationError(ContentContextError):
         message = f"Module integration failed: {module_name}"
         if reason:
             message += f" - {reason}"
-        super().__init__(message, error_code="MODULE_INTEGRATION_ERROR", **kwargs)
+        super().__init__(message, **kwargs)
         self.module_name = module_name
         self.reason = reason
 
@@ -180,7 +180,7 @@ class SynchronizationError(ContentContextError):
         message = f"Synchronization failed: {sync_type}"
         if reason:
             message += f" - {reason}"
-        super().__init__(message, error_code="SYNCHRONIZATION_ERROR", **kwargs)
+        super().__init__(message, **kwargs)
         self.sync_type = sync_type
         self.reason = reason
 
@@ -192,7 +192,7 @@ class APIIntegrationError(ContentContextError):
         message = f"API integration failed: {api_service}.{operation}"
         if reason:
             message += f" - {reason}"
-        super().__init__(message, error_code="API_INTEGRATION_ERROR", **kwargs)
+        super().__init__(message, **kwargs)
         self.api_service = api_service
         self.operation = operation
         self.reason = reason
@@ -202,14 +202,14 @@ class GeminiAPIError(APIIntegrationError):
     """Specific error for Gemini API failures."""
     
     def __init__(self, operation: str, reason: Optional[str] = None, **kwargs):
-        super().__init__("gemini", operation, reason, error_code="GEMINI_API_ERROR", **kwargs)
+        super().__init__("gemini", operation, reason, **kwargs)
 
 
 class ImagenAPIError(APIIntegrationError):
     """Specific error for Imagen API failures."""
     
     def __init__(self, operation: str, reason: Optional[str] = None, **kwargs):
-        super().__init__("imagen", operation, reason, error_code="IMAGEN_API_ERROR", **kwargs)
+        super().__init__("imagen", operation, reason, **kwargs)
 
 
 class ResourceConstraintError(ContentContextError):

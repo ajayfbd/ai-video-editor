@@ -2,9 +2,10 @@ movis
 openai-whisper
 opencv-python
 ffmpeg-python
-pyscenedetect
+scenedetect
 matplotlib
 python-pptx
 transformers
 torch
-google-generativeai
+google-genai
+tenacity

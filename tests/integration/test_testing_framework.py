@@ -82,33 +82,34 @@ class TestTestingFrameworkIntegration:
         memory_diff = memory_profiler.get_memory_diff("start", "end")
         assert memory_diff["rss_diff"] < 500_000_000  # Less than 500MB
     
-    def test_mock_consistency_across_modules(self, api_mocker):
+    def test_mock_consistency_across_modules(self):
         """Test that mocks provide consistent responses across different usage patterns."""
-        api_mocker.mock_all_apis()
-        
-        # Test multiple calls to same API
-        response1 = api_mocker.gemini_mock.analyze_content("Test content 1", "educational")
-        response2 = api_mocker.gemini_mock.analyze_content("Test content 2", "educational")
-        
-        # Responses should have same structure but different content
-        assert set(response1.keys()) == set(response2.keys())
-        assert response1["content_analysis"]["key_concepts"] != response2["content_analysis"]["key_concepts"]
-        
-        # Test API call counting
-        assert api_mocker.gemini_mock.get_call_count("analyze_content") == 2
-        
-        # Test failure simulation
-        api_mocker.gemini_mock.set_failure_rate(1.0)  # 100% failure rate
-        
-        with pytest.raises(Exception, match="Gemini API temporarily unavailable"):
-            api_mocker.gemini_mock.analyze_content("Test content 3", "educational")
-        
-        # Reset failure rate
-        api_mocker.gemini_mock.set_failure_rate(0.0)
-        
-        # Should work again
-        response3 = api_mocker.gemini_mock.analyze_content("Test content 4", "educational")
-        assert "content_analysis" in response3
+        with ComprehensiveAPIMocker() as api_mocker:
+            api_mocker.mock_all_apis()
+            
+            # Test multiple calls to same API
+            response1 = api_mocker.gemini_mock.analyze_content("Test content 1", "educational")
+            response2 = api_mocker.gemini_mock.analyze_content("Test content 2", "educational")
+            
+            # Responses should have same structure but different content
+            assert set(response1.keys()) == set(response2.keys())
+            assert response1["content_analysis"]["key_concepts"] != response2["content_analysis"]["key_concepts"]
+            
+            # Test API call counting
+            assert api_mocker.gemini_mock.get_call_count("analyze_content") == 2
+            
+            # Test failure simulation
+            api_mocker.gemini_mock.set_failure_rate(1.0)  # 100% failure rate
+            
+            with pytest.raises(Exception, match="Gemini API temporarily unavailable"):
+                api_mocker.gemini_mock.analyze_content("Test content 3", "educational")
+            
+            # Reset failure rate
+            api_mocker.gemini_mock.set_failure_rate(0.0)
+            
+            # Should work again
+            response3 = api_mocker.gemini_mock.analyze_content("Test content 4", "educational")
+            assert "content_analysis" in response3
     
     def test_performance_monitoring_accuracy(self, performance_monitor, memory_profiler):
         """Test that performance monitoring provides accurate measurements."""
@@ -180,72 +181,74 @@ class TestTestingFrameworkIntegration:
             assert summary["file_count"] == 2
             assert len(summary["files"]) == 2
     
-    def test_error_handling_integration(self, api_mocker):
+    def test_error_handling_integration(self):
         """Test error handling across the testing framework."""
-        api_mocker.mock_all_apis()
-        
-        # Test API failure handling
-        api_mocker.set_failure_rates(gemini=0.5, imagen=0.3, whisper=0.2)
-        
-        successful_calls = 0
-        failed_calls = 0
-        
-        # Make multiple API calls
-        for i in range(20):
-            try:
-                api_mocker.gemini_mock.analyze_content(f"Test content {i}", "educational")
-                successful_calls += 1
-            except Exception:
-                failed_calls += 1
-        
-        # Should have some failures due to failure rate
-        assert failed_calls > 0
-        assert successful_calls > 0
-        
-        # Test recovery after failures
-        api_mocker.set_failure_rates(gemini=0.0, imagen=0.0, whisper=0.0)
-        
-        # Should work reliably now
-        for i in range(5):
-            response = api_mocker.gemini_mock.analyze_content(f"Recovery test {i}", "educational")
-            assert "content_analysis" in response
+        with ComprehensiveAPIMocker() as api_mocker:
+            api_mocker.mock_all_apis()
+            
+            # Test API failure handling
+            api_mocker.set_failure_rates(gemini=0.5, imagen=0.3, whisper=0.2)
+            
+            successful_calls = 0
+            failed_calls = 0
+            
+            # Make multiple API calls
+            for i in range(20):
+                try:
+                    api_mocker.gemini_mock.analyze_content(f"Test content {i}", "educational")
+                    successful_calls += 1
+                except Exception:
+                    failed_calls += 1
+            
+            # Should have some failures due to failure rate
+            assert failed_calls > 0
+            assert successful_calls > 0
+            
+            # Test recovery after failures
+            api_mocker.set_failure_rates(gemini=0.0, imagen=0.0, whisper=0.0)
+            
+            # Should work reliably now
+            for i in range(5):
+                response = api_mocker.gemini_mock.analyze_content(f"Recovery test {i}", "educational")
+                assert "content_analysis" in response
     
     @pytest.mark.slow
-    def test_performance_under_load(self, performance_monitor, api_mocker):
+    def test_performance_under_load(self, performance_monitor):
         """Test framework performance under load."""
-        api_mocker.mock_all_apis()
-        
-        performance_monitor.start_monitoring()
-        
-        # Simulate high load
-        contexts = []
-        for i in range(50):
-            context = ContentContext(
-                project_id=f"load_test_{i}",
-                video_files=[f"video_{i}.mp4"],
-                content_type=ContentType.EDUCATIONAL,
-                user_preferences=UserPreferences()
-            )
-            contexts.append(context)
+        with ComprehensiveAPIMocker() as api_mocker:
+            api_mocker.mock_all_apis()
             
-            # Make API calls
-            api_mocker.gemini_mock.analyze_content(f"Load test content {i}", "educational")
-            if i % 5 == 0:  # Every 5th iteration
-                api_mocker.imagen_mock.generate_background(f"Load test prompt {i}")
-        
-        metrics = performance_monitor.stop_monitoring()
-        
-        # Should handle load efficiently
-        assert metrics["processing_time"] < 30.0  # Should complete in under 30 seconds
-        
-        # Check API call counts
-        api_calls = api_mocker.get_total_api_calls()
-        assert api_calls["gemini"] == 50
-        assert api_calls["imagen"] == 10  # Every 5th iteration
-        
-        # Cost should be reasonable
-        total_cost = api_mocker.get_total_cost()
-        assert total_cost < 10.0  # Should be under $10 for test load
+            performance_monitor.start_monitoring()
+            
+            # Simulate high load
+            contexts = []
+            for i in range(50):
+                context = ContentContext(
+                    project_id=f"load_test_{i}",
+                    video_files=[f"video_{i}.mp4"],
+                    content_type=ContentType.EDUCATIONAL,
+                    user_preferences=UserPreferences()
+                )
+                contexts.append(context)
+                
+                # Make API calls
+                api_mocker.gemini_mock.analyze_content(f"Load test content {i}", "educational")
+                if i % 5 == 0:  # Every 5th iteration
+                    api_mocker.imagen_mock.generate_background(f"Load test prompt {i}")
+            
+            metrics = performance_monitor.stop_monitoring()
+            
+            # Should handle load efficiently
+            assert metrics["processing_time"] < 30.0  # Should complete in under 30 seconds
+            
+            # Check API call counts
+            api_calls = api_mocker.get_total_api_calls()
+            assert api_calls["gemini"] == 50
+            assert api_calls["imagen"] == 10  # Every 5th iteration
+            
+            # Cost should be reasonable
+            total_cost = api_mocker.get_total_cost()
+            assert total_cost < 10.0  # Should be under $10 for test load
     
     def test_cross_module_data_consistency(self):
         """Test data consistency across different testing modules."""
@@ -280,7 +283,7 @@ class TestTestingFrameworkIntegration:
                 transcript_emotions.add(marker["emotion"])
         
         gemini_emotions = set()
-        for peak in gemini_concepts.get("emotional_analysis", {}).get("peaks", []):
+        for peak in educational_gemini.get("emotional_analysis", {}).get("peaks", []):
             gemini_emotions.add(peak["emotion"])
         
         if transcript_emotions and gemini_emotions:
@@ -289,23 +292,24 @@ class TestTestingFrameworkIntegration:
             if not emotional_overlap:
                 pytest.skip("No emotional overlap found - this is acceptable but worth noting")
     
-    def test_testing_framework_cleanup(self, api_mocker):
+    def test_testing_framework_cleanup(self):
         """Test that testing framework properly cleans up resources."""
-        # Test API mocker cleanup
-        api_mocker.mock_all_apis()
-        
-        # Make some calls
-        api_mocker.gemini_mock.analyze_content("Cleanup test", "educational")
-        api_mocker.imagen_mock.generate_background("Cleanup test")
-        
-        initial_calls = api_mocker.get_total_api_calls()
-        assert initial_calls["total"] > 0
-        
-        # Reset mocks
-        api_mocker.reset_all_mocks()
-        
-        reset_calls = api_mocker.get_total_api_calls()
-        assert reset_calls["total"] == 0
+        with ComprehensiveAPIMocker() as api_mocker:
+            # Test API mocker cleanup
+            api_mocker.mock_all_apis()
+            
+            # Make some calls
+            api_mocker.gemini_mock.analyze_content("Cleanup test", "educational")
+            api_mocker.imagen_mock.generate_background("Cleanup test")
+            
+            initial_calls = api_mocker.get_total_api_calls()
+            assert initial_calls["total"] > 0
+            
+            # Reset mocks
+            api_mocker.reset_all_mocks()
+            
+            reset_calls = api_mocker.get_total_api_calls()
+            assert reset_calls["total"] == 0
         
         # Test data manager cleanup
         temp_dir = None
