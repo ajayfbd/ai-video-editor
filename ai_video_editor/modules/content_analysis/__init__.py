@@ -20,6 +20,13 @@ from .content_analyzer import (
     MultiModalAnalysisResult,
     create_content_analyzer
 )
+from .broll_analyzer import FinancialBRollAnalyzer, BRollOpportunity
+from .ai_graphics_director import (
+    AIGraphicsDirector,
+    GraphicsSpecification,
+    FinancialGraphicsGenerator,
+    EducationalSlideGenerator
+)
 
 __all__ = [
     'FinancialContentAnalyzer',
@@ -35,5 +42,11 @@ __all__ = [
     'ConceptExtraction',
     'ContentTypeDetection',
     'MultiModalAnalysisResult',
-    'create_content_analyzer'
+    'create_content_analyzer',
+    'FinancialBRollAnalyzer',
+    'BRollOpportunity',
+    'AIGraphicsDirector',
+    'GraphicsSpecification',
+    'FinancialGraphicsGenerator',
+    'EducationalSlideGenerator'
 ]

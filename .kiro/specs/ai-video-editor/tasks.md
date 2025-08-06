@@ -164,14 +164,14 @@ This document outlines the comprehensive implementation plan with MCP tool integ
 
 ### 6. B-Roll Detection and Planning
 
-- [ ] **6.1 B-Roll Opportunity Analysis**
+- [x] **6.1 B-Roll Opportunity Analysis**
   - Implement `FinancialBRollAnalyzer` class from implementation-details.md for automated B-roll detection
   - Add `detect_broll_opportunities()` method with financial content triggers
   - Create timing and duration recommendations for B-roll insertion
   - Integrate with AI Director for creative B-roll decisions
   - _Requirements: 2.1, 2.4 (B-roll opportunity identification and placement)_
 
-- [ ] **6.2 Graphics and Animation Planning**
+- [x] **6.2 Graphics and Animation Planning**
   - Implement `AIGraphicsDirector` class from implementation-details.md
   - Add `generate_contextual_graphics()` method for AI-driven graphics creation
   - Add specifications for matplotlib chart generation
@@ -185,7 +185,7 @@ This document outlines the comprehensive implementation plan with MCP tool integ
 
 ### 7. Video Composition Engine (Movis Integration)
 
-- [ ] **7.1 Movis Research and Integration Setup**
+- [x] **7.1 Movis Research and Integration Setup**
   - Use **DDG Search** to fetch latest movis documentation from https://rezoo.github.io/movis/
   - Research movis composition-based editing, layer system, and keyframe animations
   - Study movis custom layer implementation for frame-by-frame processing
