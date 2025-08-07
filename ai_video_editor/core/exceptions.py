@@ -244,6 +244,19 @@ class ProcessingTimeoutError(ResourceConstraintError):
         self.timeout_seconds = timeout_seconds
 
 
+class BatchProcessingError(ContentContextError):
+    """Raised when batch processing operations fail."""
+    
+    def __init__(self, batch_id: str, operation: str, reason: Optional[str] = None, **kwargs):
+        message = f"Batch processing failed: {batch_id}.{operation}"
+        if reason:
+            message += f" - {reason}"
+        super().__init__(message, error_code="BATCH_PROCESSING_ERROR", **kwargs)
+        self.batch_id = batch_id
+        self.operation = operation
+        self.reason = reason
+
+
 # Error handling utilities
 def handle_errors(logger=None):
     """

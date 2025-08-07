@@ -1,3 +1,8 @@
 {
-  "benchmarks": [
-    
+  "audio_enhancement": {
+    "processing_time": 0.14926624298095703,
+    "memory_used": 7180288,
+    "peak_memory": 453955584,
+    "timestamp": 1754545206.8023896
+  }
+}

@@ -24,6 +24,8 @@ except ImportError:
 
 from ...core.content_context import ContentContext
 from ...core.exceptions import ProcessingError, InputValidationError
+from .plan_execution import PlanExecutionEngine, ExecutionTimeline, TrackOperation
+from .broll_generation import BRollGenerationSystem, GeneratedBRollAsset
 
 
 logger = logging.getLogger(__name__)
@@ -140,16 +142,28 @@ class VideoComposer:
         self.output_dir.mkdir(exist_ok=True)
         self.temp_dir.mkdir(exist_ok=True)
         
+        # Plan execution engine
+        self.plan_execution_engine = PlanExecutionEngine()
+        
+        # B-roll generation system
+        self.broll_generation_system = BRollGenerationSystem(
+            output_dir=str(self.output_dir / "broll")
+        )
+        
         # Current composition state
         self.current_composition: Optional[Any] = None
         self.composition_plan: Optional[CompositionPlan] = None
+        self.execution_timeline: Optional[ExecutionTimeline] = None
         self.layers: Dict[str, Any] = {}
+        self.generated_broll_assets: List[GeneratedBRollAsset] = []
         
         # Performance tracking
         self.composition_time: float = 0.0
         self.render_time: float = 0.0
+        self.plan_execution_time: float = 0.0
+        self.broll_generation_time: float = 0.0
         
-        logger.info("VideoComposer initialized with movis backend")
+        logger.info("VideoComposer initialized with movis backend and plan execution engine")
     
     def validate_ai_director_plan(self, context: ContentContext) -> bool:
         """
@@ -332,7 +346,7 @@ class VideoComposer:
         if original_duration == 0.0 and context.audio_analysis:
             # Find the last audio segment
             if context.audio_analysis.segments:
-                original_duration = max(seg['end'] for seg in context.audio_analysis.segments)
+                original_duration = max(seg.end for seg in context.audio_analysis.segments)
         
         # Apply cuts and trims
         total_cut_duration = 0.0
@@ -353,6 +367,135 @@ class VideoComposer:
             final_duration = max(final_duration, max_broll_end)
         
         return final_duration
+    
+    def create_composition_plan_from_timeline(self, timeline: ExecutionTimeline, 
+                                            context: ContentContext) -> CompositionPlan:
+        """
+        Create detailed composition plan from execution timeline.
+        
+        Args:
+            timeline: ExecutionTimeline from plan execution engine
+            context: ContentContext with source materials
+            
+        Returns:
+            CompositionPlan ready for movis composition
+        """
+        start_time = time.time()
+        
+        logger.info("Creating composition plan from execution timeline")
+        
+        # Create output settings
+        output_settings = CompositionSettings(
+            duration=timeline.total_duration,
+            quality="high" if context.user_preferences.quality_mode == "high" else "medium"
+        )
+        
+        # Convert timeline operations to layers
+        layers = []
+        transitions = []
+        effects = []
+        audio_adjustments = []
+        
+        # Group operations by type
+        for operation in timeline.operations:
+            if operation.track_type == "video":
+                layer = self._create_layer_from_operation(operation, context, output_settings)
+                if layer:
+                    layers.append(layer)
+            
+            elif operation.track_type == "audio":
+                # Audio operations become audio adjustments
+                adjustment = {
+                    'timestamp': operation.start_time,
+                    'type': operation.operation_type,
+                    'parameters': operation.parameters,
+                    'duration': operation.end_time - operation.start_time
+                }
+                audio_adjustments.append(adjustment)
+            
+            elif operation.track_type == "broll":
+                layer = self._create_broll_layer_from_operation(operation, context, output_settings)
+                if layer:
+                    layers.append(layer)
+            
+            elif operation.track_type == "effect":
+                if operation.operation_type == "transition":
+                    transition = {
+                        'timestamp': operation.start_time,
+                        'type': operation.parameters.get('transition_type', 'fade'),
+                        'duration': operation.end_time - operation.start_time,
+                        'parameters': operation.parameters
+                    }
+                    transitions.append(transition)
+                else:
+                    effect = {
+                        'timestamp': operation.start_time,
+                        'type': operation.parameters.get('effect_type', 'emphasis'),
+                        'duration': operation.end_time - operation.start_time,
+                        'parameters': operation.parameters
+                    }
+                    effects.append(effect)
+        
+        composition_plan = CompositionPlan(
+            layers=layers,
+            transitions=transitions,
+            effects=effects,
+            audio_adjustments=audio_adjustments,
+            output_settings=output_settings
+        )
+        
+        self.composition_plan = composition_plan
+        self.composition_time = time.time() - start_time
+        
+        logger.info(f"Composition plan created from timeline in {self.composition_time:.2f}s - "
+                   f"{len(layers)} layers, {len(transitions)} transitions, {len(effects)} effects")
+        
+        return composition_plan
+    
+    def _create_layer_from_operation(self, operation: TrackOperation, 
+                                   context: ContentContext, 
+                                   settings: CompositionSettings) -> Optional[LayerInfo]:
+        """Create LayerInfo from a video track operation."""
+        if operation.operation_type in ['cut', 'trim']:
+            # For cuts and trims, create a modified video layer
+            if context.video_files:
+                return LayerInfo(
+                    layer_id=operation.operation_id,
+                    layer_type="video",
+                    start_time=operation.start_time,
+                    end_time=operation.end_time,
+                    source_path=context.video_files[0],
+                    properties={
+                        'operation_type': operation.operation_type,
+                        'fade_duration': operation.parameters.get('fade_duration', 0.1),
+                        'track': 0,
+                        'priority': operation.priority
+                    },
+                    opacity=1.0
+                )
+        
+        return None
+    
+    def _create_broll_layer_from_operation(self, operation: TrackOperation, 
+                                         context: ContentContext, 
+                                         settings: CompositionSettings) -> Optional[LayerInfo]:
+        """Create LayerInfo from a B-roll track operation."""
+        return LayerInfo(
+            layer_id=operation.operation_id,
+            layer_type="broll",
+            start_time=operation.start_time,
+            end_time=operation.end_time,
+            properties={
+                'content_type': operation.parameters.get('content_type', 'graphic'),
+                'description': operation.parameters.get('description', ''),
+                'visual_elements': operation.parameters.get('visual_elements', []),
+                'animation_style': operation.parameters.get('animation_style', 'fade_in'),
+                'track': 2,
+                'priority': operation.priority,
+                'z_index': operation.parameters.get('z_index', 10)
+            },
+            opacity=operation.parameters.get('opacity', 0.8)
+        )
     
     def create_movis_composition(self, composition_plan: CompositionPlan) -> Any:
         """
@@ -437,38 +580,8 @@ class VideoComposer:
                     return None
             
             elif layer_info.layer_type == "broll":
-                # Create placeholder B-roll layer (will be enhanced in future tasks)
-                # For now, create a solid color layer with text
-                description = layer_info.properties.get('description', 'B-roll content')
-                
-                # Create solid background
-                background = mv.layer.SolidColor(
-                    color=(30, 30, 30, 200),  # Semi-transparent dark background
-                    duration=layer_info.end_time - layer_info.start_time
-                )
-                
-                # Add text overlay
-                text_layer = mv.layer.Text(
-                    text=description[:50] + "..." if len(description) > 50 else description,
-                    font_size=24,
-                    color=(255, 255, 255, 255),
-                    position=(settings.width // 2, settings.height // 2),
-                    duration=layer_info.end_time - layer_info.start_time
-                )
-                
-                # Combine background and text
-                combined = mv.Composition(
-                    size=(settings.width, settings.height),
-                    duration=layer_info.end_time - layer_info.start_time
-                )
-                combined.add_layer(background)
-                combined.add_layer(text_layer)
-                
-                # Apply opacity
-                if layer_info.opacity < 1.0:
-                    combined = mv.layer.Opacity(layer_info.opacity)(combined)
-                
-                return combined
+                # Use actual generated B-roll assets
+                return self._create_broll_layer_from_assets(layer_info, settings)
             
             elif layer_info.layer_type == "text":
                 # Create text layer
@@ -494,6 +607,89 @@ class VideoComposer:
         except Exception as e:
             logger.error(f"Error creating layer {layer_info.layer_id}: {str(e)}")
             return None
+    
+    def _create_broll_layer_from_assets(self, layer_info: LayerInfo, settings: CompositionSettings) -> Optional[Any]:
+        """Create B-roll layer using actual generated assets."""
+        try:
+            # Find generated asset for this timestamp
+            asset = self.broll_generation_system.get_asset_for_timestamp(layer_info.start_time)
+            
+            if asset and Path(asset.file_path).exists():
+                # Use actual generated asset
+                file_extension = Path(asset.file_path).suffix.lower()
+                
+                if file_extension in ['.mp4', '.avi', '.mov', '.gif']:
+                    # Video/animation asset
+                    layer = mv.layer.VideoFile(
+                        path=asset.file_path,
+                        start_time=0,
+                        duration=layer_info.end_time - layer_info.start_time
+                    )
+                elif file_extension in ['.png', '.jpg', '.jpeg']:
+                    # Image asset - use Image layer for static images
+                    try:
+                        layer = mv.layer.Image(
+                            path=asset.file_path,
+                            duration=layer_info.end_time - layer_info.start_time
+                        )
+                    except AttributeError:
+                        # Fallback if Image layer doesn't exist in this movis version
+                        layer = mv.layer.VideoFile(
+                            path=asset.file_path,
+                            start_time=0,
+                            duration=layer_info.end_time - layer_info.start_time
+                        )
+                else:
+                    # Fallback to placeholder
+                    return self._create_placeholder_broll_layer(layer_info, settings)
+                
+                # Apply opacity
+                if layer_info.opacity < 1.0:
+                    layer = mv.layer.Opacity(layer_info.opacity)(layer)
+                
+                logger.info(f"Created B-roll layer from asset: {Path(asset.file_path).name}")
+                return layer
+            else:
+                # No asset found, create placeholder
+                return self._create_placeholder_broll_layer(layer_info, settings)
+                
+        except Exception as e:
+            logger.error(f"Error creating B-roll layer from assets: {str(e)}")
+            return self._create_placeholder_broll_layer(layer_info, settings)
+    
+    def _create_placeholder_broll_layer(self, layer_info: LayerInfo, settings: CompositionSettings) -> Any:
+        """Create placeholder B-roll layer when no asset is available."""
+        description = layer_info.properties.get('description', 'B-roll content')
+        
+        # Create solid background
+        background = mv.layer.SolidColor(
+            color=(30, 30, 30, 200),  # Semi-transparent dark background
+            duration=layer_info.end_time - layer_info.start_time
+        )
+        
+        # Add text overlay
+        text_layer = mv.layer.Text(
+            text=description[:50] + "..." if len(description) > 50 else description,
+            font_size=24,
+            color=(255, 255, 255, 255),
+            position=(settings.width // 2, settings.height // 2),
+            duration=layer_info.end_time - layer_info.start_time
+        )
+        
+        # Combine background and text
+        combined = mv.Composition(
+            size=(settings.width, settings.height),
+            duration=layer_info.end_time - layer_info.start_time
+        )
+        combined.add_layer(background)
+        combined.add_layer(text_layer)
+        
+        # Apply opacity
+        if layer_info.opacity < 1.0:
+            combined = mv.layer.Opacity(layer_info.opacity)(combined)
+        
+        logger.info("Created placeholder B-roll layer")
+        return combined
     
     def _apply_transition(self, composition: Any, transition: Dict[str, Any]):
         """Apply transition effect to composition."""
@@ -539,9 +735,9 @@ class VideoComposer:
         except Exception as e:
             logger.error(f"Error applying effect: {str(e)}")
     
-    def compose_video(self, context: ContentContext) -> Dict[str, Any]:
+    async def compose_video_with_ai_plan(self, context: ContentContext) -> Dict[str, Any]:
         """
-        Execute complete video composition workflow.
+        Execute complete video composition workflow using AI Director Plan Execution Engine.
         
         Args:
             context: ContentContext with AI Director plan and source materials
@@ -551,27 +747,43 @@ class VideoComposer:
         """
         start_time = time.time()
         
-        logger.info("Starting video composition workflow")
+        logger.info("Starting AI Director plan-based video composition workflow")
         
         try:
             # Validate input
             if not self.validate_ai_director_plan(context):
                 raise InputValidationError("Invalid AI Director plan in ContentContext")
             
-            # Create composition plan
-            composition_plan = self.create_composition_plan(context)
+            # Step 1: Generate B-roll assets from AI Director plans
+            broll_generation_start = time.time()
+            self.generated_broll_assets = await self.broll_generation_system.generate_all_broll_assets(context)
+            self.broll_generation_time = time.time() - broll_generation_start
             
-            # Create movis composition
+            logger.info(f"Generated {len(self.generated_broll_assets)} B-roll assets in {self.broll_generation_time:.2f}s")
+            
+            # Step 2: Execute AI Director plan using execution engine
+            plan_execution_start = time.time()
+            execution_timeline = self.plan_execution_engine.execute_plan(context)
+            self.execution_timeline = execution_timeline
+            self.plan_execution_time = time.time() - plan_execution_start
+            
+            logger.info(f"AI Director plan executed in {self.plan_execution_time:.2f}s - "
+                       f"{len(execution_timeline.operations)} operations, "
+                       f"{len(execution_timeline.sync_points)} sync points")
+            
+            # Step 3: Create enhanced composition plan from execution timeline
+            composition_plan = self.create_composition_plan_from_timeline(execution_timeline, context)
+            
+            # Step 4: Create movis composition
             composition = self.create_movis_composition(composition_plan)
             
-            # Generate output filename
-            project_name = context.project_id or "video_composition"
+            # Step 5: Render composition
+            render_start = time.time()
+            project_name = context.project_id or "ai_directed_video"
             output_filename = f"{project_name}_{int(time.time())}.mp4"
             output_path = self.output_dir / output_filename
             
-            # Render composition
-            render_start = time.time()
-            logger.info(f"Rendering video composition to {output_path}")
+            logger.info(f"Rendering AI-directed video composition to {output_path}")
             
             # Configure render settings based on quality
             quality_settings = self._get_quality_settings(composition_plan.output_settings.quality)
@@ -585,15 +797,20 @@ class VideoComposer:
             self.render_time = time.time() - render_start
             total_time = time.time() - start_time
             
-            # Update ContentContext with results
+            # Create comprehensive result
             composition_result = {
                 'output_path': str(output_path),
                 'composition_plan': composition_plan.to_dict(),
+                'execution_timeline': execution_timeline.to_dict(),
                 'render_settings': quality_settings,
                 'performance_metrics': {
+                    'plan_execution_time': self.plan_execution_time,
                     'composition_time': self.composition_time,
                     'render_time': self.render_time,
                     'total_time': total_time,
+                    'operations_executed': len(execution_timeline.operations),
+                    'sync_points_processed': len(execution_timeline.sync_points),
+                    'conflicts_resolved': execution_timeline.conflicts_resolved,
                     'layer_count': len(composition_plan.layers),
                     'transition_count': len(composition_plan.transitions),
                     'effect_count': len(composition_plan.effects)
@@ -603,6 +820,12 @@ class VideoComposer:
                     'duration': composition_plan.output_settings.duration,
                     'resolution': f"{composition_plan.output_settings.width}x{composition_plan.output_settings.height}",
                     'fps': composition_plan.output_settings.fps
+                },
+                'ai_director_integration': {
+                    'plan_execution_successful': True,
+                    'operations_count': len(execution_timeline.operations),
+                    'timeline_optimized': execution_timeline.optimization_applied,
+                    'synchronization_applied': len(execution_timeline.sync_points) > 0
                 }
             }
             
@@ -611,13 +834,26 @@ class VideoComposer:
                 context.processed_video = {}
             context.processed_video['composition_result'] = composition_result
             
-            logger.info(f"Video composition completed in {total_time:.2f}s - Output: {output_path}")
+            logger.info(f"AI-directed video composition completed in {total_time:.2f}s - Output: {output_path}")
             
             return composition_result
             
         except Exception as e:
-            logger.error(f"Video composition failed: {str(e)}")
-            raise ProcessingError(f"Video composition failed: {str(e)}")
+            logger.error(f"AI-directed video composition failed: {str(e)}")
+            raise ProcessingError(f"AI-directed video composition failed: {str(e)}")
+    
+    def compose_video(self, context: ContentContext) -> Dict[str, Any]:
+        """
+        Execute complete video composition workflow (legacy method).
+        
+        Args:
+            context: ContentContext with AI Director plan and source materials
+            
+        Returns:
+            Dict with composition results and output file paths
+        """
+        # Use the new AI Director plan-based composition by default
+        return self.compose_video_with_ai_plan(context)
     
     def _get_quality_settings(self, quality: str) -> Dict[str, Any]:
         """Get render settings based on quality level."""

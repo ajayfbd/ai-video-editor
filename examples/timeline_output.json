@@ -1,0 +1,382 @@
+{
+  "total_duration": 34.699999999999996,
+  "operations": [
+    {
+      "operation_id": "cut_video_1",
+      "track_id": "main_video",
+      "track_type": "video",
+      "start_time": 3.5,
+      "end_time": 3.8,
+      "operation_type": "cut",
+      "parameters": {
+        "cut_type": "soft",
+        "fade_duration": 0.1,
+        "preserve_audio": true
+      },
+      "priority": 8,
+      "source_decision": "cut_3.5"
+    },
+    {
+      "operation_id": "emphasis_2",
+      "track_id": "main_video",
+      "track_type": "effect",
+      "start_time": 8.2,
+      "end_time": 10.7,
+      "operation_type": "effect",
+      "parameters": {
+        "effect_type": "zoom_in",
+        "intensity": 1.2,
+        "duration": 2.5,
+        "fade_in": 0.3,
+        "fade_out": 0.3
+      },
+      "priority": 9,
+      "source_decision": "emphasis_8.2"
+    },
+    {
+      "operation_id": "trim_video_3",
+      "track_id": "main_video",
+      "track_type": "video",
+      "start_time": 12.8,
+      "end_time": 13.600000000000001,
+      "operation_type": "trim",
+      "parameters": {
+        "trim_type": "remove",
+        "smooth_transition": true,
+        "fade_in_duration": 0.2,
+        "fade_out_duration": 0.2
+      },
+      "priority": 6,
+      "source_decision": "trim_12.8"
+    },
+    {
+      "operation_id": "trim_audio_4",
+      "track_id": "main_audio",
+      "track_type": "audio",
+      "start_time": 13.6,
+      "end_time": 14.4,
+      "operation_type": "trim",
+      "parameters": {
+        "fade_in_duration": 0.1,
+        "fade_out_duration": 0.1
+      },
+      "priority": 6,
+      "source_decision": "trim_12.8"
+    },
+    {
+      "operation_id": "broll_entrance_2",
+      "track_id": "broll_track_13.1",
+      "track_type": "effect",
+      "start_time": 13.1,
+      "end_time": 13.6,
+      "operation_type": "transition",
+      "parameters": {
+        "transition_type": "slide_up",
+        "direction": "in",
+        "duration": 0.5
+      },
+      "priority": 9,
+      "source_decision": "broll_plan_13.1"
+    },
+    {
+      "operation_id": "broll_content_1",
+      "track_id": "broll_track_13.1",
+      "track_type": "broll",
+      "start_time": 13.65,
+      "end_time": 19.8,
+      "operation_type": "insert",
+      "parameters": {
+        "content_type": "chart",
+        "description": "Bar chart showing $1000 investment growing to $1967 over 10 years",
+        "visual_elements": [
+          "bar_chart",
+          "dollar_amounts",
+          "timeline"
+        ],
+        "animation_style": "slide_up",
+        "opacity": 0.9,
+        "position": "center_overlay",
+        "z_index": 10
+      },
+      "priority": 8,
+      "source_decision": "broll_plan_13.1"
+    },
+    {
+      "operation_id": "broll_exit_3",
+      "track_id": "broll_track_13.1",
+      "track_type": "effect",
+      "start_time": 19.85,
+      "end_time": 19.8,
+      "operation_type": "transition",
+      "parameters": {
+        "transition_type": "slide_up",
+        "direction": "out",
+        "duration": 0.5
+      },
+      "priority": 9,
+      "source_decision": "broll_plan_13.1"
+    },
+    {
+      "operation_id": "transition_5",
+      "track_id": "main_video",
+      "track_type": "effect",
+      "start_time": 19.8,
+      "end_time": 20.8,
+      "operation_type": "transition",
+      "parameters": {
+        "transition_type": "crossfade",
+        "duration": 1.0,
+        "easing": "ease_in_out",
+        "direction": "forward"
+      },
+      "priority": 8,
+      "source_decision": "transition_19.8"
+    },
+    {
+      "operation_id": "broll_entrance_5",
+      "track_id": "broll_track_24.5",
+      "track_type": "effect",
+      "start_time": 24.5,
+      "end_time": 25.0,
+      "operation_type": "transition",
+      "parameters": {
+        "transition_type": "draw_on",
+        "direction": "in",
+        "duration": 0.5
+      },
+      "priority": 10,
+      "source_decision": "broll_plan_24.5"
+    },
+    {
+      "operation_id": "broll_content_4",
+      "track_id": "broll_track_24.5",
+      "track_type": "broll",
+      "start_time": 25.05,
+      "end_time": 31.2,
+      "operation_type": "insert",
+      "parameters": {
+        "content_type": "animation",
+        "description": "Animated exponential growth curve showing acceleration over time",
+        "visual_elements": [
+          "growth_curve",
+          "data_points",
+          "trend_line"
+        ],
+        "animation_style": "draw_on",
+        "opacity": 0.9,
+        "position": "center_overlay",
+        "z_index": 10
+      },
+      "priority": 9,
+      "source_decision": "broll_plan_24.5"
+    },
+    {
+      "operation_id": "broll_exit_6",
+      "track_id": "broll_track_24.5",
+      "track_type": "effect",
+      "start_time": 31.25,
+      "end_time": 31.2,
+      "operation_type": "transition",
+      "parameters": {
+        "transition_type": "draw_on",
+        "direction": "out",
+        "duration": 0.5
+      },
+      "priority": 10,
+      "source_decision": "broll_plan_24.5"
+    },
+    {
+      "operation_id": "emphasis_6",
+      "track_id": "main_video",
+      "track_type": "effect",
+      "start_time": 31.2,
+      "end_time": 34.2,
+      "operation_type": "effect",
+      "parameters": {
+        "effect_type": "highlight",
+        "intensity": 1.3,
+        "duration": 3.0,
+        "fade_in": 0.4,
+        "fade_out": 0.4
+      },
+      "priority": 9,
+      "source_decision": "emphasis_31.2"
+    },
+    {
+      "operation_id": "broll_entrance_8",
+      "track_id": "broll_track_31.2",
+      "track_type": "effect",
+      "start_time": 31.2,
+      "end_time": 31.7,
+      "operation_type": "transition",
+      "parameters": {
+        "transition_type": "zoom_in",
+        "direction": "in",
+        "duration": 0.5
+      },
+      "priority": 9,
+      "source_decision": "broll_plan_31.2"
+    },
+    {
+      "operation_id": "broll_content_7",
+      "track_id": "broll_track_31.2",
+      "track_type": "broll",
+      "start_time": 31.75,
+      "end_time": 35.8,
+      "operation_type": "insert",
+      "parameters": {
+        "content_type": "graphic",
+        "description": "Visual metaphor for compound interest magic - snowball effect",
+        "visual_elements": [
+          "snowball",
+          "growth_spiral",
+          "magic_sparkles"
+        ],
+        "animation_style": "zoom_in",
+        "opacity": 0.9,
+        "position": "center_overlay",
+        "z_index": 10
+      },
+      "priority": 8,
+      "source_decision": "broll_plan_31.2"
+    },
+    {
+      "operation_id": "broll_exit_9",
+      "track_id": "broll_track_31.2",
+      "track_type": "effect",
+      "start_time": 35.849999999999994,
+      "end_time": 35.8,
+      "operation_type": "transition",
+      "parameters": {
+        "transition_type": "zoom_in",
+        "direction": "out",
+        "duration": 0.5
+      },
+      "priority": 9,
+      "source_decision": "broll_plan_31.2"
+    }
+  ],
+  "sync_points": [
+    {
+      "timestamp": 3.5,
+      "sync_type": "cut_sync",
+      "affected_tracks": [
+        "main_video"
+      ],
+      "tolerance": 0.05
+    },
+    {
+      "timestamp": 12.8,
+      "sync_type": "trim_sync",
+      "affected_tracks": [
+        "main_video"
+      ],
+      "tolerance": 0.1
+    },
+    {
+      "timestamp": 13.1,
+      "sync_type": "transition_sync",
+      "affected_tracks": [
+        "broll_track_13.1"
+      ],
+      "tolerance": 0.1
+    },
+    {
+      "timestamp": 13.6,
+      "sync_type": "transition_end_sync",
+      "affected_tracks": [
+        "broll_track_13.1"
+      ],
+      "tolerance": 0.1
+    },
+    {
+      "timestamp": 19.8,
+      "sync_type": "transition_end_sync",
+      "affected_tracks": [
+        "broll_track_13.1"
+      ],
+      "tolerance": 0.1
+    },
+    {
+      "timestamp": 19.85,
+      "sync_type": "transition_sync",
+      "affected_tracks": [
+        "broll_track_13.1"
+      ],
+      "tolerance": 0.1
+    },
+    {
+      "timestamp": 20.8,
+      "sync_type": "transition_end_sync",
+      "affected_tracks": [
+        "main_video"
+      ],
+      "tolerance": 0.1
+    },
+    {
+      "timestamp": 24.5,
+      "sync_type": "transition_sync",
+      "affected_tracks": [
+        "broll_track_24.5"
+      ],
+      "tolerance": 0.1
+    },
+    {
+      "timestamp": 25.0,
+      "sync_type": "transition_end_sync",
+      "affected_tracks": [
+        "broll_track_24.5"
+      ],
+      "tolerance": 0.1
+    },
+    {
+      "timestamp": 31.2,
+      "sync_type": "transition_end_sync",
+      "affected_tracks": [
+        "broll_track_24.5"
+      ],
+      "tolerance": 0.1
+    },
+    {
+      "timestamp": 31.25,
+      "sync_type": "transition_sync",
+      "affected_tracks": [
+        "broll_track_24.5"
+      ],
+      "tolerance": 0.1
+    },
+    {
+      "timestamp": 31.7,
+      "sync_type": "transition_end_sync",
+      "affected_tracks": [
+        "broll_track_31.2"
+      ],
+      "tolerance": 0.1
+    },
+    {
+      "timestamp": 35.8,
+      "sync_type": "transition_end_sync",
+      "affected_tracks": [
+        "broll_track_31.2"
+      ],
+      "tolerance": 0.1
+    },
+    {
+      "timestamp": 35.849999999999994,
+      "sync_type": "transition_sync",
+      "affected_tracks": [
+        "broll_track_31.2"
+      ],
+      "tolerance": 0.1
+    }
+  ],
+  "track_mapping": {
+    "main_video": "video",
+    "main_audio": "audio",
+    "broll_track_13.1": "effect",
+    "broll_track_24.5": "effect",
+    "broll_track_31.2": "effect"
+  },
+  "conflicts_resolved": 6,
+  "optimization_applied": true
+}

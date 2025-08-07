@@ -1,6 +1,7 @@
 """Main CLI entry point for AI Video Editor."""
 
 import sys
+import time
 from pathlib import Path
 from typing import Optional
 
@@ -145,29 +146,102 @@ def init(output: Path):
 
 @cli.command()
 @click.argument("input_files", nargs=-1, required=True, type=click.Path(exists=True, path_type=Path))
-@click.option("--output", "-o", type=click.Path(path_type=Path), help="Output file path")
+@click.option("--output", "-o", type=click.Path(path_type=Path), help="Output directory path")
 @click.option("--type", "content_type", type=click.Choice(["educational", "music", "general"]), 
               default="general", help="Content type for optimization")
 @click.option("--quality", type=click.Choice(["low", "medium", "high", "ultra"]), 
               default="high", help="Output quality")
+@click.option("--mode", type=click.Choice(["fast", "balanced", "high_quality"]), 
+              default="balanced", help="Processing mode")
+@click.option("--parallel/--sequential", default=True, help="Enable parallel processing")
+@click.option("--max-memory", type=float, default=8.0, help="Maximum memory usage in GB")
+@click.option("--timeout", type=int, default=1800, help="Timeout per stage in seconds")
+@click.option("--no-progress", is_flag=True, help="Disable progress display")
 @click.pass_context
-def process(ctx: click.Context, input_files, output, content_type, quality):
-    """Process video files with AI assistance."""
+def process(ctx: click.Context, input_files, output, content_type, quality, mode, 
+           parallel, max_memory, timeout, no_progress):
+    """Process video files with AI assistance through the complete pipeline."""
+    import asyncio
+    from ai_video_editor.core.workflow_orchestrator import (
+        WorkflowOrchestrator, WorkflowConfiguration, ProcessingMode
+    )
+    from ai_video_editor.core.config import ProjectSettings, ContentType, VideoQuality
+    
     try:
-        console.print(f"[green]Processing {len(input_files)} file(s)...[/green]")
+        console.print(f"[green]Starting AI Video Editor pipeline for {len(input_files)} file(s)...[/green]")
         console.print(f"Content type: {content_type}")
         console.print(f"Quality: {quality}")
+        console.print(f"Processing mode: {mode}")
         
-        # TODO: Implement actual processing in future tasks
-        console.print("[yellow]Processing functionality will be implemented in upcoming tasks.[/yellow]")
-        console.print("This is the basic CLI structure for the video editor.")
+        # Create project settings
+        project_settings = ProjectSettings(
+            content_type=ContentType(content_type),
+            quality=VideoQuality(quality),
+            auto_enhance=True,
+            enable_b_roll_generation=True,
+            enable_thumbnail_generation=True
+        )
         
-        for i, file_path in enumerate(input_files, 1):
-            console.print(f"  {i}. {file_path}")
+        # Create workflow configuration
+        workflow_config = WorkflowConfiguration(
+            processing_mode=ProcessingMode(mode),
+            enable_parallel_processing=parallel,
+            max_memory_usage_gb=max_memory,
+            timeout_per_stage=timeout,
+            enable_progress_display=not no_progress,
+            output_directory=output,
+            temp_directory=Path("temp") / f"workflow_{int(time.time())}"
+        )
+        
+        # Create and run orchestrator
+        orchestrator = WorkflowOrchestrator(
+            config=workflow_config,
+            console=console
+        )
+        
+        # Run the workflow
+        async def run_workflow():
+            try:
+                result_context = await orchestrator.process_video(
+                    input_files=list(input_files),
+                    project_settings=project_settings
+                )
+                
+                # Display results
+                console.print("\n[green]✅ Processing completed successfully![/green]")
+                
+                # Show processing summary
+                summary = orchestrator.get_processing_summary()
+                if summary:
+                    console.print(f"\n📊 Project ID: {summary.get('project_id', 'N/A')}")
+                    console.print(f"⏱️  Total Time: {summary.get('workflow_duration', 0):.1f}s")
+                    
+                    metrics = summary.get('processing_metrics', {})
+                    if metrics:
+                        console.print(f"💾 Peak Memory: {metrics.get('memory_peak_usage', 0) / (1024**3):.1f}GB")
+                        console.print(f"🔗 API Calls: {sum(metrics.get('api_calls_made', {}).values())}")
+                
+                return result_context
+                
+            except Exception as e:
+                console.print(f"\n[red]❌ Processing failed: {e}[/red]")
+                logger.error(f"Workflow processing failed: {e}")
+                raise
+        
+        # Run the async workflow
+        if sys.platform == "win32":
+            asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+        
+        result = asyncio.run(run_workflow())
         
         if output:
-            console.print(f"Output will be saved to: {output}")
+            console.print(f"\n📁 Output saved to: {output}")
         
+        console.print("\n[cyan]Use 'ai-video-editor status' to check system status[/cyan]")
+        
+    except KeyboardInterrupt:
+        console.print("\n[yellow]⏹️  Processing cancelled by user[/yellow]")
+        sys.exit(1)
     except Exception as e:
         logger.error(f"Error processing files: {e}")
         console.print(f"[red]Error processing files: {e}[/red]")
@@ -215,6 +289,79 @@ def enhance(ctx: click.Context, input_file, output):
     except Exception as e:
         logger.error(f"Error enhancing video: {e}")
         console.print(f"[red]Error enhancing video: {e}[/red]")
+        sys.exit(1)
+
+
+@cli.command()
+@click.argument("project_id", required=False)
+@click.option("--list", "list_projects", is_flag=True, help="List all active projects")
+@click.option("--details", is_flag=True, help="Show detailed status information")
+@click.pass_context
+def workflow(ctx: click.Context, project_id, list_projects, details):
+    """Monitor and manage workflow execution."""
+    try:
+        if list_projects:
+            console.print("[cyan]Active Workflow Projects:[/cyan]")
+            console.print("(This will show active workflows when implemented)")
+            return
+        
+        if project_id:
+            console.print(f"[cyan]Workflow Status for Project: {project_id}[/cyan]")
+            console.print("(This will show specific project status when implemented)")
+        else:
+            console.print("[yellow]Please specify a project ID or use --list to see all projects[/yellow]")
+            console.print("Usage: ai-video-editor workflow <project_id>")
+            console.print("       ai-video-editor workflow --list")
+        
+    except Exception as e:
+        logger.error(f"Error checking workflow status: {e}")
+        console.print(f"[red]Error checking workflow status: {e}[/red]")
+        sys.exit(1)
+
+
+@cli.command()
+@click.option("--stage", type=str, help="Test specific workflow stage")
+@click.option("--mock", is_flag=True, help="Use mock data for testing")
+@click.pass_context
+def test_workflow(ctx: click.Context, stage, mock):
+    """Test workflow orchestrator functionality."""
+    import asyncio
+    from ai_video_editor.core.workflow_orchestrator import (
+        WorkflowOrchestrator, WorkflowConfiguration, ProcessingMode
+    )
+    
+    try:
+        console.print("[cyan]Testing Workflow Orchestrator...[/cyan]")
+        
+        # Create test configuration
+        config = WorkflowConfiguration(
+            processing_mode=ProcessingMode.FAST,
+            enable_parallel_processing=False,
+            max_memory_usage_gb=4.0,
+            timeout_per_stage=60,
+            enable_progress_display=True,
+            temp_directory=Path("temp") / "test_workflow"
+        )
+        
+        # Create orchestrator
+        orchestrator = WorkflowOrchestrator(config=config, console=console)
+        
+        console.print("[green]✅ Workflow orchestrator created successfully[/green]")
+        console.print(f"Configuration: {config.processing_mode.value} mode")
+        console.print(f"Parallel processing: {config.enable_parallel_processing}")
+        console.print(f"Memory limit: {config.max_memory_usage_gb}GB")
+        
+        if stage:
+            console.print(f"[yellow]Stage-specific testing not yet implemented: {stage}[/yellow]")
+        
+        if mock:
+            console.print("[yellow]Mock data testing not yet implemented[/yellow]")
+        
+        console.print("\n[cyan]Workflow orchestrator test completed successfully![/cyan]")
+        
+    except Exception as e:
+        logger.error(f"Workflow test failed: {e}")
+        console.print(f"[red]Workflow test failed: {e}[/red]")
         sys.exit(1)
 
 
