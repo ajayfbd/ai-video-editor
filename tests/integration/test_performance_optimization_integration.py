@@ -101,19 +101,23 @@ class TestPerformanceOptimizationIntegration:
                 # Verify processing time is reasonable
                 assert processing_time < 1.0  # Should be fast
             
-            # Test API rate limiting
+            # Test API rate limiting with mocked sleep to avoid timeout
             api_limiter = performance_optimizer.api_rate_limiter
             api_limiter.set_api_quota('test_service', 10, 0.001)
             
-            # Test multiple API calls
-            successful_calls = 0
-            for i in range(15):  # More than rate limit
-                success = await api_limiter.acquire_api_slot('test_service', 0.001)
-                if success:
-                    successful_calls += 1
-            
-            # Should have some successful calls
-            assert successful_calls > 0
+            # Mock asyncio.sleep to avoid actual waiting
+            with patch('asyncio.sleep') as mock_sleep:
+                mock_sleep.return_value = None
+                
+                # Test multiple API calls
+                successful_calls = 0
+                for i in range(15):  # More than rate limit
+                    success = await api_limiter.acquire_api_slot('test_service', 0.001)
+                    if success:
+                        successful_calls += 1
+                
+                # Should have some successful calls
+                assert successful_calls > 0
             
             # Get performance statistics
             stats = performance_optimizer.get_performance_stats()

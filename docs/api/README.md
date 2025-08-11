@@ -22,10 +22,10 @@ from ai_video_editor.core.content_context import ContentContext, ContentType
 
 # Create a new content context
 context = ContentContext(
-    project_id="my_project",
+    project_id="example_project",
     video_files=["video.mp4"],
-    content_type=ContentType.EDUCATIONAL,
-    user_preferences=UserPreferences(quality_mode="high")
+    content_type=ContentType.GENERAL,
+    user_preferences=UserPreferences()
 )
 ```
 
@@ -171,7 +171,7 @@ metadata_strategy = plan.metadata_strategy
 ### Thumbnail Generation Module
 
 ```python
-from ai_video_editor.modules.thumbnail_generation.generator import ThumbnailGenerator
+from ai_video_editor.core.workflow_orchestrator import WorkflowOrchestrator
 
 # Initialize generator
 generator = ThumbnailGenerator(

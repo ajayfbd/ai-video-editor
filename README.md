@@ -12,52 +12,13 @@ An AI-driven content creation system that transforms raw video into professional
 - **Multi-Content Optimization**: Specialized workflows for educational, music, and general content
 - **Performance Optimized**: Efficient resource usage with intelligent caching
 
-## Installation
+## Getting Started
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd ai-video-editor
-```
+**New to AI Video Editor?** Get up and running in 5 minutes with our [**Quick Start Guide**](quick-start.md).
 
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+**Need detailed guidance?** Follow the complete [**First Video Tutorial**](docs/tutorials/first-video.md) for step-by-step instructions.
 
-3. Initialize configuration:
-```bash
-python -m ai_video_editor.cli.main init
-```
-
-4. Edit the generated `.env` file to add your API keys:
-```bash
-AI_VIDEO_EDITOR_GEMINI_API_KEY=your_gemini_api_key_here
-AI_VIDEO_EDITOR_IMAGEN_API_KEY=your_imagen_api_key_here
-AI_VIDEO_EDITOR_GOOGLE_CLOUD_PROJECT=your_project_id_here
-```
-
-## Quick Start
-
-1. Check system status:
-```bash
-python -m ai_video_editor.cli.main status
-```
-
-2. Process a video file:
-```bash
-python -m ai_video_editor.cli.main process video.mp4 --type educational --quality high
-```
-
-3. Analyze audio content:
-```bash
-python -m ai_video_editor.cli.main analyze audio.mp3 --output transcript.txt
-```
-
-4. Enhance video quality:
-```bash
-python -m ai_video_editor.cli.main enhance input.mp4 --output enhanced.mp4
-```
+**Looking for comprehensive documentation?** Browse the [**Complete Documentation**](docs/README.md) for detailed guides and API reference.
 
 ## Project Structure
 
@@ -109,17 +70,7 @@ The project uses:
 
 ### Configuration
 
-The application supports configuration through:
-- Environment variables (prefixed with `AI_VIDEO_EDITOR_`)
-- `.env` files
-- Command-line arguments
-
-Key configuration options:
-- `GEMINI_API_KEY`: Required for content analysis
-- `IMAGEN_API_KEY`: Required for AI thumbnail generation
-- `GOOGLE_CLOUD_PROJECT`: Required for cloud services
-- `MAX_MEMORY_USAGE_GB`: Memory limit (default: 8GB)
-- `MAX_CONCURRENT_PROCESSES`: Parallel processing limit (default: 2)
+For detailed configuration instructions, see the [**User Guide**](docs/user-guide/README.md#-configuration). The application supports environment variables, `.env` files, and command-line arguments for flexible setup.
 
 ## Architecture
 
@@ -133,18 +84,10 @@ The system is built on a **ContentContext-driven architecture** where all module
 ## Requirements
 
 - Python 3.9+
-- 8GB+ RAM recommended
-- GPU acceleration supported (optional)
+- 8GB+ RAM recommended  
 - Internet connection for AI services
 
-## Core Libraries
-
-- **VideoLab-Pro**: Advanced video processing
-- **Whisper Large-V3**: Speech-to-text conversion
-- **OpenCV**: Computer vision and video analysis
-- **Gemini API**: Content analysis and keyword research
-- **Imagen API**: AI-powered thumbnail backgrounds
-- **PyVips**: Professional image processing and text rendering
+For detailed system requirements and installation instructions, see the [**Quick Start Guide**](quick-start.md).
 
 ## License
 
@@ -162,52 +105,47 @@ MIT License - see LICENSE file for details.
 ## Support
 
 For issues and questions:
-1. Check the documentation
-2. Search existing issues
-3. Create a new issue with detailed information
+1. Check the [**Complete Documentation**](docs/README.md)
+2. Review the [**Troubleshooting Guide**](docs/support/troubleshooting-unified.md)
+3. Search existing issues
+4. Create a new issue with detailed information
+
+> **Note**: Some documentation files have been consolidated and archived. If you're looking for previously referenced files like `quick-guide.md` or analysis reports, they can be found in the `archive/` directory.
 
 ## 📚 Documentation
 
 Comprehensive documentation is available in the `docs/` directory:
 
-- **[Getting Started](docs/user-guide/getting-started.md)** - Installation and first video
-- **[User Guide](docs/user-guide/README.md)** - Complete user documentation
-- **[CLI Reference](docs/user-guide/cli-reference.md)** - Command-line interface guide
-- **[API Reference](docs/api/README.md)** - Developer API documentation
-- **[Tutorials](docs/tutorials/README.md)** - Step-by-step workflows
+### Getting Started
+- **[Quick Start Guide](quick-start.md)** - 5-minute setup and first video processing
+- **[First Video Tutorial](docs/tutorials/first-video.md)** - Complete step-by-step walkthrough
+- **[User Guide](docs/user-guide/README.md)** - Complete user documentation with installation, CLI reference, and workflows
+
+### Developer Resources
+- **[API Reference](docs/developer/api-reference.md)** - Complete API documentation and integration guides
 - **[Architecture Guide](docs/developer/architecture.md)** - System design and components
-- **[Troubleshooting](docs/support/troubleshooting.md)** - Common issues and solutions
-- **[FAQ](docs/support/faq.md)** - Frequently asked questions
-- **[Performance Guide](docs/support/performance.md)** - Optimization and tuning
+- **[Contributing Guide](docs/developer/contributing.md)** - Development workflow and coding standards
+- **[Testing Guide](docs/developer/testing.md)** - Testing strategies and best practices
 
-## 🎬 Quick Examples
+### Tutorials and Workflows
+- **[Tutorials Overview](docs/tutorials/README.md)** - Step-by-step workflows for all content types
+- **[Educational Content](docs/tutorials/workflows/educational-content.md)** - Specialized workflow for educational videos
+- **[Music Videos](docs/tutorials/workflows/music-videos.md)** - Optimized processing for music content
+- **[General Content](docs/tutorials/workflows/general-content.md)** - Versatile workflow for mixed content
 
-### Educational Content
-```bash
-# Process educational video with all optimizations
-python -m ai_video_editor.cli.main process lecture.mp4 \
-  --type educational \
-  --quality high \
-  --output ./educational_output
-```
+### Support and Troubleshooting
+- **[Troubleshooting Guide](docs/support/troubleshooting-unified.md)** - Common issues and solutions
+- **[FAQ](docs/support/faq-unified.md)** - Frequently asked questions
+- **[Performance Guide](docs/support/performance-unified.md)** - Optimization and tuning
+- **[Error Handling](docs/support/error-handling-unified.md)** - Error recovery and debugging
 
-### Music Videos
-```bash
-# Process music content with beat synchronization
-python -m ai_video_editor.cli.main process music_video.mp4 \
-  --type music \
-  --quality ultra \
-  --mode balanced
-```
+## 🎬 Usage Examples
 
-### Batch Processing
-```bash
-# Process multiple videos efficiently
-python -m ai_video_editor.cli.main process *.mp4 \
-  --type general \
-  --parallel \
-  --output ./batch_output
-```
+For detailed usage examples and workflows, see:
+- [**Quick Start Guide**](quick-start.md) - Basic usage and first video processing
+- [**Educational Content Workflow**](docs/tutorials/workflows/educational-content.md) - Specialized processing for educational videos
+- [**Music Video Workflow**](docs/tutorials/workflows/music-videos.md) - Optimized processing for music content
+- [**General Content Workflow**](docs/tutorials/workflows/general-content.md) - Versatile processing for mixed content
 
 ## 🏗️ Architecture Overview
 
@@ -222,12 +160,14 @@ Input Analysis → AI Director Decisions → Asset Generation → Final Output
 
 ## 📊 Project Status
 
-**Overall Completion: 75%** | **Test Coverage: 96.7%** (475/491 tests passing)
+**Overall Completion: 97.4%** | **Test Coverage: 96.7%** (475/491 tests passing)
 
 - ✅ **Phase 1: Core Processing** - 100% Complete (Audio/Video Analysis)
 - ✅ **Phase 2: AI Intelligence** - 100% Complete (AI Director, Metadata, B-roll)  
 - ✅ **Phase 3: Output Generation** - 100% Complete (Full video composition pipeline)
-- ❌ **Phase 4: Integration & QA** - 75% Complete (Documentation and examples added)
+- ✅ **Phase 4: Integration & QA** - 95% Complete (Documentation consolidation in progress)
+
+> 📋 **Detailed Status**: For comprehensive project analysis, test results, and recent fixes, see [Project Status](docs/support/project-status.md)
 
 ## 🚀 Roadmap
 

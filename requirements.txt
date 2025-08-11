@@ -10,3 +10,9 @@ torch
 google-genai
 tenacity
 librosa
+pytest-timeout
+GPUtil
+psutil
+rich
+numpy
+pytest-asyncio

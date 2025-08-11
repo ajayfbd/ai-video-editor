@@ -1,6 +1,14 @@
 # Troubleshooting Guide
 
-Comprehensive troubleshooting guide for common AI Video Editor issues and solutions.
+> **📚 This document has been consolidated into a comprehensive unified guide.**
+> 
+> **Please see: [Unified Troubleshooting and Support Guide](troubleshooting-unified.md)**
+> 
+> The unified guide consolidates all troubleshooting information, error handling patterns, and recovery procedures in one comprehensive document.
+
+---
+
+*Legacy troubleshooting content below - please use the unified guide above for the most complete and up-to-date information.*
 
 ## 🚨 Quick Diagnostics
 

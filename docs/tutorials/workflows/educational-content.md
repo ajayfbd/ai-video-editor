@@ -2,6 +2,14 @@
 
 Complete guide to processing educational videos, tutorials, and lectures with the AI Video Editor.
 
+## 🧭 Navigation
+
+**New to AI Video Editor?** Complete the [**First Video Tutorial**](../first-video.md) before diving into this specialized workflow.
+
+**Need general guidance?** Check the [**User Guide**](../../../user-guide/README.md) for comprehensive CLI reference and configuration.
+
+**Want to compare workflows?** Explore [**Music Videos**](music-videos.md) or [**General Content**](general-content.md) workflows.
+
 ## 🎯 Overview
 
 The educational content workflow is optimized for:
@@ -445,6 +453,28 @@ python -m ai_video_editor.cli.main process tutorial.mp4 \
 3. **Series Consistency**: Maintain branding across videos
 4. **Analytics Tracking**: Monitor educational engagement metrics
 5. **Continuous Improvement**: Refine based on performance data
+
+## 🚀 Next Steps
+
+### Immediate Actions
+1. **Process your first educational video** using the basic workflow above
+2. **Review the output** using the [Understanding Output](../understanding-output.md) guide
+3. **Experiment with quality settings** to find your optimal balance
+
+### Advanced Learning
+- **[Batch Processing](../advanced/batch-processing.md)** - Process multiple educational videos efficiently
+- **[Performance Tuning](../advanced/performance-tuning.md)** - Optimize for your system and content
+- **[API Integration](../advanced/api-integration.md)** - Automate educational content workflows
+
+### Related Workflows
+- **[Music Videos](music-videos.md)** - Learn music-specific optimizations
+- **[General Content](general-content.md)** - Explore versatile content processing
+- **[Advanced Techniques](../advanced/)** - Master power-user features
+
+### Support Resources
+- **[Troubleshooting](../../../support/troubleshooting-unified.md)** - Solve common educational content issues
+- **[FAQ](../../../support/faq-unified.md)** - Educational workflow frequently asked questions
+- **[Performance Guide](../../../support/performance-unified.md)** - Optimize processing for educational content
 
 ---
 

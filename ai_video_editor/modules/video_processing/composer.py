@@ -8,6 +8,7 @@ Integrates with ContentContext to ensure synchronized video output.
 
 import logging
 import time
+import asyncio
 from typing import Dict, List, Optional, Any, Union, Tuple
 from pathlib import Path
 from dataclasses import dataclass, field
@@ -735,7 +736,7 @@ class VideoComposer:
         except Exception as e:
             logger.error(f"Error applying effect: {str(e)}")
     
-    async def compose_video_with_ai_plan(self, context: ContentContext) -> Dict[str, Any]:
+    def compose_video_with_ai_plan(self, context: ContentContext) -> Dict[str, Any]:
         """
         Execute complete video composition workflow using AI Director Plan Execution Engine.
         
@@ -756,7 +757,10 @@ class VideoComposer:
             
             # Step 1: Generate B-roll assets from AI Director plans
             broll_generation_start = time.time()
-            self.generated_broll_assets = await self.broll_generation_system.generate_all_broll_assets(context)
+            # Run async generation in a local event loop
+            self.generated_broll_assets = asyncio.run(
+                self.broll_generation_system.generate_all_broll_assets(context)
+            )
             self.broll_generation_time = time.time() - broll_generation_start
             
             logger.info(f"Generated {len(self.generated_broll_assets)} B-roll assets in {self.broll_generation_time:.2f}s")

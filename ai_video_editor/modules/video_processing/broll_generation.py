@@ -33,6 +33,14 @@ try:
 except ImportError:
     PIL_AVAILABLE = False
 
+# Check for Blender availability
+try:
+    import subprocess
+    result = subprocess.run(['blender', '--version'], capture_output=True, text=True, timeout=5)
+    BLENDER_AVAILABLE = result.returncode == 0
+except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
+    BLENDER_AVAILABLE = False
+
 from ...core.content_context import ContentContext
 from ...core.exceptions import ProcessingError, ContentContextError
 from ...modules.intelligence.ai_director import BRollPlan

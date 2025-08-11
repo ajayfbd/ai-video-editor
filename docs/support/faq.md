@@ -413,4 +413,4 @@ python -m ai_video_editor.cli.main status
 
 ---
 
-*Have more questions? Check our [Troubleshooting Guide](troubleshooting.md) or review the [User Guide](../user-guide/README.md)*
+*Have more questions? Check our [Troubleshooting Guide](troubleshooting.md) or review the [User Guide](../../user-guide/README.md)*

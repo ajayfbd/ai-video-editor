@@ -1,6 +1,6 @@
 # Architecture Guide
 
-Comprehensive guide to the AI Video Editor system architecture, design patterns, and implementation details.
+Comprehensive guide to the AI Video Editor system architecture, design patterns, and implementation details. This document consolidates architectural information from multiple sources to provide a single authoritative reference.
 
 ## 🏗️ System Overview
 
@@ -730,6 +730,259 @@ class ScalabilityManager:
                 await self._shutdown_worker(worker)
 ```
 
+## 🔗 Integration Patterns
+
+### ContentContext Integration Requirements
+
+All modules in the AI Video Editor must operate on a shared ContentContext object that flows through the entire pipeline. This ensures deep integration and prevents data silos.
+
+#### Key Integration Points
+
+1. **Thumbnail-Metadata Synchronization**
+   - Thumbnail hook text MUST be derived from the same emotional analysis used for YouTube titles
+   - Visual concepts identified for thumbnails MUST inform metadata descriptions
+   - Trending keywords MUST influence both thumbnail text overlays AND metadata tags
+   - A/B testing MUST be coordinated between thumbnail and title variations
+
+2. **Shared Research Layer**
+   - Keyword research MUST be performed once and shared across all output generation
+   - Competitor analysis MUST inform both thumbnail concepts and metadata strategies
+   - Trend analysis MUST be cached and reused across multiple generation requests
+
+3. **Parallel Processing Guidelines**
+   - Thumbnail generation and metadata research CAN run in parallel after content analysis
+   - API calls MUST be batched to minimize costs and latency
+   - Shared caching MUST be implemented for repeated operations
+
+#### Data Flow Pattern
+
+```
+Input (Raw Video/Audio) → Comprehensive Analysis (Input Processing Module) → AI Director Decisions (Intelligence Layer Module) → Asset Generation & Composition (Output Module)
+  ↓                                     ↓                                     ↓
+ContentContext (Raw Data) → ContentContext (Analyzed Data) → ContentContext (AI Decisions) → Final Video & Metadata
+```
+
+**Key Integration Points:**
+- The AI Director's decisions (editing plan, B-roll plan, SEO metadata) are stored directly in the ContentContext
+- The Output Generation module reads these plans from the ContentContext to orchestrate `movis` for video composition and motion graphics, and `Blender` for character animations
+- Thumbnail generation and metadata creation are driven by the same ContentContext insights, ensuring consistency
+
+## 🚨 Advanced Error Handling Architecture
+
+### ContentContext Preservation Principle
+
+All error handling must preserve ContentContext state to enable recovery and maintain processing continuity.
+
+#### Error Categories and Handling
+
+```python
+class ContentContextError(Exception):
+    """Base exception for ContentContext-related errors"""
+    def __init__(self, message: str, context_state: Optional[ContentContext] = None):
+        super().__init__(message)
+        self.context_state = context_state
+        self.recovery_checkpoint = None
+
+class ContextIntegrityError(ContentContextError):
+    """Raised when ContentContext data is corrupted or invalid"""
+    pass
+
+# Error handling pattern
+@contextmanager
+def preserve_context_on_error(context: ContentContext, checkpoint_name: str):
+    try:
+        # Save checkpoint before risky operation
+        context_manager.save_checkpoint(context, checkpoint_name)
+        yield context
+    except Exception as e:
+        # Restore from checkpoint on error
+        restored_context = context_manager.load_checkpoint(context.project_id, checkpoint_name)
+        logger.error(f"Error occurred, restored from checkpoint {checkpoint_name}: {str(e)}")
+        raise ContentContextError(f"Processing failed: {str(e)}", restored_context)
+```
+
+#### API Integration Error Handling
+
+```python
+# Retry pattern with exponential backoff
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=4, max=10),
+    retry=retry_if_exception_type(APIIntegrationError)
+)
+def call_api_with_retry(api_function, context: ContentContext, *args, **kwargs):
+    try:
+        return api_function(*args, **kwargs)
+    except requests.RequestException as e:
+        logger.warning(f"API call failed, retrying: {str(e)}")
+        raise APIIntegrationError(f"API call failed: {str(e)}", context)
+```
+
+#### Resource Monitoring Pattern
+
+```python
+def monitor_resources(func):
+    @wraps(func)
+    def wrapper(context: ContentContext, *args, **kwargs):
+        initial_memory = psutil.Process().memory_info().rss
+        start_time = time.time()
+        
+        try:
+            result = func(context, *args, **kwargs)
+            
+            # Check resource usage
+            final_memory = psutil.Process().memory_info().rss
+            processing_time = time.time() - start_time
+            
+            if final_memory - initial_memory > 8_000_000_000:  # 8GB
+                logger.warning(f"High memory usage in {func.__name__}: {(final_memory - initial_memory) / 1_000_000_000:.2f}GB")
+            
+            if processing_time > 300:  # 5 minutes
+                logger.warning(f"Long processing time in {func.__name__}: {processing_time:.2f}s")
+            
+            return result
+            
+        except MemoryError:
+            raise MemoryConstraintError(f"Out of memory in {func.__name__}", context)
+        except TimeoutError:
+            raise ProcessingTimeoutError(f"Processing timeout in {func.__name__}", context)
+    
+    return wrapper
+```
+
+### Graceful Degradation Strategies
+
+#### API Failure Fallbacks
+
+```python
+class GracefulDegradationManager:
+    def __init__(self, context: ContentContext):
+        self.context = context
+        self.fallback_strategies = {
+            'gemini_api': self._handle_gemini_failure,
+            'imagen_api': self._handle_imagen_failure,
+            'whisper_api': self._handle_whisper_failure
+        }
+    
+    def _handle_gemini_failure(self, context: ContentContext) -> ContentContext:
+        """Fallback for Gemini API failures"""
+        logger.warning("Gemini API failed, using cached keyword research")
+        
+        # Use cached keywords or basic analysis
+        if hasattr(context, 'cached_keywords'):
+            context.trending_keywords = context.cached_keywords
+        else:
+            # Generate basic keywords from content concepts
+            context.trending_keywords = self._generate_basic_keywords(context.key_concepts)
+        
+        context.processing_metrics.add_fallback_used('gemini_api')
+        return context
+    
+    def _handle_imagen_failure(self, context: ContentContext) -> ContentContext:
+        """Fallback for Imagen API failures"""
+        logger.warning("Imagen API failed, using procedural generation")
+        
+        # Switch to procedural thumbnail generation
+        context.thumbnail_generation_strategy = 'procedural_only'
+        context.processing_metrics.add_fallback_used('imagen_api')
+        return context
+```
+
+#### Quality vs Performance Trade-offs
+
+```python
+class QualityManager:
+    def adjust_for_constraints(self, context: ContentContext, available_memory: int) -> ContentContext:
+        """Adjust processing quality based on available resources"""
+        
+        if available_memory < 4_000_000_000:  # Less than 4GB
+            logger.info("Low memory detected, reducing processing quality")
+            context.processing_preferences.thumbnail_resolution = (1280, 720)  # Reduce from 1920x1080
+            context.processing_preferences.batch_size = 1
+            context.processing_preferences.enable_aggressive_caching = True
+            
+        elif available_memory < 8_000_000_000:  # Less than 8GB
+            logger.info("Medium memory detected, using balanced processing")
+            context.processing_preferences.batch_size = 2
+            context.processing_preferences.parallel_processing = False
+            
+        return context
+```
+
+## 🎯 Performance Architecture Guidelines
+
+### Core Principle: Efficient Resource Management
+
+The AI Video Editor must run efficiently on mid-range hardware (i7 11th gen, 32GB RAM, 2GB GPU) while maintaining high-quality output.
+
+#### Resource Management Strategy
+
+- **ContentContext Size Limit**: Maximum 500MB per project
+- **Video Buffer Management**: Stream processing for large files
+- **Cache Management**: LRU cache for frequently accessed data
+- **Garbage Collection**: Explicit cleanup after each processing stage
+
+#### CPU Optimization
+
+- **Parallel Processing**: Use multiprocessing for independent operations
+- **Batch Operations**: Group similar operations to reduce overhead
+- **Lazy Loading**: Load data only when needed
+- **Efficient Algorithms**: Prefer O(n log n) or better time complexity
+
+#### GPU Utilization
+
+- **OpenCV GPU Acceleration**: Use CUDA when available for video processing
+- **Selective GPU Usage**: Reserve GPU for computationally intensive tasks
+- **Memory Transfer Optimization**: Minimize CPU-GPU data transfers
+
+### API Cost Optimization
+
+#### Gemini API Efficiency
+
+- **Batch Requests**: Combine multiple analysis requests
+- **Response Caching**: Cache results for similar content
+- **Request Optimization**: Use minimal token counts for requests
+- **Rate Limiting**: Respect API limits to avoid throttling
+
+#### Imagen API Cost Management
+
+- **Hybrid Generation**: Use procedural generation when possible
+- **Template Reuse**: Build library of successful background templates
+- **Quality Thresholds**: Use AI generation only for high-impact concepts
+- **Batch Processing**: Generate multiple variations in single requests
+
+### Performance Targets
+
+- **Educational Content (15+ min)**: Process in under 10 minutes
+- **Music Videos (5-6 min)**: Process in under 5 minutes
+- **General Content (3 min)**: Process in under 3 minutes
+- **Memory Usage**: Stay under 16GB peak usage
+- **API Costs**: Under $2 per project on average
+
+### Monitoring Implementation
+
+```python
+@performance_monitor
+def process_module(context: ContentContext) -> ContentContext:
+    start_time = time.time()
+    start_memory = psutil.Process().memory_info().rss
+    
+    # Module processing logic here
+    result = actual_processing(context)
+    
+    # Record metrics
+    processing_time = time.time() - start_time
+    memory_used = psutil.Process().memory_info().rss - start_memory
+    
+    context.processing_metrics.add_module_metrics(
+        module_name=__name__,
+        processing_time=processing_time,
+        memory_used=memory_used
+    )
+    
+    return result
+```
+
 ---
 
-*This architecture guide provides the foundation for understanding, extending, and optimizing the AI Video Editor system.*
+*This comprehensive architecture guide provides the foundation for understanding, extending, and optimizing the AI Video Editor system. It consolidates architectural patterns, integration requirements, error handling strategies, and performance guidelines into a single authoritative reference.*

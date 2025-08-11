@@ -74,24 +74,24 @@ def status(ctx: click.Context):
         table.add_column("Details")
         
         # Overall status
-        overall_status = "✅ Ready" if env_status["valid"] else "❌ Issues Found"
+        overall_status = "[OK] Ready" if env_status["valid"] else "[ERROR] Issues Found"
         table.add_row("Overall", overall_status, "")
         
         # API Keys
         for api, available in env_status["api_keys"].items():
-            status_icon = "✅" if available else "⚠️"
+            status_icon = "[OK]" if available else "[WARNING]"
             status_text = "Configured" if available else "Missing"
             table.add_row(f"{api.title()} API", f"{status_icon} {status_text}", "")
         
         # Directories
         for dir_name, accessible in env_status["directories"].items():
-            status_icon = "✅" if accessible else "❌"
+            status_icon = "[OK]" if accessible else "[ERROR]"
             status_text = "Accessible" if accessible else "Not Found"
             table.add_row(f"{dir_name.title()} Directory", f"{status_icon} {status_text}", "")
         
         # System Resources
         memory_gb = env_status["system"]["memory_gb"]
-        table.add_row("System Memory", f"✅ {memory_gb}GB", "Available")
+        table.add_row("System Memory", f"[OK] {memory_gb}GB", "Available")
         
         console.print(table)
         
@@ -99,12 +99,12 @@ def status(ctx: click.Context):
         if env_status["warnings"]:
             console.print("\n[yellow]Warnings:[/yellow]")
             for warning in env_status["warnings"]:
-                console.print(f"  ⚠️  {warning}")
+                console.print(f"  [WARNING]  {warning}")
         
         if env_status["errors"]:
             console.print("\n[red]Errors:[/red]")
             for error in env_status["errors"]:
-                console.print(f"  ❌ {error}")
+                console.print(f"  [ERROR] {error}")
         
         if not env_status["valid"]:
             console.print("\n[red]Please fix the errors above before using the video editor.[/red]")
@@ -208,23 +208,23 @@ def process(ctx: click.Context, input_files, output, content_type, quality, mode
                 )
                 
                 # Display results
-                console.print("\n[green]✅ Processing completed successfully![/green]")
+                console.print("\n[green][OK] Processing completed successfully![/green]")
                 
                 # Show processing summary
                 summary = orchestrator.get_processing_summary()
                 if summary:
-                    console.print(f"\n📊 Project ID: {summary.get('project_id', 'N/A')}")
-                    console.print(f"⏱️  Total Time: {summary.get('workflow_duration', 0):.1f}s")
+                    console.print(f"\n[INFO] Project ID: {summary.get('project_id', 'N/A')}")
+                    console.print(f"[TIME]  Total Time: {summary.get('workflow_duration', 0):.1f}s")
                     
                     metrics = summary.get('processing_metrics', {})
                     if metrics:
-                        console.print(f"💾 Peak Memory: {metrics.get('memory_peak_usage', 0) / (1024**3):.1f}GB")
-                        console.print(f"🔗 API Calls: {sum(metrics.get('api_calls_made', {}).values())}")
+                        console.print(f"[MEM] Peak Memory: {metrics.get('memory_peak_usage', 0) / (1024**3):.1f}GB")
+                        console.print(f"[API] API Calls: {sum(metrics.get('api_calls_made', {}).values())}")
                 
                 return result_context
                 
             except Exception as e:
-                console.print(f"\n[red]❌ Processing failed: {e}[/red]")
+                console.print(f"\n[red][ERROR] Processing failed: {e}[/red]")
                 logger.error(f"Workflow processing failed: {e}")
                 raise
         
@@ -235,12 +235,12 @@ def process(ctx: click.Context, input_files, output, content_type, quality, mode
         result = asyncio.run(run_workflow())
         
         if output:
-            console.print(f"\n📁 Output saved to: {output}")
+            console.print(f"\n[DIR] Output saved to: {output}")
         
         console.print("\n[cyan]Use 'ai-video-editor status' to check system status[/cyan]")
         
     except KeyboardInterrupt:
-        console.print("\n[yellow]⏹️  Processing cancelled by user[/yellow]")
+        console.print("\n[yellow][STOP]  Processing cancelled by user[/yellow]")
         sys.exit(1)
     except Exception as e:
         logger.error(f"Error processing files: {e}")
@@ -346,7 +346,7 @@ def test_workflow(ctx: click.Context, stage, mock):
         # Create orchestrator
         orchestrator = WorkflowOrchestrator(config=config, console=console)
         
-        console.print("[green]✅ Workflow orchestrator created successfully[/green]")
+        console.print("[green][OK] Workflow orchestrator created successfully[/green]")
         console.print(f"Configuration: {config.processing_mode.value} mode")
         console.print(f"Parallel processing: {config.enable_parallel_processing}")
         console.print(f"Memory limit: {config.max_memory_usage_gb}GB")

@@ -122,8 +122,8 @@ class TestAudioCleanupPipeline:
         
         # Test with EQ enabled
         cleanup_pipeline.settings.enable_eq = True
-        with patch('scipy.signal.butter') as mock_butter, \
-             patch('scipy.signal.filtfilt') as mock_filtfilt:
+        with patch('ai_video_editor.modules.enhancement.audio_enhancement.butter') as mock_butter, \
+             patch('ai_video_editor.modules.enhancement.audio_enhancement.filtfilt') as mock_filtfilt:
             
             # Setup mock filter responses
             mock_butter.return_value = ([1, 0, 0], [1, 0, 0])  # Mock filter coefficients
@@ -404,7 +404,7 @@ class TestAudioEnhancementEngine:
     def test_enhance_audio_success(self, enhancement_engine, mock_context_full):
         """Test successful audio enhancement."""
         with patch('librosa.load') as mock_load, \
-             patch('librosa.output.write_wav') as mock_write_wav:
+             patch('soundfile.write') as mock_write_wav:
             
             # Mock audio loading
             sample_rate = 44100
@@ -563,7 +563,7 @@ class TestAudioEnhancementIntegration:
     
     @patch('ai_video_editor.modules.enhancement.audio_enhancement.AUDIO_LIBS_AVAILABLE', True)
     @patch('librosa.load')
-    @patch('librosa.output.write_wav')
+    @patch('soundfile.write')
     def test_full_enhancement_pipeline(self, mock_write_wav, mock_load, temp_dir):
         """Test complete enhancement pipeline integration."""
         # Setup mocks

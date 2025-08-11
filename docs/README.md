@@ -4,27 +4,31 @@ Welcome to the comprehensive documentation for the AI Video Editor - an AI-drive
 
 ## 📚 Documentation Structure
 
-### User Guides
-- [**Getting Started**](user-guide/getting-started.md) - Installation, setup, and first video
-- [**User Guide**](user-guide/README.md) - Complete user documentation
-- [**CLI Reference**](user-guide/cli-reference.md) - Command-line interface guide
-- [**Configuration Guide**](user-guide/configuration.md) - Settings and customization
+### Getting Started
+- [**Quick Start Guide**](../quick-start.md) - 5-minute setup and first video processing
+- [**First Video Tutorial**](tutorials/first-video.md) - Complete step-by-step walkthrough
+- [**User Guide**](../user-guide/README.md) - Complete user documentation with installation, CLI reference, and configuration
 
 ### Developer Documentation
-- [**API Reference**](api/README.md) - Complete API documentation
+- [**API Reference**](developer/api-reference.md) - Complete API documentation and integration guides
 - [**Architecture Guide**](developer/architecture.md) - System design and components
-- [**Integration Guide**](developer/integration.md) - Extending and integrating
-- [**Contributing Guide**](developer/contributing.md) - Development workflow
+- [**Contributing Guide**](developer/contributing.md) - Development workflow and coding standards
+- [**Testing Guide**](developer/testing.md) - Testing strategies and best practices
 
-### Tutorials and Examples
-- [**Tutorials**](tutorials/README.md) - Step-by-step workflows
-- [**Examples**](examples/README.md) - Code examples and use cases
-- [**Best Practices**](tutorials/best-practices.md) - Optimization tips
+### Tutorials and Workflows
+- [**Tutorials Overview**](../tutorials/README.md) - Step-by-step workflows for all content types
+- [**Educational Content**](tutorials/workflows/educational-content.md) - Specialized workflow for educational videos
+- [**Music Videos**](tutorials/workflows/music-videos.md) - Optimized processing for music content
+- [**General Content**](tutorials/workflows/general-content.md) - Versatile workflow for mixed content
+- [**Advanced Techniques**](tutorials/advanced/) - Performance tuning, API integration, and batch processing
+- [**Understanding Output**](tutorials/understanding-output.md) - Learn about generated files and optimization
 
-### Support
-- [**Troubleshooting**](support/troubleshooting.md) - Common issues and solutions
-- [**FAQ**](support/faq.md) - Frequently asked questions
-- [**Performance Guide**](support/performance.md) - Optimization and tuning
+### Support and Troubleshooting
+- [**Troubleshooting Guide**](../support/troubleshooting-unified.md) - Common issues and solutions
+- [**FAQ**](../support/faq-unified.md) - Frequently asked questions
+- [**Performance Guide**](../support/performance-unified.md) - Optimization and tuning
+- [**Error Handling**](support/error-handling-unified.md) - Error recovery and debugging
+- [**Project Status**](support/project-status.md) - Current development status and test results
 
 ## 🚀 Quick Start
 
@@ -44,20 +48,40 @@ Welcome to the comprehensive documentation for the AI Video Editor - an AI-drive
 
 ## 📖 Documentation Sections
 
-### For Users
-Start with the [Getting Started Guide](user-guide/getting-started.md) to install and configure the system, then explore the [User Guide](user-guide/README.md) for detailed workflows.
+### For New Users
+1. Start with the [**Quick Start Guide**](../quick-start.md) for immediate setup
+2. Follow the [**First Video Tutorial**](tutorials/first-video.md) for your first complete workflow
+3. Explore the [**User Guide**](../user-guide/README.md) for comprehensive documentation
 
 ### For Developers
-Review the [Architecture Guide](developer/architecture.md) to understand the system design, then check the [API Reference](api/README.md) for integration details.
+1. Review the [**Architecture Guide**](developer/architecture.md) to understand the system design
+2. Check the [**API Reference**](developer/api-reference.md) for integration details
+3. Read the [**Contributing Guide**](developer/contributing.md) for development workflow
 
 ### For Content Creators
-Explore [Tutorials](tutorials/README.md) for specific workflows and [Best Practices](tutorials/best-practices.md) for optimization tips.
+1. Explore [**Workflow Tutorials**](../tutorials/README.md) for content-specific processing
+2. Learn [**Advanced Techniques**](tutorials/advanced/) for optimization
+3. Understand [**Output Files**](tutorials/understanding-output.md) for best results
 
 ## 🆘 Need Help?
 
-- Check the [FAQ](support/faq.md) for common questions
-- Review [Troubleshooting](support/troubleshooting.md) for issues
-- See [Performance Guide](support/performance.md) for optimization
+- Check the [**FAQ**](../support/faq-unified.md) for common questions
+- Review [**Troubleshooting**](../support/troubleshooting-unified.md) for issues and solutions
+- See [**Performance Guide**](../support/performance-unified.md) for optimization
+- Browse [**Error Handling**](support/error-handling-unified.md) for debugging help
+
+## 🔗 Quick Navigation
+
+| I want to... | Go to... |
+|---------------|----------|
+| **Get started quickly** | [Quick Start Guide](../quick-start.md) |
+| **Process my first video** | [First Video Tutorial](tutorials/first-video.md) |
+| **Learn all CLI commands** | [User Guide](../user-guide/README.md) |
+| **Understand the architecture** | [Architecture Guide](developer/architecture.md) |
+| **Integrate with my app** | [API Reference](developer/api-reference.md) |
+| **Optimize performance** | [Performance Guide](../support/performance-unified.md) |
+| **Fix an issue** | [Troubleshooting](../support/troubleshooting-unified.md) |
+| **Contribute code** | [Contributing Guide](developer/contributing.md) |
 
 ## 📝 Contributing
 

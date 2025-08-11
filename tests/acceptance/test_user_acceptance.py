@@ -9,12 +9,16 @@ technical implementation details.
 import pytest
 import json
 import tempfile
+import time
 from pathlib import Path
 from typing import Dict, Any, List
 from unittest.mock import Mock, patch
 import numpy as np
 
-from ai_video_editor.core.content_context import ContentContext, ContentType, UserPreferences
+from ai_video_editor.core.content_context import (
+    ContentContext, ContentType, UserPreferences, 
+    AudioAnalysisResult, AudioSegment, EmotionalPeak
+)
 from ai_video_editor.modules.enhancement.audio_enhancement import AudioEnhancementEngine, AudioEnhancementSettings
 from ai_video_editor.modules.enhancement.audio_synchronizer import AudioSynchronizer
 from ai_video_editor.modules.video_processing.composer import VideoComposer
@@ -98,8 +102,8 @@ class TestUserAcceptanceScenarios:
             content_type=ContentType.EDUCATIONAL,
             user_preferences=UserPreferences(
                 quality_mode="high",
-                target_audience="general",
-                content_style="professional"
+                thumbnail_resolution=(1920, 1080),
+                batch_size=3
             )
         )
         
@@ -107,6 +111,71 @@ class TestUserAcceptanceScenarios:
         video_path = Path(context.video_files[0])
         video_path.parent.mkdir(parents=True, exist_ok=True)
         video_path.touch()
+        
+        # Add mock audio analysis data
+        audio_segments = [
+            AudioSegment(
+                text="Welcome to this educational video about financial concepts.",
+                start=0.0,
+                end=3.0,
+                confidence=0.95,
+                financial_concepts=["financial concepts"],
+                emotional_markers=["welcome"]
+            ),
+            AudioSegment(
+                text="Today we'll explore investment strategies and portfolio management.",
+                start=3.0,
+                end=7.0,
+                confidence=0.92,
+                financial_concepts=["investment strategies", "portfolio management"],
+                emotional_markers=["educational"]
+            )
+        ]
+        
+        audio_analysis = AudioAnalysisResult(
+            transcript_text="Welcome to this educational video about financial concepts. Today we'll explore investment strategies and portfolio management.",
+            segments=audio_segments,
+            overall_confidence=0.93,
+            language="en",
+            processing_time=0.5,
+            model_used="whisper-medium",
+            financial_concepts=["financial concepts", "investment strategies", "portfolio management"],
+            detected_emotions=[
+                EmotionalPeak(1.5, "engagement", 0.8, 0.9, "educational introduction")
+            ]
+        )
+        
+        context.set_audio_analysis(audio_analysis)
+        
+        # Add mock AI Director plan for video composition
+        context.processed_video = {
+            'editing_decisions': [
+                {
+                    'type': 'cut',
+                    'start_time': 0.0,
+                    'end_time': 3.0,
+                    'reason': 'Introduction segment'
+                },
+                {
+                    'type': 'trim',
+                    'start_time': 3.0,
+                    'end_time': 7.0,
+                    'reason': 'Main content'
+                }
+            ],
+            'broll_plans': [
+                {
+                    'type': 'chart',
+                    'timing': 2.0,
+                    'duration': 3.0,
+                    'description': 'Financial concepts visualization'
+                }
+            ],
+            'audio_enhancements': {
+                'noise_reduction': True,
+                'level_adjustment': True
+            }
+        }
         
         return context
     
@@ -317,7 +386,7 @@ class TestUserAcceptanceScenarios:
         criteria.add_criterion(
             "quality_settings_respected",
             "User quality preferences should be reflected in composition",
-            lambda ctx, res: res['composition_plan'].quality_profile,
+            lambda ctx, res: res['composition_plan'].output_settings.quality,
             "high"  # Should match user preference
         )
         

@@ -864,8 +864,8 @@ class WorkflowOrchestrator:
                     "format": file_path.suffix.lower().lstrip('.') if file_path.suffix else "mp4"
                 }
                 
-                # Store in context
-                if not hasattr(self.context, 'video_metadata'):
+                # Store in context (ensure list exists even if attribute present but None)
+                if not getattr(self.context, 'video_metadata', None):
                     self.context.video_metadata = []
                 self.context.video_metadata.append(video_metadata)
                 
@@ -1045,15 +1045,14 @@ class WorkflowOrchestrator:
             self.logger.warning("Continuing with mock composition plan")
             
             # Create minimal mock composition plan
-            from ..modules.video_processing.composer import CompositionPlan, CompositionLayer
+            from ..modules.video_processing.composer import CompositionPlan, LayerInfo
             
-            mock_layer = CompositionLayer(
+            mock_layer = LayerInfo(
                 layer_id="main_video",
                 layer_type="video",
                 source_path=self.context.video_files[0] if self.context.video_files else "mock.mp4",
                 start_time=0.0,
-                duration=300.0,
-                z_index=1
+                end_time=300.0
             )
             
             self.context.composition_plan = CompositionPlan(
@@ -1076,8 +1075,21 @@ class WorkflowOrchestrator:
                     completed=25
                 )
             
-            # Initialize thumbnail generator
-            thumbnail_generator = ThumbnailGenerator()
+            # Initialize thumbnail generator with required dependencies
+            from ..modules.intelligence.gemini_client import GeminiClient
+            from ..core.cache_manager import CacheManager
+            
+            # Use existing cache manager or create a temporary one
+            cache_manager = getattr(self, 'cache_manager', None)
+            if not cache_manager:
+                cache_manager = CacheManager()
+            
+            # Use existing gemini client or create a temporary one
+            gemini_client = getattr(self, 'gemini_client', None)
+            if not gemini_client:
+                gemini_client = GeminiClient()
+            
+            thumbnail_generator = ThumbnailGenerator(gemini_client, cache_manager)
             synchronizer = ThumbnailMetadataSynchronizer()
             
             # Update progress
@@ -1114,23 +1126,68 @@ class WorkflowOrchestrator:
             self.logger.warning("Continuing with mock thumbnail data")
             
             # Create minimal mock thumbnail results
-            from ..modules.thumbnail_generation.thumbnail_models import ThumbnailResult, Thumbnail
+            from ..modules.thumbnail_generation.thumbnail_models import ThumbnailPackage, ThumbnailVariation, ThumbnailConcept
+            from ..core.content_context import VisualHighlight, EmotionalPeak
+            from datetime import datetime
             
-            mock_thumbnail = Thumbnail(
-                thumbnail_id="mock_thumb_1",
-                image_path="mock_thumbnail.jpg",
-                hook_text="Educational Content",
-                visual_elements=["text", "background"],
-                emotional_appeal="engagement",
-                target_audience="general",
-                a_b_test_group="A"
+            # Create mock visual highlight and emotional peak
+            from ..core.content_context import FaceDetection
+            
+            mock_face = FaceDetection(
+                bbox=(100, 100, 200, 200),
+                confidence=0.8,
+                landmarks={}
             )
             
-            self.context.thumbnail_results = ThumbnailResult(
-                thumbnails=[mock_thumbnail],
-                processing_time=1.0,
-                generation_strategy="mock",
-                quality_score=0.8
+            mock_visual = VisualHighlight(
+                timestamp=30.0,
+                description="Mock visual highlight",
+                faces=[mock_face],
+                visual_elements=["face"],
+                thumbnail_potential=0.8
+            )
+            
+            mock_emotional = EmotionalPeak(
+                timestamp=30.0,
+                emotion="excitement",
+                intensity=0.8,
+                confidence=0.9
+            )
+            
+            mock_concept = ThumbnailConcept(
+                concept_id="mock_concept_1",
+                visual_highlight=mock_visual,
+                emotional_peak=mock_emotional,
+                hook_text="Educational Content",
+                background_style="gradient",
+                text_style={"font": "Arial", "size": 24},
+                visual_elements=["text", "background"],
+                thumbnail_potential=0.8,
+                strategy="emotional"
+            )
+            
+            mock_variation = ThumbnailVariation(
+                variation_id="mock_var_1",
+                concept=mock_concept,
+                generated_image_path="mock_thumbnail.jpg",
+                generation_method="mock",
+                confidence_score=0.8,
+                estimated_ctr=0.05,
+                visual_appeal_score=0.8,
+                text_readability_score=0.9,
+                brand_consistency_score=0.7
+            )
+            
+            self.context.thumbnail_results = ThumbnailPackage(
+                package_id="mock_package",
+                variations=[mock_variation],
+                recommended_variation="mock_var_1",
+                generation_timestamp=datetime.now(),
+                synchronized_metadata={},
+                a_b_testing_config={},
+                performance_predictions={},
+                total_generation_time=1.0,
+                total_generation_cost=0.0
             )
     
     async def _stage_metadata_generation(self) -> None:

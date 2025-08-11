@@ -1,0 +1,130 @@
+name: Documentation Quality Assurance
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'docs/**'
+      - '*.md'
+      - 'scripts/validate_documentation.py'
+      - 'scripts/documentation_config.json'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'docs/**'
+      - '*.md'
+      - 'scripts/validate_documentation.py'
+      - 'scripts/documentation_config.json'
+
+jobs:
+  validate-documentation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # Add any required dependencies here
+        
+    - name: Validate critical documentation issues
+      run: |
+        python scripts/validate_documentation.py --severity error
+        
+    - name: Generate full validation report
+      run: |
+        python scripts/validate_documentation.py --format json --output validation-report.json
+        
+    - name: Upload validation report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: documentation-validation-report
+        path: validation-report.json
+        
+    - name: Comment PR with validation results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          
+          try {
+            const report = JSON.parse(fs.readFileSync('validation-report.json', 'utf8'));
+            
+            let comment = '## 📋 Documentation Validation Report\n\n';
+            comment += `**Total files checked:** ${report.total_files_checked}\n`;
+            comment += `**Total issues found:** ${report.total_issues}\n`;
+            comment += `**Validation status:** ${report.summary.validation_passed ? '✅ Passed' : '❌ Issues found'}\n\n`;
+            
+            if (report.total_issues > 0) {
+              comment += '### Issues by Severity\n\n';
+              for (const [severity, count] of Object.entries(report.issues_by_severity)) {
+                if (count > 0) {
+                  const emoji = severity === 'error' ? '🚨' : severity === 'warning' ? '⚠️' : 'ℹ️';
+                  comment += `- ${emoji} **${severity}**: ${count}\n`;
+                }
+              }
+              
+              if (report.summary.most_common_issues) {
+                comment += '\n### Most Common Issues\n\n';
+                for (const [issueType, count] of Object.entries(report.summary.most_common_issues)) {
+                  comment += `- ${issueType}: ${count}\n`;
+                }
+              }
+              
+              comment += '\n### Action Required\n\n';
+              if (report.issues_by_severity.error > 0) {
+                comment += '🚨 **Critical issues found** - Please fix errors before merging.\n';
+              } else if (report.issues_by_severity.warning > 0) {
+                comment += '⚠️ **Warnings found** - Consider addressing these issues.\n';
+              }
+            } else {
+              comment += '✅ **All documentation validation checks passed!**\n';
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+          } catch (error) {
+            console.log('Could not read validation report:', error);
+          }
+
+  weekly-maintenance:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Run weekly maintenance checks
+      run: |
+        python scripts/run_maintenance_checks.py weekly
+        
+    - name: Upload weekly report
+      uses: actions/upload-artifact@v3
+      with:
+        name: weekly-maintenance-report
+        path: reports/weekly-maintenance-*.md
+
+# Schedule weekly maintenance checks (every Monday at 9 AM UTC)
+on:
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch: # Allow manual triggering

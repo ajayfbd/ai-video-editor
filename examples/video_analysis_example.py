@@ -209,8 +209,13 @@ def demonstrate_api_usage():
     editing_plan = ai_director.create_editing_plan(analyzed_context)
     
     # Thumbnail generator uses visual highlights
-    thumbnail_gen = ThumbnailGenerator()
-    thumbnails = thumbnail_gen.generate_thumbnails(analyzed_context)
+    from ai_video_editor.modules.intelligence.gemini_client import GeminiClient
+    from ai_video_editor.core.cache_manager import CacheManager
+    
+    gemini_client = GeminiClient()
+    cache_manager = CacheManager()
+    thumbnail_gen = ThumbnailGenerator(gemini_client, cache_manager)
+    thumbnails = await thumbnail_gen.generate_thumbnail_package(analyzed_context)
     
     # Metadata generator considers visual content
     metadata_gen = MetadataGenerator()

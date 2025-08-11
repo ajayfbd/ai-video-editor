@@ -13,7 +13,10 @@ from typing import Dict, Any
 from unittest.mock import Mock, patch, MagicMock
 import numpy as np
 
-from ai_video_editor.core.content_context import ContentContext, ContentType, UserPreferences
+from ai_video_editor.core.content_context import (
+    ContentContext, ContentType, UserPreferences,
+    AudioAnalysisResult, AudioSegment, EmotionalPeak
+)
 from ai_video_editor.modules.enhancement.audio_enhancement import AudioEnhancementEngine, AudioEnhancementSettings
 from ai_video_editor.modules.enhancement.audio_synchronizer import AudioSynchronizer
 from ai_video_editor.modules.video_processing.composer import VideoComposer
@@ -48,10 +51,99 @@ class TestEndToEndWorkflows:
             content_type=ContentType.EDUCATIONAL,
             user_preferences=UserPreferences(
                 quality_mode="high",
-                target_audience="students",
-                content_style="educational"
+                thumbnail_resolution=(1920, 1080),
+                batch_size=3
             )
         )
+        
+        # Add mock audio analysis data for end-to-end testing
+        audio_segments = [
+            AudioSegment(
+                text="In this comprehensive educational lecture, we'll explore advanced financial concepts.",
+                start=0.0,
+                end=4.0,
+                confidence=0.96,
+                financial_concepts=["financial concepts", "educational lecture"],
+                emotional_markers=["introduction"]
+            ),
+            AudioSegment(
+                text="We'll start with portfolio theory and risk management strategies.",
+                start=4.0,
+                end=8.0,
+                confidence=0.94,
+                financial_concepts=["portfolio theory", "risk management"],
+                emotional_markers=["explanation"]
+            ),
+            AudioSegment(
+                text="These concepts are fundamental to understanding modern investment approaches.",
+                start=8.0,
+                end=12.0,
+                confidence=0.91,
+                financial_concepts=["investment approaches", "modern finance"],
+                emotional_markers=["emphasis"]
+            )
+        ]
+        
+        audio_analysis = AudioAnalysisResult(
+            transcript_text="In this comprehensive educational lecture, we'll explore advanced financial concepts. We'll start with portfolio theory and risk management strategies. These concepts are fundamental to understanding modern investment approaches.",
+            segments=audio_segments,
+            overall_confidence=0.94,
+            language="en",
+            processing_time=1.2,
+            model_used="whisper-large",
+            financial_concepts=["financial concepts", "portfolio theory", "risk management", "investment approaches"],
+            detected_emotions=[
+                EmotionalPeak(2.0, "confidence", 0.85, 0.92, "educational introduction"),
+                EmotionalPeak(6.0, "explanation", 0.78, 0.88, "concept explanation"),
+                EmotionalPeak(10.0, "emphasis", 0.82, 0.90, "key concept emphasis")
+            ],
+            complexity_level="advanced"
+        )
+        
+        context.set_audio_analysis(audio_analysis)
+        
+        # Add mock AI Director plan for video composition
+        context.processed_video = {
+            'editing_decisions': [
+                {
+                    'type': 'cut',
+                    'start_time': 0.0,
+                    'end_time': 4.0,
+                    'reason': 'Educational introduction'
+                },
+                {
+                    'type': 'trim',
+                    'start_time': 4.0,
+                    'end_time': 8.0,
+                    'reason': 'Portfolio theory explanation'
+                },
+                {
+                    'type': 'cut',
+                    'start_time': 8.0,
+                    'end_time': 12.0,
+                    'reason': 'Investment concepts'
+                }
+            ],
+            'broll_plans': [
+                {
+                    'type': 'chart',
+                    'timing': 2.0,
+                    'duration': 4.0,
+                    'description': 'Portfolio theory visualization'
+                },
+                {
+                    'type': 'animation',
+                    'timing': 6.0,
+                    'duration': 3.0,
+                    'description': 'Risk management concepts'
+                }
+            ],
+            'audio_enhancements': {
+                'noise_reduction': True,
+                'level_adjustment': True,
+                'compression': True
+            }
+        }
         
         return context
     
@@ -140,12 +232,12 @@ class TestEndToEndWorkflows:
         # Validate composition planning
         assert composition_plan is not None
         assert len(composition_plan.layers) > 0
-        assert composition_plan.total_duration > 0
-        assert composition_plan.quality_profile == "high"
+        assert composition_plan.output_settings.duration > 0
+        assert composition_plan.output_settings.quality == "high"
         
         print(f"✅ Composition planned: {len(composition_plan.layers)} layers")
-        print(f"   Total duration: {composition_plan.total_duration:.2f}s")
-        print(f"   Quality profile: {composition_plan.quality_profile}")
+        print(f"   Total duration: {composition_plan.output_settings.duration:.2f}s")
+        print(f"   Quality profile: {composition_plan.output_settings.quality}")
         
         # Step 4: Validate ContentContext Integration
         print("\n=== Step 4: ContentContext Integration Validation ===")
@@ -201,7 +293,8 @@ class TestEndToEndWorkflows:
         invalid_context = ContentContext(
             project_id="error_test",
             video_files=["/nonexistent/file.mp4"],
-            content_type=ContentType.EDUCATIONAL
+            content_type=ContentType.EDUCATIONAL,
+            user_preferences=UserPreferences(quality_mode="balanced")
         )
         
         settings = AudioEnhancementSettings()
@@ -251,8 +344,8 @@ class TestEndToEndWorkflows:
         original_preferences = educational_video_context.user_preferences
         educational_video_context.user_preferences = UserPreferences(
             quality_mode="fast",  # Lower quality for resource constraints
-            target_audience="general",
-            content_style="simple"
+            thumbnail_resolution=(1280, 720),  # Lower resolution for resource constraints
+            batch_size=1  # Smaller batch size for resource constraints
         )
         
         # Test with reduced settings
@@ -292,7 +385,8 @@ class TestEndToEndWorkflows:
             context = ContentContext(
                 project_id=f"concurrent_test_{i}",
                 video_files=[str(video_file)],
-                content_type=ContentType.EDUCATIONAL
+                content_type=ContentType.EDUCATIONAL,
+                user_preferences=UserPreferences(quality_mode="balanced")
             )
             contexts.append(context)
         

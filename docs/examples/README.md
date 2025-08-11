@@ -379,22 +379,18 @@ from ai_video_editor.core.content_context import (
 )
 from ai_video_editor.modules.content_analysis.audio_analyzer import FinancialContentAnalyzer
 from ai_video_editor.modules.intelligence.ai_director import FinancialVideoEditor
-from ai_video_editor.modules.thumbnail_generation.generator import ThumbnailGenerator
+from ai_video_editor.core.workflow_orchestrator import WorkflowOrchestrator
 
 async def custom_processing_pipeline():
     """Custom processing pipeline with fine-grained control."""
     
     # Create content context
     context = ContentContext(
-        project_id="custom_api_project",
-        video_files=["educational_video.mp4"],
-        content_type=ContentType.EDUCATIONAL,
-        user_preferences=UserPreferences(
-            quality_mode="high",
-            batch_size=2,
-            parallel_processing=True
-        )
-    )
+    project_id="example_project",
+    video_files=["video.mp4"],
+    content_type=ContentType.GENERAL,
+    user_preferences=UserPreferences()
+)
     
     # Step 1: Audio Analysis
     print("🎵 Analyzing audio content...")
@@ -538,7 +534,7 @@ result = await custom_orchestrator.process_video_custom(
 
 ```python
 import asyncio
-from ai_video_editor.modules.thumbnail_generation.generator import ThumbnailGenerator
+from ai_video_editor.core.workflow_orchestrator import WorkflowOrchestrator
 from ai_video_editor.modules.thumbnail_generation.concept_analyzer import ThumbnailConceptAnalyzer
 
 async def generate_custom_thumbnails():
@@ -582,7 +578,7 @@ thumbnails = asyncio.run(generate_custom_thumbnails())
 **SEO-optimized metadata generation:**
 
 ```python
-from ai_video_editor.modules.intelligence.metadata_generator import MetadataGenerator
+from ai_video_editor.core.content_context import ContentContext
 from ai_video_editor.modules.intelligence.trend_analyzer import TrendAnalyzer
 
 async def generate_optimized_metadata():
@@ -755,7 +751,7 @@ result = await monitoring_orchestrator.process_video(
 ```python
 import pytest
 from unittest.mock import AsyncMock, MagicMock
-from ai_video_editor.modules.thumbnail_generation.generator import ThumbnailGenerator
+from ai_video_editor.core.workflow_orchestrator import WorkflowOrchestrator
 
 @pytest.fixture
 def mock_gemini_client():
