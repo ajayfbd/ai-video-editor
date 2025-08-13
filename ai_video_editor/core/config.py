@@ -68,9 +68,9 @@ class Settings(BaseSettings):
     
     # File paths
     project_dir: Path = Path.cwd()
-    output_dir: Path = Path.cwd() / "output"
+    output_dir: Path = Path.cwd() / "out"
     temp_dir: Path = Path.cwd() / "temp"
-    logs_dir: Path = Path.cwd() / "logs"
+    logs_dir: Path = Path.cwd() / "out" / "logs"
     
     # API Configuration
     gemini_api_key: Optional[str] = None

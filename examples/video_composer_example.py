@@ -79,7 +79,7 @@ def test_video_composer_integration():
         }
         
         # Initialize VideoComposer
-        composer = VideoComposer(output_dir="temp/test_output")
+        composer = VideoComposer(output_dir="out/test_output", temp_dir="temp/test_output_tmp")
         
         print("✅ VideoComposer initialized successfully")
         

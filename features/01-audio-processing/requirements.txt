@@ -1,0 +1,17 @@
+# Audio Processing Feature Requirements
+
+# Core transcription
+openai-whisper
+
+# Audio processing and analysis
+librosa
+soundfile
+
+# Video processing (for extracting audio from video files)
+ffmpeg-python
+
+# For loading .env files
+python-dotenv
+
+# Additional audio format support
+pydub

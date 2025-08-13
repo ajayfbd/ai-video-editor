@@ -359,7 +359,18 @@ class VideoAnalyzer:
             # Add visual highlights to context
             for highlight in visual_highlights:
                 # Convert enhanced visual elements back to simple list for compatibility
-                element_types = [elem.element_type for elem in highlight.visual_elements] if hasattr(highlight, 'visual_elements') else highlight.visual_elements
+                element_types = []
+                if hasattr(highlight, 'visual_elements'):
+                    for elem in highlight.visual_elements:
+                        if hasattr(elem, 'element_type'):
+                            element_types.append(elem.element_type)
+                        elif isinstance(elem, str):
+                            element_types.append(elem)
+                        else:
+                            element_types.append(str(elem))
+                else:
+                    element_types = highlight.visual_elements if highlight.visual_elements else []
+                
                 context.add_visual_highlight(
                     highlight.timestamp,
                     highlight.description,
@@ -1688,7 +1699,14 @@ class VideoAnalyzer:
                 description = self._create_enhanced_frame_description(frame_analysis, scene_context)
                 
                 # Convert enhanced visual elements to simple list for VisualHighlight compatibility
-                element_types = [elem.element_type for elem in frame_analysis.visual_elements]
+                element_types = []
+                for elem in frame_analysis.visual_elements:
+                    if hasattr(elem, 'element_type'):
+                        element_types.append(elem.element_type)
+                    elif isinstance(elem, str):
+                        element_types.append(elem)
+                    else:
+                        element_types.append(str(elem))
                 
                 highlight = VisualHighlight(
                     timestamp=frame_analysis.timestamp,

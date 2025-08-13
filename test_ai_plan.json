@@ -1,0 +1,41 @@
+{
+  "editing_decisions": [
+    {
+      "timestamp": 5.0,
+      "decision_type": "emphasis",
+      "rationale": "Key moment in content",
+      "confidence": 0.85,
+      "parameters": {
+        "type": "highlight",
+        "duration": 2.0,
+        "intensity": 0.7
+      }
+    },
+    {
+      "timestamp": 15.0,
+      "decision_type": "transition",
+      "rationale": "Scene change detected",
+      "confidence": 0.9,
+      "parameters": {
+        "type": "fade",
+        "duration": 1.0
+      }
+    }
+  ],
+  "broll_plans": [
+    {
+      "timestamp": 8.0,
+      "duration": 3.0,
+      "content_type": "text_overlay",
+      "description": "Key concept visualization",
+      "visual_elements": ["text", "background"],
+      "animation_style": "fade_in",
+      "priority": 60
+    }
+  ],
+  "metadata_strategy": {
+    "title_suggestions": ["Test Video Render"],
+    "description": "Test rendering with AI Director plan",
+    "tags": ["test", "render", "ai"]
+  }
+}

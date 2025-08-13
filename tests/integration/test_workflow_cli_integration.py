@@ -72,7 +72,7 @@ class TestCLIWorkflowIntegration:
     
     def test_cli_process_command_with_options(self, runner, test_video_files, temp_dir):
         """Test process command with various options."""
-        output_dir = temp_dir / "output"
+        output_dir = temp_dir / "out"
         
         with patch('ai_video_editor.cli.main.asyncio.run') as mock_run:
             mock_context = Mock(spec=ContentContext)

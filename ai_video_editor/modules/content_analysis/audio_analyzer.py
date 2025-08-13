@@ -13,10 +13,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 import json
 
-import whisper
-import torch
 import numpy as np
-from whisper.normalizers import EnglishTextNormalizer
+from whisper.normalizers import EnglishTextNormalizer  # light import; defer heavy model import
+
 
 from ai_video_editor.core.content_context import ContentContext, EmotionalPeak
 from ai_video_editor.core.cache_manager import CacheManager, cached
@@ -211,7 +210,7 @@ class FinancialContentAnalyzer:
         )
         
         # Model cache
-        self._models: Dict[str, whisper.Whisper] = {}
+        self._models: Dict[str, Any] = {}
         self.normalizer = EnglishTextNormalizer()
         
         # Quality-focused model preferences (larger models for better accuracy)
@@ -253,7 +252,9 @@ class FinancialContentAnalyzer:
         self.logger.info("FinancialContentAnalyzer initialized with cache manager")
     
     @handle_errors()
-    def get_model(self, model_size: str = 'medium') -> whisper.Whisper:
+    def get_model(self, model_size: str = 'medium'):
+        import whisper
+        import torch
         """
         Load and cache Whisper model.
         
@@ -273,11 +274,17 @@ class FinancialContentAnalyzer:
                 start_time = time.time()
                 
                 # Check available memory before loading large models
-                if model_size in ['large', 'turbo'] and torch.cuda.is_available():
-                    gpu_memory = torch.cuda.get_device_properties(0).total_memory
-                    if gpu_memory < 4_000_000_000:  # Less than 4GB GPU memory
-                        self.logger.warning(f"Limited GPU memory, falling back to medium model")
-                        model_size = 'medium'
+                if model_size in ['large', 'turbo']:
+                    try:
+                        import torch as _torch
+                        if _torch.cuda.is_available():
+                            gpu_memory = _torch.cuda.get_device_properties(0).total_memory
+                            if gpu_memory < 4_000_000_000:  # <4GB GPU
+                                self.logger.warning("Limited GPU memory, falling back to medium model")
+                                model_size = 'medium'
+                    except Exception:
+                        # If torch not available or any error, keep requested model (CPU fallback)
+                        pass
                 
                 model = whisper.load_model(model_size, download_root=str(self.cache_dir))
                 load_time = time.time() - start_time
@@ -769,8 +776,12 @@ class FinancialContentAnalyzer:
             transcripts.extend(batch_transcripts)
             
             # Memory cleanup between batches
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
+            try:
+                import torch as _torch
+                if _torch.cuda.is_available():
+                    _torch.cuda.empty_cache()
+            except Exception:
+                pass
         
         self.logger.info(f"Batch processing complete: {len(transcripts)} transcripts")
         return transcripts

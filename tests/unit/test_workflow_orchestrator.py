@@ -141,7 +141,7 @@ class TestWorkflowOrchestrator:
             max_memory_usage_gb=4.0,
             timeout_per_stage=60,
             enable_progress_display=False,
-            output_directory=temp_dir / "output",
+            output_directory=temp_dir / "out",
             temp_directory=temp_dir / "temp"
         )
     

@@ -1,0 +1,77 @@
+{
+  "audio": {
+    "transcript": {
+      "text": "Ahamkar Ki Jwala, Dhanav Karaj Tha, Tharthi Thi Pyaasi, Sarpe Nataj Tha Asur Ke Vardhan Ka, Kessai Yajjal Hai, Bhakti Ki Pukar Pe, Chub Ki Gopal Hai Buche Hind Yakshipu Bhol De Raram Ka, Ha, Hase Pralad Bhole, Prabhu To Hai Yaha Maha Is Khambe Me, Ha, Isi Me Vaha Sa, Ka, Ka, Ka, Ka Prahara Bus Sa, Ka Na, Sa, Ha, Ha Khambapar Ki Ghari Jee, Kho, Nara, Sa, Pa, Pa, Pa",
+      "segments": [
+        {
+          "text": "Ahamkar Ki Jwala, Dhanav Karaj Tha, Tharthi Thi Pyaasi, Sarpe Nataj Tha",
+          "start": 0.08,
+          "end": 5.7,
+          "text_original": "Ahamkar Ki Jwala, Dhanav Karaj Tha, Tharthi Thi Pyaasi, Sarpe Nataj Tha"
+        },
+        {
+          "text": "Asur Ke Vardhan Ka, Kessai Yajjal Hai, Bhakti Ki Pukar Pe, Chub Ki Gopal Hai",
+          "start": 5.7,
+          "end": 11.08,
+          "text_original": "Asur Ke Vardhan Ka, Kessai Yajjal Hai, Bhakti Ki Pukar Pe, Chub Ki Gopal Hai"
+        },
+        {
+          "text": "Buche Hind Yakshipu Bhol De Raram Ka, Ha, Hase Pralad Bhole, Prabhu To Hai Yaha Maha",
+          "start": 11.08,
+          "end": 16.38,
+          "text_original": "Buche Hind Yakshipu Bhol De Raram Ka, Ha, Hase Pralad Bhole, Prabhu To Hai Yaha Maha"
+        },
+        {
+          "text": "Is Khambe Me, Ha, Isi Me Vaha Sa, Ka, Ka, Ka, Ka Prahara Bus Sa, Ka Na, Sa, Ha, Ha",
+          "start": 16.38,
+          "end": 21.78,
+          "text_original": "Is Khambe Me, Ha, Isi Me Vaha Sa, Ka, Ka, Ka, Ka Prahara Bus Sa, Ka Na, Sa, Ha, Ha"
+        },
+        {
+          "text": "Khambapar Ki Ghari Jee, Kho, Nara, Sa, Pa, Pa, Pa",
+          "start": 21.78,
+          "end": 24.88,
+          "text_original": "Khambapar Ki Ghari Jee, Kho, Nara, Sa, Pa, Pa, Pa"
+        }
+      ],
+      "language": "hi",
+      "model_used": "faster-whisper:base:cpu:int8",
+      "processing_time": null,
+      "text_original": "Ahamkar Ki Jwala, Dhanav Karaj Tha, Tharthi Thi Pyaasi, Sarpe Nataj Tha Asur Ke Vardhan Ka, Kessai Yajjal Hai, Bhakti Ki Pukar Pe, Chub Ki Gopal Hai Buche Hind Yakshipu Bhol De Raram Ka, Ha, Hase Pralad Bhole, Prabhu To Hai Yaha Maha Is Khambe Me, Ha, Isi Me Vaha Sa, Ka, Ka, Ka, Ka Prahara Bus Sa, Ka Na, Sa, Ha, Ha Khambapar Ki Ghari Jee, Kho, Nara, Sa, Pa, Pa, Pa",
+      "romanized": true,
+      "romanization_scheme": "hk"
+    },
+    "statistics": {
+      "total_duration": 24.88,
+      "segment_count": 5,
+      "language": "hi",
+      "model_used": "faster-whisper:base:cpu:int8",
+      "average_confidence": 0.0
+    },
+    "content_analysis": {
+      "themes": {
+        "devotional": 0,
+        "dramatic": 0,
+        "nature": 0,
+        "emotional": 0
+      },
+      "dominant_theme": "general",
+      "repeated_phrases": [],
+      "word_count": 73,
+      "unique_words": 58,
+      "speaking_rate": 2.934083601286174
+    }
+  },
+  "metadata": {
+    "video_file": "D:\\Ajay Projects\\Auto Video Editor\\Untitled video.mp4",
+    "analysis_time": 7.190700531005859,
+    "timestamp": "2025-08-13 10:25:38",
+    "analyses_performed": {
+      "audio": true,
+      "video": false,
+      "scenes": false,
+      "faces": false,
+      "highlights": false
+    }
+  }
+}

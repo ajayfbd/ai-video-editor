@@ -143,6 +143,11 @@ class WorkflowOrchestrator:
         self.console = console or Console()
         self.logger = get_logger(__name__)
         self.settings = get_settings()
+        # Standardize default directories if not provided
+        if self.config.output_directory is None:
+            self.config.output_directory = Path("out")
+        if self.config.temp_directory is None:
+            self.config.temp_directory = Path("temp")
         
         # Performance optimization
         self.cache_manager = cache_manager or CacheManager()

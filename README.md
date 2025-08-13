@@ -20,6 +20,28 @@ An AI-driven content creation system that transforms raw video into professional
 
 **Looking for comprehensive documentation?** Browse the [**Complete Documentation**](docs/README.md) for detailed guides and API reference.
 
+## 🎙️ Enhanced Transcription System
+
+The AI Video Editor includes a comprehensive **Sanskrit/Hindi transcription system** with:
+
+- **580+ built-in vocabulary terms** (religious, mythological, classical, philosophical)
+- **Granular segmentation control** (from natural flow to word-by-word breakdown)
+- **Professional output formats** (JSON, SRT, VTT with dual Devanagari/romanized text)
+- **Smart model selection** with automatic fallbacks and progress tracking
+
+### Quick Transcription
+
+```bash
+# Launch transcription system
+transcribe.bat
+
+# Or directly use scripts
+cd transcription/scripts
+transcribe_hindi.bat "your_video.mp4" "output_name"
+```
+
+**📚 Full Documentation**: See [`transcription/README.md`](transcription/README.md) for complete usage guide.
+
 ## Project Structure
 
 ```
@@ -34,7 +56,14 @@ ai_video_editor/
 │   ├── thumbnail_generation/ # Thumbnail creation
 │   └── video_processing/  # Video editing
 └── utils/                 # Utility functions
-    └── logging_config.py  # Logging configuration
+    ├── logging_config.py  # Logging configuration
+    └── sanskrit_hindi_vocab.py # Comprehensive vocabulary system
+
+transcription/              # Enhanced transcription system
+├── scripts/               # Executable transcription scripts
+├── docs/                  # Transcription documentation
+├── examples/              # Test and example scripts
+└── output/                # Transcription outputs
 
 tests/
 ├── unit/                  # Unit tests

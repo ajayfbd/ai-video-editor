@@ -1,0 +1,1 @@
+This folder contains archived planning/status documents and older design artifacts. Nothing here is required to run the project, but it’s preserved for reference.

@@ -1,0 +1,49 @@
+{
+  "video_file": "D:\\Ajay Projects\\Auto Video Editor\\Untitled video.mp4",
+  "analysis_summary": {
+    "audio": {
+      "transcription_quality": "high",
+      "content_type": "devotional",
+      "duration": 21.94,
+      "segment_count": 8,
+      "speaking_rate": 2.8258887876025525,
+      "vocabulary_richness": 0.8225806451612904
+    },
+    "video": {
+      "scene_count": 10,
+      "face_count": 25,
+      "key_frames": 11,
+      "analysis_quality": "high",
+      "resolution": "1280x720",
+      "fps": 24.0,
+      "duration": 32.716916
+    }
+  },
+  "recommendations": [
+    "Detected 10 scene changes - use these as natural cut points",
+    "Detected 25 face regions - good for close-up shots and emotional moments"
+  ],
+  "editing_suggestions": [
+    "Use devotional editing style with fade effects and gentle transitions",
+    "Consider warm color grading and soft lighting effects",
+    "Add subtle background music during quiet moments",
+    "Many scene changes - suitable for fast-paced editing style",
+    "Multiple faces detected - use close-ups during key dialogue moments"
+  ],
+  "technical_insights": [
+    "Lower image sharpness - may benefit from sharpening filters",
+    "HD resolution (720p) - suitable for web and social media",
+    "Audio and video duration mismatch - check for sync issues"
+  ],
+  "content_insights": [
+    "Devotional content detected (3 keywords) - suitable for spiritual/religious audience",
+    "Dramatic content detected (2 keywords) - suitable for engaging storytelling",
+    "High face density - person-focused content, suitable for interview/presentation style"
+  ],
+  "workflow_suggestions": [
+    "Recommended workflow: devotional style with gentle pacing and warm effects",
+    "Consider adding devotional imagery b-roll (temples, nature, spiritual symbols)",
+    "Consider adding dramatic b-roll (action scenes, intense visuals)",
+    "Good balance of scenes and faces - suitable for narrative storytelling"
+  ]
+}

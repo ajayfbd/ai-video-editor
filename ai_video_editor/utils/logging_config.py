@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Dict, Any
 
 # Create logs directory if it doesn't exist
-LOGS_DIR = Path("logs")
+LOGS_DIR = Path("out") / "logs"
 LOGS_DIR.mkdir(exist_ok=True)
 
 # Logging configuration

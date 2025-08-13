@@ -1,0 +1,48 @@
+{
+  "total_duration": 20.0,
+  "operations": [
+    {
+      "operation_id": "main_video_1",
+      "track_id": "video_main",
+      "track_type": "video",
+      "start_time": 0.0,
+      "end_time": 20.0,
+      "operation_type": "play",
+      "parameters": {
+        "fade_duration": 0.5
+      },
+      "priority": 100,
+      "source_decision": "main_content"
+    },
+    {
+      "operation_id": "text_overlay_1",
+      "track_id": "text_1",
+      "track_type": "broll",
+      "start_time": 5.0,
+      "end_time": 8.0,
+      "operation_type": "text_overlay",
+      "parameters": {
+        "content_type": "text_overlay",
+        "description": "Timeline Test",
+        "animation_style": "fade_in",
+        "opacity": 0.9
+      },
+      "priority": 80,
+      "source_decision": "emphasis"
+    }
+  ],
+  "sync_points": [
+    {
+      "timestamp": 5.0,
+      "sync_type": "emphasis",
+      "affected_tracks": ["video_main", "text_1"],
+      "tolerance": 0.1
+    }
+  ],
+  "track_mapping": {
+    "video_main": 0,
+    "text_1": 2
+  },
+  "conflicts_resolved": 0,
+  "optimization_applied": true
+}

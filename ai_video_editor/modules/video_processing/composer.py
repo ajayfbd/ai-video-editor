@@ -124,7 +124,7 @@ class VideoComposer:
     and professional-grade output quality.
     """
     
-    def __init__(self, output_dir: str = "output", temp_dir: str = "temp"):
+    def __init__(self, output_dir: str = "out", temp_dir: str = "temp"): 
         """
         Initialize VideoComposer.
         
@@ -513,10 +513,9 @@ class VideoComposer:
         settings = composition_plan.output_settings
         
         # Create composition with settings
-        composition = mv.Composition(
+        composition = mv.layer.Composition(
             size=(settings.width, settings.height),
-            duration=settings.duration,
-            fps=settings.fps
+            duration=settings.duration
         )
         
         # Sort layers by priority (higher priority on top)
@@ -552,15 +551,14 @@ class VideoComposer:
             if layer_info.layer_type == "video":
                 if layer_info.source_path and Path(layer_info.source_path).exists():
                     # Create video layer
-                    layer = mv.layer.VideoFile(
-                        path=layer_info.source_path,
-                        start_time=layer_info.start_time,
+                    layer = mv.layer.Video(
+                        layer_info.source_path,
                         duration=layer_info.end_time - layer_info.start_time
                     )
                     
                     # Apply opacity if not full
                     if layer_info.opacity < 1.0:
-                        layer = mv.layer.Opacity(layer_info.opacity)(layer)
+                        layer.opacity = layer_info.opacity
                     
                     return layer
                 else:
@@ -569,13 +567,9 @@ class VideoComposer:
             
             elif layer_info.layer_type == "audio":
                 if layer_info.source_path and Path(layer_info.source_path).exists():
-                    # Extract audio from video file
-                    layer = mv.layer.AudioFile(
-                        path=layer_info.source_path,
-                        start_time=layer_info.start_time,
-                        duration=layer_info.end_time - layer_info.start_time
-                    )
-                    return layer
+                    # Audio is handled by the video layer in movis
+                    # Return None as audio will be included with video layer
+                    return None
                 else:
                     logger.warning(f"Audio source not found: {layer_info.source_path}")
                     return None
@@ -588,14 +582,12 @@ class VideoComposer:
                 # Create text layer
                 text = layer_info.properties.get('text', 'Text')
                 font_size = layer_info.properties.get('font_size', 24)
-                color = layer_info.properties.get('color', (255, 255, 255, 255))
-                position = layer_info.properties.get('position', (settings.width // 2, settings.height // 2))
+                color = layer_info.properties.get('color', '#ffffff')
                 
                 layer = mv.layer.Text(
-                    text=text,
+                    text,
                     font_size=font_size,
                     color=color,
-                    position=position,
                     duration=layer_info.end_time - layer_info.start_time
                 )
                 
@@ -621,32 +613,23 @@ class VideoComposer:
                 
                 if file_extension in ['.mp4', '.avi', '.mov', '.gif']:
                     # Video/animation asset
-                    layer = mv.layer.VideoFile(
-                        path=asset.file_path,
-                        start_time=0,
+                    layer = mv.layer.Video(
+                        asset.file_path,
                         duration=layer_info.end_time - layer_info.start_time
                     )
                 elif file_extension in ['.png', '.jpg', '.jpeg']:
-                    # Image asset - use Image layer for static images
-                    try:
-                        layer = mv.layer.Image(
-                            path=asset.file_path,
-                            duration=layer_info.end_time - layer_info.start_time
-                        )
-                    except AttributeError:
-                        # Fallback if Image layer doesn't exist in this movis version
-                        layer = mv.layer.VideoFile(
-                            path=asset.file_path,
-                            start_time=0,
-                            duration=layer_info.end_time - layer_info.start_time
-                        )
+                    # Image asset
+                    layer = mv.layer.Image(
+                        asset.file_path,
+                        duration=layer_info.end_time - layer_info.start_time
+                    )
                 else:
                     # Fallback to placeholder
                     return self._create_placeholder_broll_layer(layer_info, settings)
                 
                 # Apply opacity
                 if layer_info.opacity < 1.0:
-                    layer = mv.layer.Opacity(layer_info.opacity)(layer)
+                    layer.opacity = layer_info.opacity
                 
                 logger.info(f"Created B-roll layer from asset: {Path(asset.file_path).name}")
                 return layer
@@ -663,22 +646,23 @@ class VideoComposer:
         description = layer_info.properties.get('description', 'B-roll content')
         
         # Create solid background
-        background = mv.layer.SolidColor(
-            color=(30, 30, 30, 200),  # Semi-transparent dark background
+        background = mv.layer.Rectangle(
+            size=(settings.width, settings.height),
+            color='#1e1e1e',
             duration=layer_info.end_time - layer_info.start_time
         )
+        background.opacity = 0.8
         
         # Add text overlay
         text_layer = mv.layer.Text(
-            text=description[:50] + "..." if len(description) > 50 else description,
+            description[:50] + "..." if len(description) > 50 else description,
             font_size=24,
-            color=(255, 255, 255, 255),
-            position=(settings.width // 2, settings.height // 2),
+            color='#ffffff',
             duration=layer_info.end_time - layer_info.start_time
         )
         
         # Combine background and text
-        combined = mv.Composition(
+        combined = mv.layer.Composition(
             size=(settings.width, settings.height),
             duration=layer_info.end_time - layer_info.start_time
         )
@@ -687,7 +671,7 @@ class VideoComposer:
         
         # Apply opacity
         if layer_info.opacity < 1.0:
-            combined = mv.layer.Opacity(layer_info.opacity)(combined)
+            combined.opacity = layer_info.opacity
         
         logger.info("Created placeholder B-roll layer")
         return combined
@@ -789,14 +773,8 @@ class VideoComposer:
             
             logger.info(f"Rendering AI-directed video composition to {output_path}")
             
-            # Configure render settings based on quality
-            quality_settings = self._get_quality_settings(composition_plan.output_settings.quality)
-            
-            # Render to file
-            composition.write_video(
-                str(output_path),
-                **quality_settings
-            )
+            # Render to file with basic settings
+            composition.write_video(str(output_path))
             
             self.render_time = time.time() - render_start
             total_time = time.time() - start_time
@@ -806,7 +784,7 @@ class VideoComposer:
                 'output_path': str(output_path),
                 'composition_plan': composition_plan.to_dict(),
                 'execution_timeline': execution_timeline.to_dict(),
-                'render_settings': quality_settings,
+                'render_settings': {'quality': composition_plan.output_settings.quality},
                 'performance_metrics': {
                     'plan_execution_time': self.plan_execution_time,
                     'composition_time': self.composition_time,
@@ -861,34 +839,23 @@ class VideoComposer:
     
     def _get_quality_settings(self, quality: str) -> Dict[str, Any]:
         """Get render settings based on quality level."""
+        # Simplified settings for movis compatibility
         quality_profiles = {
             "low": {
-                "codec": "libx264",
-                "preset": "faster",
-                "crf": 28,
-                "audio_codec": "aac",
-                "audio_bitrate": "128k"
+                "fps": 24,
+                "bitrate": "1M"
             },
             "medium": {
-                "codec": "libx264",
-                "preset": "medium",
-                "crf": 23,
-                "audio_codec": "aac",
-                "audio_bitrate": "192k"
+                "fps": 30,
+                "bitrate": "2M"
             },
             "high": {
-                "codec": "libx264",
-                "preset": "slow",
-                "crf": 18,
-                "audio_codec": "aac",
-                "audio_bitrate": "256k"
+                "fps": 30,
+                "bitrate": "4M"
             },
             "ultra": {
-                "codec": "libx264",
-                "preset": "veryslow",
-                "crf": 15,
-                "audio_codec": "aac",
-                "audio_bitrate": "320k"
+                "fps": 60,
+                "bitrate": "8M"
             }
         }
         
@@ -910,6 +877,54 @@ class VideoComposer:
             'render_time': self.render_time
         }
     
+    def write_video(self, composition_plan: CompositionPlan, output_path: str, 
+                   quality_preset: str = "high") -> Dict[str, Any]:
+        """
+        Write video composition to file.
+        
+        Args:
+            composition_plan: CompositionPlan to render
+            output_path: Output file path
+            quality_preset: Quality preset ("low", "medium", "high", "ultra")
+            
+        Returns:
+            Dict with render results and file info
+        """
+        start_time = time.time()
+        
+        logger.info(f"Writing video composition to {output_path} with {quality_preset} quality")
+        
+        try:
+            # Create movis composition
+            composition = self.create_movis_composition(composition_plan)
+            
+            # Render to file
+            composition.write_video(output_path)
+            
+            render_time = time.time() - start_time
+            output_file = Path(output_path)
+            
+            # Create result info
+            result = {
+                'output_path': str(output_path),
+                'duration': composition_plan.output_settings.duration,
+                'resolution': f"{composition_plan.output_settings.width}x{composition_plan.output_settings.height}",
+                'fps': composition_plan.output_settings.fps,
+                'quality_preset': quality_preset,
+                'render_time': render_time,
+                'file_size_mb': output_file.stat().st_size / (1024 * 1024) if output_file.exists() else 0,
+                'layers_rendered': len(composition_plan.layers),
+                'transitions_applied': len(composition_plan.transitions),
+                'effects_applied': len(composition_plan.effects)
+            }
+            
+            logger.info(f"Video rendered successfully in {render_time:.2f}s - {result['file_size_mb']:.1f}MB")
+            return result
+            
+        except Exception as e:
+            logger.error(f"Video rendering failed: {str(e)}")
+            raise ProcessingError(f"Video rendering failed: {str(e)}")
+
     def cleanup_temp_files(self):
         """Clean up temporary files created during composition."""
         try:

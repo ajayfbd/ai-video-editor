@@ -23,6 +23,7 @@ classifiers = [
 
 [project.scripts]
 video-editor = "ai_video_editor.cli.main:main"
+ai-ve = "ai_video_editor.cli.features:main"
 
 [tool.black]
 line-length = 88

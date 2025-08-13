@@ -16,6 +16,9 @@ Welcome to the comprehensive documentation for the AI Video Editor - an AI-drive
 - [**Testing Guide**](developer/testing.md) - Testing strategies and best practices
 
 ### Tutorials and Workflows
+
+### Feature Index
+- [Feature Index](../FEATURES.md) - All runnable features with contracts and examples
 - [**Tutorials Overview**](../tutorials/README.md) - Step-by-step workflows for all content types
 - [**Educational Content**](tutorials/workflows/educational-content.md) - Specialized workflow for educational videos
 - [**Music Videos**](tutorials/workflows/music-videos.md) - Optimized processing for music content

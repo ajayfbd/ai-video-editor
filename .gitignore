@@ -128,6 +128,13 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Outputs and caches
+out/
+.temp/
+.whisper/
+.cache/
+.pytest_cache/
+
 # AI Video Editor specific
 logs/
 output/

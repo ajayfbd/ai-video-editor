@@ -1,0 +1,7 @@
+# AI Content Analysis Feature Requirements
+
+# Core dependency for Gemini AI
+google-generativeai
+
+# For loading .env files
+python-dotenv
