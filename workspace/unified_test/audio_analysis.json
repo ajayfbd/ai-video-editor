@@ -1,0 +1,83 @@
+{
+  "transcript": {
+    "text": "अहमकार की ज्वाला दानव का राज था धर्ती थी प्यासी सर पे नताज था असुर के वर्दान का कैसा ये जाल है भक्त की पुकार पे चुप क्यूं गोपाल है पुछे हिन्यक शिपू बोल तेरा राम कहा हसे प्रालाद बोले प्रबू तो है यहां वहां इस खंबे में है इसी में वास है गदा का प्रहार अब समय का नाश है खंब थार के गरेजे देखो नरसे",
+    "segments": [
+      {
+        "text": "अहमकार की ज्वाला दानव का राज था",
+        "start": 0.08,
+        "end": 3.1,
+        "confidence": 0.0
+      },
+      {
+        "text": "धर्ती थी प्यासी सर पे नताज था",
+        "start": 3.1,
+        "end": 5.76,
+        "confidence": 0.0
+      },
+      {
+        "text": "असुर के वर्दान का कैसा ये जाल है",
+        "start": 5.76,
+        "end": 8.4,
+        "confidence": 0.0
+      },
+      {
+        "text": "भक्त की पुकार पे चुप क्यूं गोपाल है",
+        "start": 8.4,
+        "end": 11.08,
+        "confidence": 0.0
+      },
+      {
+        "text": "पुछे हिन्यक शिपू बोल तेरा राम कहा",
+        "start": 11.08,
+        "end": 13.38,
+        "confidence": 0.0
+      },
+      {
+        "text": "हसे प्रालाद बोले प्रबू तो है यहां वहां",
+        "start": 13.38,
+        "end": 16.36,
+        "confidence": 0.0
+      },
+      {
+        "text": "इस खंबे में है इसी में वास है",
+        "start": 16.36,
+        "end": 18.96,
+        "confidence": 0.0
+      },
+      {
+        "text": "गदा का प्रहार अब समय का नाश है",
+        "start": 18.96,
+        "end": 21.7,
+        "confidence": 0.0
+      },
+      {
+        "text": "खंब थार के गरेजे देखो नरसे",
+        "start": 21.7,
+        "end": 24.24,
+        "confidence": 0.0
+      }
+    ],
+    "language": "hi",
+    "model_used": "faster-whisper:large-v3:cpu:int8"
+  },
+  "statistics": {
+    "total_duration": 24.24,
+    "segment_count": 9,
+    "language": "hi",
+    "model_used": "faster-whisper:large-v3:cpu:int8",
+    "average_confidence": 0.0
+  },
+  "content_analysis": {
+    "themes": {
+      "educational": 0,
+      "financial": 0,
+      "general": 0,
+      "technical": 0
+    },
+    "dominant_theme": "general",
+    "repeated_phrases": [],
+    "word_count": 67,
+    "unique_words": 54,
+    "speaking_rate": 2.764026402640264
+  }
+}

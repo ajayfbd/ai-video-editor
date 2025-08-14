@@ -116,18 +116,46 @@ class CLIBridge:
             
             audio_analyzer = FinancialContentAnalyzer(cache_manager=self.cache_manager)
             
-            # Transcribe the first video file
+            # Transcribe the first video file using the same system as transcribe command
             if context.video_files:
                 video_file = context.video_files[0]
-                model_size = context.user_preferences.whisper_model_size or "medium"
+                model_size = context.user_preferences.whisper_model_size or "large"  # Use large by default like transcribe
                 language = context.user_preferences.transcription_language
                 
-                logger.info(f"Transcribing audio from {video_file} using model {model_size}")
-                transcript = audio_analyzer.transcribe_audio(
-                    video_file, 
-                    model_size=model_size,
-                    language=language
+                logger.info(f"Transcribing audio from {video_file} using model {model_size} (faster-whisper)")
+                
+                # Use the same faster-whisper system as transcribe command for consistency
+                from ai_video_editor.cli.commands.transcribe import _transcribe_with_faster_whisper
+                import time
+                
+                # Call faster-whisper with same settings as transcribe command
+                start_time = time.time()
+                transcript_dict = _transcribe_with_faster_whisper(
+                    str(video_file), model_size, language, "auto", None, True, 0.3, 
+                    500, True, 3, None, "transcribe", True, True, False, start_time
                 )
+                
+                # Convert to Transcript object for compatibility with existing code
+                from ai_video_editor.modules.content_analysis.audio_analyzer import Transcript, TranscriptSegment
+                
+                segments = []
+                for seg in transcript_dict.get('segments', []):
+                    segments.append(TranscriptSegment(
+                        text=seg['text'],
+                        start=seg['start'],
+                        end=seg['end'],
+                        confidence=seg.get('confidence', 0.0)
+                    ))
+                
+                transcript = Transcript(
+                    text=transcript_dict['text'],
+                    segments=segments,
+                    confidence=transcript_dict.get('confidence', 0.0),
+                    language=transcript_dict.get('language', 'unknown'),
+                    processing_time=transcript_dict.get('processing_time', 0.0),
+                    model_used=transcript_dict.get('model_used', model_size)
+                )
+
                 
                 # Analyze financial content
                 logger.info("Analyzing financial content...")
@@ -277,7 +305,7 @@ class CLIBridge:
                 scenes.append({
                     "scene_id": i,
                     "timestamp": highlight.timestamp,
-                    "confidence": highlight.confidence,
+                    "confidence": getattr(highlight, 'confidence', highlight.thumbnail_potential),
                     "description": highlight.description,
                     "frame_number": int(highlight.timestamp * metadata.get('fps', 30))
                 })
@@ -302,7 +330,7 @@ class CLIBridge:
             for highlight in context.visual_highlights:
                 visual_highlights.append({
                     "timestamp": highlight.timestamp,
-                    "confidence": highlight.confidence,
+                    "confidence": getattr(highlight, 'confidence', highlight.thumbnail_potential),
                     "description": highlight.description,
                     "highlight_type": "general",
                     "visual_elements": highlight.visual_elements

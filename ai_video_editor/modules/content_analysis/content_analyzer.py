@@ -18,8 +18,8 @@ from ai_video_editor.core.content_context import ContentContext, ContentType, Em
 from ai_video_editor.modules.content_analysis.audio_analyzer import FinancialContentAnalyzer
 from ai_video_editor.modules.content_analysis.video_analyzer import VideoAnalyzer
 from ai_video_editor.modules.content_analysis.emotional_analyzer import EmotionalAnalyzer
-from ai_video_editor.utils.cache_manager import CacheManager
-from ai_video_editor.utils.error_handling import ContentContextError
+from ai_video_editor.core.cache_manager import CacheManager
+from ai_video_editor.core.exceptions import ContentContextError
 from ai_video_editor.utils.logging_config import get_logger
 
 

@@ -17,8 +17,8 @@ import numpy as np
 from ai_video_editor.core.content_context import (
     ContentContext, EmotionalPeak, AudioAnalysisResult, VisualHighlight
 )
-from ai_video_editor.utils.cache_manager import CacheManager
-from ai_video_editor.utils.error_handling import ContentContextError
+from ai_video_editor.core.cache_manager import CacheManager
+from ai_video_editor.core.exceptions import ContentContextError
 from ai_video_editor.utils.logging_config import get_logger
 
 

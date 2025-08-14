@@ -1,0 +1,333 @@
+{
+  "audio": {
+    "transcript": {
+      "text": "अहमकार की जौला दानव का राज था तर्ती थी प्यासी सर पे न ताज था असुर के वर्डान का कैसा ये जाल है भक्त की पुकार पे चुप क्यूं गोपाल है पुछे हिन्यक शिपू बोल तेरा राम कहां हसे प्रालाद बोले प्रभू तो है यहां वहां इस खंबे में है, इसी में वास है घदा का प्रहार अब समय का नाश है",
+      "segments": [
+        {
+          "text": "अहमकार की जौला दानव का राज था",
+          "start": 0.0,
+          "end": 3.22,
+          "confidence": -0.1756878662109375
+        },
+        {
+          "text": "तर्ती थी प्यासी सर पे न ताज था",
+          "start": 3.22,
+          "end": 5.88,
+          "confidence": -0.1756878662109375
+        },
+        {
+          "text": "असुर के वर्डान का कैसा ये जाल है",
+          "start": 5.88,
+          "end": 8.52,
+          "confidence": -0.1756878662109375
+        },
+        {
+          "text": "भक्त की पुकार पे चुप क्यूं गोपाल है",
+          "start": 8.52,
+          "end": 11.22,
+          "confidence": -0.1756878662109375
+        },
+        {
+          "text": "पुछे हिन्यक शिपू बोल तेरा राम कहां",
+          "start": 11.22,
+          "end": 13.6,
+          "confidence": -0.1756878662109375
+        },
+        {
+          "text": "हसे प्रालाद बोले प्रभू तो है यहां वहां",
+          "start": 13.6,
+          "end": 16.54,
+          "confidence": -0.1756878662109375
+        },
+        {
+          "text": "इस खंबे में है, इसी में वास है",
+          "start": 16.54,
+          "end": 19.08,
+          "confidence": -0.28679124135819695
+        },
+        {
+          "text": "घदा का प्रहार अब समय का नाश है",
+          "start": 19.08,
+          "end": 21.94,
+          "confidence": -0.28679124135819695
+        }
+      ],
+      "language": "hi",
+      "model_used": "medium"
+    },
+    "statistics": {
+      "total_duration": 21.94,
+      "segment_count": 8,
+      "language": "hi",
+      "model_used": "medium",
+      "average_confidence": -0.20346370999775235
+    },
+    "content_analysis": {
+      "themes": {
+        "educational": 0,
+        "financial": 0,
+        "general": 7,
+        "technical": 0
+      },
+      "dominant_theme": "general",
+      "repeated_phrases": [],
+      "word_count": 62,
+      "unique_words": 51,
+      "speaking_rate": 2.8258887876025525
+    }
+  },
+  "video": {
+    "metadata": {
+      "duration": 32.716916,
+      "fps": 24.0,
+      "width": 1280,
+      "height": 720,
+      "codec": "h264",
+      "bitrate": 1633760,
+      "format": "mov,mp4,m4a,3gp,3g2,mj2",
+      "total_frames": 785
+    },
+    "scenes": [
+      {
+        "scene_id": 0,
+        "timestamp": 9.0,
+        "confidence": 1.0,
+        "description": "Frame from scene_3; 2 face(s) with happy, neutral expression(s) (conf: 0.80); High-confidence elements: text_overlay(0.95), data_visualization(0.88), red_dominant(0.90), green_dominant(0.90), green_dominant(0.90), green_dominant(0.90), green_dominant(0.90); All elements: text_overlay, data_visualization, green_dominant, red_dominant, geometric_patterns; medium quality, low motion; thumbnail potential: excellent (1.00)",
+        "frame_number": 216
+      },
+      {
+        "scene_id": 1,
+        "timestamp": 22.0,
+        "confidence": 0.9822185958170271,
+        "description": "Frame from scene_8; 2 face(s) with happy, neutral expression(s) (conf: 0.80); High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.90), red_dominant(0.87), red_dominant(0.90); All elements: text_overlay, data_visualization, gesture_content, red_dominant, geometric_patterns; medium quality, low motion; thumbnail potential: excellent (0.98)",
+        "frame_number": 528
+      },
+      {
+        "scene_id": 2,
+        "timestamp": 16.0,
+        "confidence": 0.8825978243229167,
+        "description": "Frame from scene_5; 1 face(s) with neutral expression(s) (conf: 0.80); High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.90), orange_dominant(0.72), green_dominant(0.90); All elements: text_overlay, data_visualization, orange_dominant, gesture_content, green_dominant, red_dominant, geometric_patterns; high quality, low motion; thumbnail potential: excellent (0.88)",
+        "frame_number": 384
+      },
+      {
+        "scene_id": 3,
+        "timestamp": 4.0,
+        "confidence": 0.8462487231098674,
+        "description": "Frame from scene_1; 1 face(s) with focused expression(s) (conf: 0.80); High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.90), red_dominant(0.76), red_dominant(0.90), red_dominant(0.90); All elements: red_dominant, text_overlay, geometric_patterns, data_visualization; medium quality, low motion; thumbnail potential: excellent (0.85)",
+        "frame_number": 96
+      },
+      {
+        "scene_id": 4,
+        "timestamp": 27.0,
+        "confidence": 0.7101557482662748,
+        "description": "Frame from scene_9; High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.85), red_dominant(0.90), red_dominant(0.90), red_dominant(0.90), red_dominant(0.90); All elements: text_overlay, data_visualization, gesture_content, red_dominant, geometric_patterns; medium quality, low motion; thumbnail potential: good (0.71)",
+        "frame_number": 648
+      },
+      {
+        "scene_id": 5,
+        "timestamp": 32.0,
+        "confidence": 0.6999702709057517,
+        "description": "Frame from scene_10; High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.89), red_dominant(0.70), red_dominant(0.90), red_dominant(0.90); All elements: red_dominant, text_overlay, geometric_patterns, data_visualization; medium quality, low motion; thumbnail potential: good (0.70)",
+        "frame_number": 768
+      }
+    ],
+    "faces": [
+      {
+        "timestamp": 9.0,
+        "confidence": 0.8,
+        "bbox": [
+          601.0,
+          218.0,
+          129.0,
+          129.0
+        ],
+        "expression": "neutral",
+        "frame_number": 216
+      },
+      {
+        "timestamp": 9.0,
+        "confidence": 0.8,
+        "bbox": [
+          598.0,
+          492.0,
+          174.0,
+          174.0
+        ],
+        "expression": "happy",
+        "frame_number": 216
+      },
+      {
+        "timestamp": 22.0,
+        "confidence": 0.8,
+        "bbox": [
+          751.0,
+          386.0,
+          142.0,
+          142.0
+        ],
+        "expression": "happy",
+        "frame_number": 528
+      },
+      {
+        "timestamp": 22.0,
+        "confidence": 0.8,
+        "bbox": [
+          583.0,
+          317.0,
+          107.0,
+          107.0
+        ],
+        "expression": "neutral",
+        "frame_number": 528
+      },
+      {
+        "timestamp": 16.0,
+        "confidence": 0.8,
+        "bbox": [
+          658.0,
+          222.0,
+          232.0,
+          232.0
+        ],
+        "expression": "neutral",
+        "frame_number": 384
+      },
+      {
+        "timestamp": 4.0,
+        "confidence": 0.8,
+        "bbox": [
+          594.0,
+          433.0,
+          136.0,
+          136.0
+        ],
+        "expression": "focused",
+        "frame_number": 96
+      }
+    ],
+    "visual_highlights": [
+      {
+        "timestamp": 9.0,
+        "confidence": 1.0,
+        "description": "Frame from scene_3; 2 face(s) with happy, neutral expression(s) (conf: 0.80); High-confidence elements: text_overlay(0.95), data_visualization(0.88), red_dominant(0.90), green_dominant(0.90), green_dominant(0.90), green_dominant(0.90), green_dominant(0.90); All elements: text_overlay, data_visualization, green_dominant, red_dominant, geometric_patterns; medium quality, low motion; thumbnail potential: excellent (1.00)",
+        "highlight_type": "general",
+        "visual_elements": [
+          "text_overlay",
+          "data_visualization",
+          "red_dominant",
+          "green_dominant",
+          "green_dominant",
+          "green_dominant",
+          "green_dominant",
+          "geometric_patterns"
+        ]
+      },
+      {
+        "timestamp": 22.0,
+        "confidence": 0.9822185958170271,
+        "description": "Frame from scene_8; 2 face(s) with happy, neutral expression(s) (conf: 0.80); High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.90), red_dominant(0.87), red_dominant(0.90); All elements: text_overlay, data_visualization, gesture_content, red_dominant, geometric_patterns; medium quality, low motion; thumbnail potential: excellent (0.98)",
+        "highlight_type": "general",
+        "visual_elements": [
+          "text_overlay",
+          "data_visualization",
+          "gesture_content",
+          "red_dominant",
+          "red_dominant",
+          "red_dominant",
+          "red_dominant",
+          "red_dominant",
+          "geometric_patterns"
+        ]
+      },
+      {
+        "timestamp": 16.0,
+        "confidence": 0.8825978243229167,
+        "description": "Frame from scene_5; 1 face(s) with neutral expression(s) (conf: 0.80); High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.90), orange_dominant(0.72), green_dominant(0.90); All elements: text_overlay, data_visualization, orange_dominant, gesture_content, green_dominant, red_dominant, geometric_patterns; high quality, low motion; thumbnail potential: excellent (0.88)",
+        "highlight_type": "general",
+        "visual_elements": [
+          "text_overlay",
+          "data_visualization",
+          "gesture_content",
+          "red_dominant",
+          "orange_dominant",
+          "green_dominant",
+          "green_dominant",
+          "green_dominant",
+          "geometric_patterns"
+        ]
+      },
+      {
+        "timestamp": 4.0,
+        "confidence": 0.8462487231098674,
+        "description": "Frame from scene_1; 1 face(s) with focused expression(s) (conf: 0.80); High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.90), red_dominant(0.76), red_dominant(0.90), red_dominant(0.90); All elements: red_dominant, text_overlay, geometric_patterns, data_visualization; medium quality, low motion; thumbnail potential: excellent (0.85)",
+        "highlight_type": "general",
+        "visual_elements": [
+          "text_overlay",
+          "data_visualization",
+          "red_dominant",
+          "red_dominant",
+          "red_dominant",
+          "red_dominant",
+          "red_dominant",
+          "geometric_patterns"
+        ]
+      },
+      {
+        "timestamp": 27.0,
+        "confidence": 0.7101557482662748,
+        "description": "Frame from scene_9; High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.85), red_dominant(0.90), red_dominant(0.90), red_dominant(0.90), red_dominant(0.90); All elements: text_overlay, data_visualization, gesture_content, red_dominant, geometric_patterns; medium quality, low motion; thumbnail potential: good (0.71)",
+        "highlight_type": "general",
+        "visual_elements": [
+          "text_overlay",
+          "data_visualization",
+          "gesture_content",
+          "red_dominant",
+          "red_dominant",
+          "red_dominant",
+          "red_dominant",
+          "red_dominant",
+          "geometric_patterns"
+        ]
+      },
+      {
+        "timestamp": 32.0,
+        "confidence": 0.6999702709057517,
+        "description": "Frame from scene_10; High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.89), red_dominant(0.70), red_dominant(0.90), red_dominant(0.90); All elements: red_dominant, text_overlay, geometric_patterns, data_visualization; medium quality, low motion; thumbnail potential: good (0.70)",
+        "highlight_type": "general",
+        "visual_elements": [
+          "text_overlay",
+          "data_visualization",
+          "red_dominant",
+          "red_dominant",
+          "red_dominant",
+          "red_dominant",
+          "red_dominant",
+          "geometric_patterns"
+        ]
+      }
+    ],
+    "statistics": {
+      "total_scenes": 6,
+      "total_faces": 6,
+      "total_highlights": 6,
+      "analysis_quality": "high",
+      "resolution": "1280x720",
+      "fps": 24.0,
+      "duration": 32.716916
+    }
+  },
+  "metadata": {
+    "video_file": "media\\test\\Untitled video.mp4",
+    "analysis_time": 243.96572470664978,
+    "timestamp": "2025-08-14 18:03:45",
+    "analyses_performed": {
+      "audio": true,
+      "video": true,
+      "scenes": true,
+      "faces": true,
+      "highlights": true
+    },
+    "core_modules_used": true,
+    "content_context_integration": true
+  }
+}

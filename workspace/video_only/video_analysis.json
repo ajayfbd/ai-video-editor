@@ -1,0 +1,240 @@
+{
+  "metadata": {
+    "duration": 32.716916,
+    "fps": 24.0,
+    "width": 1280,
+    "height": 720,
+    "codec": "h264",
+    "bitrate": 1633760,
+    "format": "mov,mp4,m4a,3gp,3g2,mj2",
+    "total_frames": 785
+  },
+  "scenes": [
+    {
+      "scene_id": 0,
+      "timestamp": 9.0,
+      "confidence": 1.0,
+      "description": "Frame from scene_3; 2 face(s) with neutral, happy expression(s) (conf: 0.80); High-confidence elements: text_overlay(0.95), data_visualization(0.88), red_dominant(0.90), green_dominant(0.90), green_dominant(0.90), green_dominant(0.90), green_dominant(0.90); All elements: text_overlay, geometric_patterns, red_dominant, green_dominant, data_visualization; medium quality, low motion; thumbnail potential: excellent (1.00)",
+      "frame_number": 216
+    },
+    {
+      "scene_id": 1,
+      "timestamp": 22.0,
+      "confidence": 0.9822185958170271,
+      "description": "Frame from scene_8; 2 face(s) with neutral, happy expression(s) (conf: 0.80); High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.90), red_dominant(0.87), red_dominant(0.90); All elements: text_overlay, gesture_content, red_dominant, geometric_patterns, data_visualization; medium quality, low motion; thumbnail potential: excellent (0.98)",
+      "frame_number": 528
+    },
+    {
+      "scene_id": 2,
+      "timestamp": 16.0,
+      "confidence": 0.8825978243229167,
+      "description": "Frame from scene_5; 1 face(s) with neutral expression(s) (conf: 0.80); High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.90), orange_dominant(0.72), green_dominant(0.90); All elements: text_overlay, gesture_content, red_dominant, geometric_patterns, green_dominant, orange_dominant, data_visualization; high quality, low motion; thumbnail potential: excellent (0.88)",
+      "frame_number": 384
+    },
+    {
+      "scene_id": 3,
+      "timestamp": 4.0,
+      "confidence": 0.8462487231098674,
+      "description": "Frame from scene_1; 1 face(s) with focused expression(s) (conf: 0.80); High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.90), red_dominant(0.76), red_dominant(0.90), red_dominant(0.90); All elements: geometric_patterns, red_dominant, data_visualization, text_overlay; medium quality, low motion; thumbnail potential: excellent (0.85)",
+      "frame_number": 96
+    },
+    {
+      "scene_id": 4,
+      "timestamp": 27.0,
+      "confidence": 0.7101557482662748,
+      "description": "Frame from scene_9; High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.85), red_dominant(0.90), red_dominant(0.90), red_dominant(0.90), red_dominant(0.90); All elements: text_overlay, gesture_content, red_dominant, geometric_patterns, data_visualization; medium quality, low motion; thumbnail potential: good (0.71)",
+      "frame_number": 648
+    },
+    {
+      "scene_id": 5,
+      "timestamp": 32.0,
+      "confidence": 0.6999702709057517,
+      "description": "Frame from scene_10; High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.89), red_dominant(0.70), red_dominant(0.90), red_dominant(0.90); All elements: geometric_patterns, red_dominant, data_visualization, text_overlay; medium quality, low motion; thumbnail potential: good (0.70)",
+      "frame_number": 768
+    }
+  ],
+  "faces": [
+    {
+      "timestamp": 9.0,
+      "confidence": 0.8,
+      "bbox": [
+        601.0,
+        218.0,
+        129.0,
+        129.0
+      ],
+      "expression": "neutral",
+      "frame_number": 216
+    },
+    {
+      "timestamp": 9.0,
+      "confidence": 0.8,
+      "bbox": [
+        598.0,
+        492.0,
+        174.0,
+        174.0
+      ],
+      "expression": "happy",
+      "frame_number": 216
+    },
+    {
+      "timestamp": 22.0,
+      "confidence": 0.8,
+      "bbox": [
+        751.0,
+        386.0,
+        142.0,
+        142.0
+      ],
+      "expression": "happy",
+      "frame_number": 528
+    },
+    {
+      "timestamp": 22.0,
+      "confidence": 0.8,
+      "bbox": [
+        583.0,
+        317.0,
+        107.0,
+        107.0
+      ],
+      "expression": "neutral",
+      "frame_number": 528
+    },
+    {
+      "timestamp": 16.0,
+      "confidence": 0.8,
+      "bbox": [
+        658.0,
+        222.0,
+        232.0,
+        232.0
+      ],
+      "expression": "neutral",
+      "frame_number": 384
+    },
+    {
+      "timestamp": 4.0,
+      "confidence": 0.8,
+      "bbox": [
+        594.0,
+        433.0,
+        136.0,
+        136.0
+      ],
+      "expression": "focused",
+      "frame_number": 96
+    }
+  ],
+  "visual_highlights": [
+    {
+      "timestamp": 9.0,
+      "confidence": 1.0,
+      "description": "Frame from scene_3; 2 face(s) with neutral, happy expression(s) (conf: 0.80); High-confidence elements: text_overlay(0.95), data_visualization(0.88), red_dominant(0.90), green_dominant(0.90), green_dominant(0.90), green_dominant(0.90), green_dominant(0.90); All elements: text_overlay, geometric_patterns, red_dominant, green_dominant, data_visualization; medium quality, low motion; thumbnail potential: excellent (1.00)",
+      "highlight_type": "general",
+      "visual_elements": [
+        "text_overlay",
+        "data_visualization",
+        "red_dominant",
+        "green_dominant",
+        "green_dominant",
+        "green_dominant",
+        "green_dominant",
+        "geometric_patterns"
+      ]
+    },
+    {
+      "timestamp": 22.0,
+      "confidence": 0.9822185958170271,
+      "description": "Frame from scene_8; 2 face(s) with neutral, happy expression(s) (conf: 0.80); High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.90), red_dominant(0.87), red_dominant(0.90); All elements: text_overlay, gesture_content, red_dominant, geometric_patterns, data_visualization; medium quality, low motion; thumbnail potential: excellent (0.98)",
+      "highlight_type": "general",
+      "visual_elements": [
+        "text_overlay",
+        "data_visualization",
+        "gesture_content",
+        "red_dominant",
+        "red_dominant",
+        "red_dominant",
+        "red_dominant",
+        "red_dominant",
+        "geometric_patterns"
+      ]
+    },
+    {
+      "timestamp": 16.0,
+      "confidence": 0.8825978243229167,
+      "description": "Frame from scene_5; 1 face(s) with neutral expression(s) (conf: 0.80); High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.90), orange_dominant(0.72), green_dominant(0.90); All elements: text_overlay, gesture_content, red_dominant, geometric_patterns, green_dominant, orange_dominant, data_visualization; high quality, low motion; thumbnail potential: excellent (0.88)",
+      "highlight_type": "general",
+      "visual_elements": [
+        "text_overlay",
+        "data_visualization",
+        "gesture_content",
+        "red_dominant",
+        "orange_dominant",
+        "green_dominant",
+        "green_dominant",
+        "green_dominant",
+        "geometric_patterns"
+      ]
+    },
+    {
+      "timestamp": 4.0,
+      "confidence": 0.8462487231098674,
+      "description": "Frame from scene_1; 1 face(s) with focused expression(s) (conf: 0.80); High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.90), red_dominant(0.76), red_dominant(0.90), red_dominant(0.90); All elements: geometric_patterns, red_dominant, data_visualization, text_overlay; medium quality, low motion; thumbnail potential: excellent (0.85)",
+      "highlight_type": "general",
+      "visual_elements": [
+        "text_overlay",
+        "data_visualization",
+        "red_dominant",
+        "red_dominant",
+        "red_dominant",
+        "red_dominant",
+        "red_dominant",
+        "geometric_patterns"
+      ]
+    },
+    {
+      "timestamp": 27.0,
+      "confidence": 0.7101557482662748,
+      "description": "Frame from scene_9; High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.85), red_dominant(0.90), red_dominant(0.90), red_dominant(0.90), red_dominant(0.90); All elements: text_overlay, gesture_content, red_dominant, geometric_patterns, data_visualization; medium quality, low motion; thumbnail potential: good (0.71)",
+      "highlight_type": "general",
+      "visual_elements": [
+        "text_overlay",
+        "data_visualization",
+        "gesture_content",
+        "red_dominant",
+        "red_dominant",
+        "red_dominant",
+        "red_dominant",
+        "red_dominant",
+        "geometric_patterns"
+      ]
+    },
+    {
+      "timestamp": 32.0,
+      "confidence": 0.6999702709057517,
+      "description": "Frame from scene_10; High-confidence elements: text_overlay(0.95), data_visualization(0.95), red_dominant(0.89), red_dominant(0.70), red_dominant(0.90), red_dominant(0.90); All elements: geometric_patterns, red_dominant, data_visualization, text_overlay; medium quality, low motion; thumbnail potential: good (0.70)",
+      "highlight_type": "general",
+      "visual_elements": [
+        "text_overlay",
+        "data_visualization",
+        "red_dominant",
+        "red_dominant",
+        "red_dominant",
+        "red_dominant",
+        "red_dominant",
+        "geometric_patterns"
+      ]
+    }
+  ],
+  "statistics": {
+    "total_scenes": 6,
+    "total_faces": 6,
+    "total_highlights": 6,
+    "analysis_quality": "high",
+    "resolution": "1280x720",
+    "fps": 24.0,
+    "duration": 32.716916
+  }
+}

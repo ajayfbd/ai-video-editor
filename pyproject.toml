@@ -2,23 +2,66 @@
 requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools.packages.find]
+include = ["ai_video_editor*"]
+exclude = ["tests*", "docs*", "examples*", "archive*", "workspace*", "config*", "media*", "out*", "broll*", "features*", "transcription*", "tools*"]
+
 [project]
 name = "ai-video-editor"
 version = "0.1.0"
 description = "AI-assisted video editing and production coaching system"
 authors = [{name = "AI Video Editor Team"}]
-license = {text = "MIT"}
+license = "MIT"
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+    "movis",
+    "openai-whisper",
+    "opencv-python",
+    "ffmpeg-python",
+    "scenedetect",
+    "matplotlib",
+    "python-pptx",
+    "transformers",
+    "torch",
+    "google-genai",
+    "tenacity",
+    "librosa",
+    "pytest-timeout",
+    "GPUtil",
+    "psutil",
+    "rich",
+    "numpy",
+    "pytest-asyncio",
+    "click",
+    "pydantic",
+    "pydantic-settings",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+    "pytest-asyncio",
+    "pytest-timeout",
+    "black",
+    "mypy",
+    "pre-commit",
+]
+test = [
+    "pytest>=7.0",
+    "pytest-cov",
+    "pytest-asyncio", 
+    "pytest-timeout",
 ]
 
 [project.scripts]
@@ -63,9 +106,21 @@ testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+norecursedirs = [".git", ".tox", "dist", "build", "*.egg"]
+minversion = "7.0"
 addopts = [
     "--strict-markers",
     "--strict-config",
+    "--tb=short",
+    "--maxfail=5",
+    "--durations=10",
+    "-v",
+    "--log-cli-level=INFO",
+    "--log-cli-format=%(asctime)s [%(levelname)8s] %(name)s: %(message)s",
+    "--log-cli-date-format=%H:%M:%S",
+    "--timeout=30",
+    "--timeout-method=thread",
+    "-m", "not slow and not performance and not acceptance",
     "--cov=ai_video_editor",
     "--cov-report=term-missing",
     "--cov-report=html",
@@ -75,6 +130,27 @@ markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "integration: marks tests as integration tests",
     "unit: marks tests as unit tests",
+    "api: marks tests that require API access",
+    "performance: marks tests that measure performance metrics",
+    "acceptance: marks tests for user acceptance testing",
+    "mock_heavy: marks tests with extensive mocking",
+    "external_deps: marks tests that mock external dependencies",
+    "memory_intensive: marks tests that use significant memory",
+    "requires_gpu: marks tests that require GPU acceleration",
+    "content_context: marks tests that validate ContentContext integrity",
+    "gemini_api: marks tests that mock Gemini API",
+    "imagen_api: marks tests that mock Imagen API",
+    "whisper_api: marks tests that mock Whisper API",
+    "cost_tracking: marks tests that validate API cost tracking",
+    "error_recovery: marks tests for error handling and recovery",
+    "asyncio: marks tests as async tests",
+]
+filterwarnings = [
+    "ignore::UserWarning",
+    "ignore::DeprecationWarning",
+    "ignore::pytest.PytestUnraisableExceptionWarning",
+    "ignore::ResourceWarning",
+    "ignore::PendingDeprecationWarning",
 ]
 
 [tool.coverage.run]

@@ -1,0 +1,32 @@
+{
+  "video_file": "media\\test\\Untitled video.mp4",
+  "analysis_summary": {
+    "audio": {
+      "transcription_quality": "low",
+      "content_type": "general",
+      "duration": 21.94,
+      "segment_count": 8,
+      "speaking_rate": 2.8258887876025525,
+      "vocabulary_richness": 0.8225806451612904
+    },
+    "video": {
+      "scene_count": 6,
+      "face_count": 6,
+      "key_frames": 6,
+      "analysis_quality": "high",
+      "resolution": "1280x720",
+      "fps": 24.0,
+      "duration": 32.716916
+    }
+  },
+  "recommendations": [
+    "Low transcription quality detected - consider using a larger Whisper model"
+  ],
+  "editing_suggestions": [
+    "Multiple faces detected - use close-ups during key moments"
+  ],
+  "technical_insights": [],
+  "content_insights": [
+    "Key concepts identified: visual_text_overlay, visual_data_visualization, text_content, red_dominant, green_dominant"
+  ]
+}

@@ -1,32 +1,46 @@
 {
   "benchmarks": [
     {
-      "video_duration": 0.0,
+      "video_duration": 32.716916,
       "video_resolution": [
-        1920,
-        1080
+        1280,
+        720
       ],
-      "frames_analyzed": 0,
-      "processing_time": 0.19526886940002441,
-      "memory_peak_usage": 377860096,
-      "memory_average_usage": 377860096.0,
-      "cpu_usage_percent": 0.0,
-      "frames_per_second": 0.0,
-      "quality_score_accuracy": 0.0
+      "frames_analyzed": 17,
+      "processing_time": 2.731921911239624,
+      "memory_peak_usage": 3987660800,
+      "memory_average_usage": 3982403811.5555553,
+      "cpu_usage_percent": 193.5235294117647,
+      "frames_per_second": 6.222725448358866,
+      "quality_score_accuracy": 0.8092998254896727
     },
     {
-      "video_duration": 0.0,
+      "video_duration": 32.716916,
       "video_resolution": [
-        1920,
-        1080
+        1280,
+        720
       ],
-      "frames_analyzed": 0,
-      "processing_time": 0.2198486328125,
-      "memory_peak_usage": 512245760,
-      "memory_average_usage": 512245760.0,
-      "cpu_usage_percent": 0.0,
-      "frames_per_second": 0.0,
-      "quality_score_accuracy": 0.0
+      "frames_analyzed": 17,
+      "processing_time": 2.7389280796051025,
+      "memory_peak_usage": 591892480,
+      "memory_average_usage": 586747676.4444444,
+      "cpu_usage_percent": 188.76470588235293,
+      "frames_per_second": 6.206807738613952,
+      "quality_score_accuracy": 0.8092998254896727
+    },
+    {
+      "video_duration": 32.716916,
+      "video_resolution": [
+        1280,
+        720
+      ],
+      "frames_analyzed": 17,
+      "processing_time": 2.68235445022583,
+      "memory_peak_usage": 591888384,
+      "memory_average_usage": 586587932.4444444,
+      "cpu_usage_percent": 194.25882352941176,
+      "frames_per_second": 6.337715732746935,
+      "quality_score_accuracy": 0.8092998254896727
     }
   ],
   "targets": {

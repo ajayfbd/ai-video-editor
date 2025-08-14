@@ -1,0 +1,41 @@
+{
+  "benchmarks": [
+    {
+      "video_duration": 0.0,
+      "video_resolution": [
+        1920,
+        1080
+      ],
+      "frames_analyzed": 0,
+      "processing_time": 0.19526886940002441,
+      "memory_peak_usage": 377860096,
+      "memory_average_usage": 377860096.0,
+      "cpu_usage_percent": 0.0,
+      "frames_per_second": 0.0,
+      "quality_score_accuracy": 0.0
+    },
+    {
+      "video_duration": 0.0,
+      "video_resolution": [
+        1920,
+        1080
+      ],
+      "frames_analyzed": 0,
+      "processing_time": 0.2198486328125,
+      "memory_peak_usage": 512245760,
+      "memory_average_usage": 512245760.0,
+      "cpu_usage_percent": 0.0,
+      "frames_per_second": 0.0,
+      "quality_score_accuracy": 0.0
+    }
+  ],
+  "targets": {
+    "educational_content_target": 40.0,
+    "music_video_target": 60.0,
+    "general_content_target": 60.0,
+    "max_memory_usage_gb": 16.0,
+    "min_frames_per_second": 5.0,
+    "min_quality_accuracy": 0.85,
+    "max_cpu_usage_percent": 80.0
+  }
+}

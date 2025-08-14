@@ -1,0 +1,74 @@
+[
+  {
+    "timestamp": 9.0,
+    "confidence": 0.8,
+    "bbox": [
+      601.0,
+      218.0,
+      129.0,
+      129.0
+    ],
+    "expression": "neutral",
+    "frame_number": 216
+  },
+  {
+    "timestamp": 9.0,
+    "confidence": 0.8,
+    "bbox": [
+      598.0,
+      492.0,
+      174.0,
+      174.0
+    ],
+    "expression": "happy",
+    "frame_number": 216
+  },
+  {
+    "timestamp": 22.0,
+    "confidence": 0.8,
+    "bbox": [
+      751.0,
+      386.0,
+      142.0,
+      142.0
+    ],
+    "expression": "happy",
+    "frame_number": 528
+  },
+  {
+    "timestamp": 22.0,
+    "confidence": 0.8,
+    "bbox": [
+      583.0,
+      317.0,
+      107.0,
+      107.0
+    ],
+    "expression": "neutral",
+    "frame_number": 528
+  },
+  {
+    "timestamp": 16.0,
+    "confidence": 0.8,
+    "bbox": [
+      658.0,
+      222.0,
+      232.0,
+      232.0
+    ],
+    "expression": "neutral",
+    "frame_number": 384
+  },
+  {
+    "timestamp": 4.0,
+    "confidence": 0.8,
+    "bbox": [
+      594.0,
+      433.0,
+      136.0,
+      136.0
+    ],
+    "expression": "focused",
+    "frame_number": 96
+  }
+]

@@ -1,5 +1,7 @@
 """Custom exceptions for AI Video Editor."""
 
+import time
+from functools import wraps
 from typing import Optional, Dict, Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -90,6 +92,102 @@ class NetworkError(VideoEditorError):
         super().__init__(message, error_code="NETWORK_ERROR", **kwargs)
         self.service = service
         self.reason = reason
+
+
+# ContentContext-specific exceptions (from utils/error_handling.py)
+class ContentContextError(VideoEditorError):
+    """Base exception for ContentContext-related errors."""
+    
+    def __init__(self, message: str, context_state: Optional[Any] = None, **kwargs):
+        super().__init__(message, error_code="CONTENT_CONTEXT_ERROR", **kwargs)
+        self.context_state = context_state
+        self.recovery_checkpoint = None
+
+
+class ContextIntegrityError(ContentContextError):
+    """Raised when ContentContext data is corrupted or invalid."""
+    pass
+
+
+class APIIntegrationError(ContentContextError):
+    """Raised when external API calls fail."""
+    pass
+
+
+class GeminiAPIError(APIIntegrationError):
+    """Specific error for Gemini API failures."""
+    pass
+
+
+class ImagenAPIError(APIIntegrationError):
+    """Specific error for Imagen API failures."""
+    pass
+
+
+class VideoAnalysisError(ContentContextError):
+    """Raised when video analysis fails."""
+    pass
+
+
+class AudioAnalysisError(ContentContextError):
+    """Raised when audio analysis fails."""
+    pass
+
+
+class ProcessingTimeoutError(ResourceError):
+    """Raised when processing takes too long."""
+    pass
+
+
+class MemoryConstraintError(ResourceError):
+    """Raised when memory usage exceeds limits."""
+    pass
+
+
+# Error handling utilities
+def handle_errors(preserve_context: bool = True):
+    """Decorator for handling errors with context preservation."""
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except ContentContextError:
+                raise  # Re-raise ContentContext errors as-is
+            except Exception as e:
+                # Convert to ContentContextError if preserve_context is True
+                if preserve_context and args and hasattr(args[0], '__class__'):
+                    context = args[0] if hasattr(args[0], 'project_id') else None
+                    raise ContentContextError(f"Error in {func.__name__}: {str(e)}", context)
+                else:
+                    raise
+        return wrapper
+    return decorator
+
+
+def retry_on_error(max_retries: int = 3, delay: float = 1.0, backoff: float = 2.0):
+    """Decorator for retrying operations on specific errors."""
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            last_exception = None
+            for attempt in range(max_retries + 1):
+                try:
+                    return func(*args, **kwargs)
+                except (APIIntegrationError, ResourceError) as e:
+                    last_exception = e
+                    if attempt < max_retries:
+                        time.sleep(delay * (backoff ** attempt))
+                        continue
+                    else:
+                        raise
+                except Exception:
+                    raise  # Don't retry on other exceptions
+            
+            if last_exception:
+                raise last_exception
+        return wrapper
+    return decorator
 
 
 class APIError(VideoEditorError):

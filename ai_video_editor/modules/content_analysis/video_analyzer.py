@@ -20,8 +20,8 @@ from scenedetect.detectors import ContentDetector, ThresholdDetector
 from scenedetect.video_splitter import split_video_ffmpeg
 
 from ...core.content_context import ContentContext, VisualHighlight, FaceDetection
-from ...utils.cache_manager import CacheManager
-from ...utils.error_handling import ContentContextError, ResourceConstraintError
+from ...core.cache_manager import CacheManager
+from ...core.exceptions import ContentContextError, ResourceConstraintError
 from ...utils.performance_benchmarks import create_quality_assessment_profiler, create_benchmark_manager
 
 logger = logging.getLogger(__name__)

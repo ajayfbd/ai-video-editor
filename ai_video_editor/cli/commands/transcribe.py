@@ -20,12 +20,12 @@ logger = get_logger(__name__)
 @click.command("transcribe")
 @click.argument("input_file", type=click.Path(exists=True, path_type=Path))
 @click.option("--model", "model_size", type=click.Choice(["tiny", "base", "small", "medium", "large", "turbo"]), 
-              default="medium", help="Model size (mapped appropriately for selected backend)")
+              default="large", help="Model size (default: large for best quality)")
 @click.option("--language", type=str, default=None, help="Language code (auto-detect if omitted)")
-@click.option("--output", "output_path", type=click.Path(path_type=Path), required=True, 
-              help="Output transcript JSON path")
+@click.option("--output", "output_path", type=click.Path(path_type=Path), default=None, 
+              help="Output transcript JSON path (default: workspace/outputs/<filename>_transcript.json)")
 @click.option("--backend", type=click.Choice(["whisper", "faster-whisper"]), default="faster-whisper", 
-              help="ASR backend (smart default: faster-whisper)")
+              help="ASR backend (default: faster-whisper)")
 @click.option("--device", type=click.Choice(["auto", "cpu", "cuda"]), default="auto", 
               help="Device for backend execution (smart default: auto)")
 @click.option("--compute-type", "compute_type", type=click.Choice(["int8", "int8_float32", "float16", "float32"]), 
@@ -35,21 +35,21 @@ logger = get_logger(__name__)
               help="VAD threshold (0.0-1.0, lower = more sensitive, more segments)")
 @click.option("--min-silence-duration", type=int, default=500, 
               help="Minimum silence duration in ms to split segments (lower = more segments)")
-@click.option("--word-timestamps", is_flag=True, help="Enable word-level timestamps")
-@click.option("--segment-length", type=int, default=0, 
-              help="Force maximum segment length in seconds (0 = natural segmentation)")
+@click.option("--word-timestamps", default=True, is_flag=True, help="Enable word-level timestamps (default: enabled)")
+@click.option("--segment-length", type=int, default=3, 
+              help="Force maximum segment length in seconds (default: 3 seconds)")
 @click.option("--initial-prompt", type=str, default=None, 
               help="Initial prompt to bias recognition (e.g., script hints)")
-@click.option("--enhance-audio/--no-enhance-audio", default=False, 
-              help="Preprocess audio: normalize + light denoise before ASR")
+@click.option("--enhance-audio/--no-enhance-audio", default=True, 
+              help="Preprocess audio: normalize + light denoise before ASR (default: enabled)")
 @click.option("--task", type=click.Choice(["transcribe", "translate"]), default="transcribe", 
               help="Recognition task")
 @click.option("--romanize/--no-romanize", default=True, 
               help="If Hindi is detected, output Hinglish (romanized) text by default (smart default: on)")
 @click.option("--romanize-scheme", type=click.Choice(["hk", "itrans", "iast"]), default="hk", 
               help="Romanization scheme for Hindi")
-@click.option("--force-model", is_flag=True, 
-              help="Force use of specified model size even on CPU (may be slow for large models)")
+@click.option("--force-model", default=True, is_flag=True, 
+              help="Force use of specified model size even on CPU (default: enabled for large model)")
 @click.option("--vocab-file", type=click.Path(exists=True, path_type=Path), 
               help="Sanskrit/Hindi vocabulary file for better word prediction")
 @click.option("--preset", type=click.Choice(["hindi-religious", "sanskrit-classical", "mythological", "comprehensive", "general"]), 
@@ -58,7 +58,7 @@ logger = get_logger(__name__)
               help="Number of vocabulary words to use in prompt (default: 100)")
 @click.option("--progress/--no-progress", default=True, help="Show progress bar during transcription")
 @click.option("--quiet", is_flag=True, help="Suppress progress and info output")
-def transcribe_cmd(input_file: Path, model_size: str, language: Optional[str], output_path: Path, 
+def transcribe_cmd(input_file: Path, model_size: str, language: Optional[str], output_path: Optional[Path], 
                    backend: str, device: str, compute_type: Optional[str], vad: bool, vad_threshold: float, 
                    min_silence_duration: int, word_timestamps: bool, segment_length: int, 
                    initial_prompt: Optional[str], enhance_audio: bool, task: str, romanize: bool, 
@@ -71,6 +71,19 @@ def transcribe_cmd(input_file: Path, model_size: str, language: Optional[str], o
     """
     try:
         start_time = time.time()
+        
+        # Generate default output path if not provided
+        if output_path is None:
+            # Create workspace/outputs directory if it doesn't exist
+            output_dir = Path("workspace/outputs")
+            output_dir.mkdir(parents=True, exist_ok=True)
+            
+            # Generate filename: <input_name>_transcript.json
+            input_stem = input_file.stem
+            output_path = output_dir / f"{input_stem}_transcript.json"
+            
+            if not quiet:
+                click.echo(f"[INFO] Using default output path: {output_path}")
         
         # Apply preset configurations with comprehensive vocabulary
         if preset:

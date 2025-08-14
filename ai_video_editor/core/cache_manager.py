@@ -25,6 +25,87 @@ from .exceptions import ContentContextError
 logger = logging.getLogger(__name__)
 
 
+# Simple cache interface compatibility (from utils/cache_manager.py)
+class SimpleCacheManager:
+    """
+    Simple in-memory cache manager with TTL support.
+    
+    Provides backward compatibility with the utils.cache_manager interface.
+    """
+    
+    def __init__(self, default_ttl: int = 3600):
+        """
+        Initialize cache manager.
+        
+        Args:
+            default_ttl: Default time-to-live in seconds
+        """
+        self.default_ttl = default_ttl
+        self._cache: Dict[str, Dict[str, Any]] = {}
+        logger.info(f"SimpleCacheManager initialized with default TTL: {default_ttl}s")
+    
+    def get(self, key: str) -> Optional[Any]:
+        """Get value from cache."""
+        if key not in self._cache:
+            return None
+        
+        entry = self._cache[key]
+        
+        # Check if expired
+        if time.time() > entry['expires_at']:
+            del self._cache[key]
+            return None
+        
+        logger.debug(f"Cache hit for key: {key}")
+        return entry['value']
+    
+    def set(self, key: str, value: Any, ttl: Optional[int] = None) -> None:
+        """Set value in cache."""
+        if ttl is None:
+            ttl = self.default_ttl
+        
+        self._cache[key] = {
+            'value': value,
+            'expires_at': time.time() + ttl,
+            'created_at': time.time()
+        }
+        
+        logger.debug(f"Cached value for key: {key} (TTL: {ttl}s)")
+    
+    def delete(self, key: str) -> bool:
+        """Delete value from cache."""
+        if key in self._cache:
+            del self._cache[key]
+            logger.debug(f"Deleted cache key: {key}")
+            return True
+        return False
+    
+    def clear(self) -> None:
+        """Clear all cached values."""
+        self._cache.clear()
+        logger.info("Cache cleared")
+    
+    def cleanup_expired(self) -> int:
+        """Clean up expired entries."""
+        current_time = time.time()
+        expired_keys = [
+            key for key, entry in self._cache.items()
+            if current_time > entry['expires_at']
+        ]
+        
+        for key in expired_keys:
+            del self._cache[key]
+        
+        if expired_keys:
+            logger.info(f"Cleaned up {len(expired_keys)} expired cache entries")
+        
+        return len(expired_keys)
+
+
+# Alias for backward compatibility
+CacheManager = SimpleCacheManager
+
+
 class CacheEntry:
     """Represents a single cache entry with metadata."""
     
