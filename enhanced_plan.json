@@ -1,0 +1,149 @@
+{
+  "editing_decisions": [
+    {
+      "decision_id": "scene_cut_000",
+      "decision_type": "cut",
+      "timestamp": 9.0,
+      "duration": 0.5,
+      "parameters": {
+        "cut_type": "scene_change",
+        "confidence": 0.8,
+        "reason": "Scene change detected: पुकार पे चुप क्यों गोपाल है, प...",
+        "video_analysis": true
+      }
+    },
+    {
+      "decision_id": "scene_cut_001",
+      "decision_type": "cut",
+      "timestamp": 22.0,
+      "duration": 0.5,
+      "parameters": {
+        "cut_type": "scene_change",
+        "confidence": 0.8,
+        "reason": "Scene change detected: प्रहार, अब समय का नाश है, खंब ...",
+        "video_analysis": true
+      }
+    },
+    {
+      "decision_id": "scene_cut_002",
+      "decision_type": "cut",
+      "timestamp": 16.0,
+      "duration": 0.5,
+      "parameters": {
+        "cut_type": "scene_change",
+        "confidence": 0.8,
+        "reason": "Scene change detected: प्रबू तो है यहां वहां, इस खं...",
+        "video_analysis": true
+      }
+    },
+    {
+      "decision_id": "scene_cut_003",
+      "decision_type": "cut",
+      "timestamp": 4.0,
+      "duration": 0.5,
+      "parameters": {
+        "cut_type": "scene_change",
+        "confidence": 0.8,
+        "reason": "Scene change detected: थी प्यासी, सर पे नताज था, असुर...",
+        "video_analysis": true
+      }
+    },
+    {
+      "decision_id": "scene_cut_004",
+      "decision_type": "cut",
+      "timestamp": 27.0,
+      "duration": 0.5,
+      "parameters": {
+        "cut_type": "scene_change",
+        "confidence": 0.8,
+        "reason": "Scene change detected: ...",
+        "video_analysis": true
+      }
+    },
+    {
+      "decision_id": "scene_cut_005",
+      "decision_type": "cut",
+      "timestamp": 32.0,
+      "duration": 0.5,
+      "parameters": {
+        "cut_type": "scene_change",
+        "confidence": 0.8,
+        "reason": "Scene change detected: ...",
+        "video_analysis": true
+      }
+    }
+  ],
+  "broll_plans": [
+    {
+      "broll_id": "content_broll_000",
+      "timestamp": 0.0,
+      "duration": 2.86,
+      "content_type": "dramatic_effect",
+      "description": "Dramatic visual effect: अहमकार की ज्वाला, दानव का राज था, धर्ती...",
+      "parameters": {
+        "opacity": 0.7,
+        "blend_mode": "multiply",
+        "style": "devotional",
+        "text_based": true
+      }
+    },
+    {
+      "broll_id": "content_broll_001",
+      "timestamp": 2.86,
+      "duration": 2.8700000000000006,
+      "content_type": "dramatic_effect",
+      "description": "Dramatic visual effect: थी प्यासी, सर पे नताज था, असुर के...",
+      "parameters": {
+        "opacity": 0.7,
+        "blend_mode": "multiply",
+        "style": "devotional",
+        "text_based": true
+      }
+    },
+    {
+      "broll_id": "content_broll_002",
+      "timestamp": 5.73,
+      "duration": 2.8599999999999994,
+      "content_type": "devotional_scene",
+      "description": "Devotional scene overlay: वर्दान का कैसा ये जाल है, भक्त की...",
+      "parameters": {
+        "opacity": 0.7,
+        "blend_mode": "overlay",
+        "style": "devotional",
+        "text_based": true
+      }
+    },
+    {
+      "broll_id": "content_broll_003",
+      "timestamp": 8.59,
+      "duration": 2.8599999999999994,
+      "content_type": "deity_imagery",
+      "description": "Deity imagery overlay: पुकार पे चुप क्यों गोपाल है, पुछे हिन्यक...",
+      "parameters": {
+        "opacity": 0.7,
+        "blend_mode": "overlay",
+        "style": "devotional",
+        "text_based": true
+      }
+    },
+    {
+      "broll_id": "content_broll_004",
+      "timestamp": 11.45,
+      "duration": 2.860000000000001,
+      "content_type": "deity_imagery",
+      "description": "Deity imagery overlay: शिपू बोल तेरा राम कहा, हसे प्रालाद बोले...",
+      "parameters": {
+        "opacity": 0.7,
+        "blend_mode": "overlay",
+        "style": "devotional",
+        "text_based": true
+      }
+    }
+  ],
+  "metadata_strategy": {
+    "style": "devotional",
+    "target_duration": 24.24,
+    "content_type": "devotional",
+    "video_analysis_used": true
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "editing_decisions": [
+    {
+      "decision_id": "scene_cut_000",
+      "decision_type": "cut",
+      "timestamp": 9.0,
+      "duration": 0.5,
+      "parameters": {
+        "cut_type": "scene_change",
+        "confidence": 0.8,
+        "reason": "Scene change detected: ...",
+        "video_analysis": true
+      }
+    },
+    {
+      "decision_id": "scene_cut_001",
+      "decision_type": "cut",
+      "timestamp": 22.0,
+      "duration": 0.5,
+      "parameters": {
+        "cut_type": "scene_change",
+        "confidence": 0.8,
+        "reason": "Scene change detected: ...",
+        "video_analysis": true
+      }
+    },
+    {
+      "decision_id": "scene_cut_002",
+      "decision_type": "cut",
+      "timestamp": 16.0,
+      "duration": 0.5,
+      "parameters": {
+        "cut_type": "scene_change",
+        "confidence": 0.8,
+        "reason": "Scene change detected: ...",
+        "video_analysis": true
+      }
+    },
+    {
+      "decision_id": "scene_cut_003",
+      "decision_type": "cut",
+      "timestamp": 4.0,
+      "duration": 0.5,
+      "parameters": {
+        "cut_type": "scene_change",
+        "confidence": 0.8,
+        "reason": "Scene change detected: ...",
+        "video_analysis": true
+      }
+    },
+    {
+      "decision_id": "scene_cut_004",
+      "decision_type": "cut",
+      "timestamp": 27.0,
+      "duration": 0.5,
+      "parameters": {
+        "cut_type": "scene_change",
+        "confidence": 0.8,
+        "reason": "Scene change detected: ...",
+        "video_analysis": true
+      }
+    },
+    {
+      "decision_id": "scene_cut_005",
+      "decision_type": "cut",
+      "timestamp": 32.0,
+      "duration": 0.5,
+      "parameters": {
+        "cut_type": "scene_change",
+        "confidence": 0.8,
+        "reason": "Scene change detected: ...",
+        "video_analysis": true
+      }
+    }
+  ],
+  "broll_plans": [],
+  "metadata_strategy": {
+    "style": "dynamic",
+    "target_duration": 32.716916,
+    "content_type": "general",
+    "video_analysis_used": true
+  }
+}

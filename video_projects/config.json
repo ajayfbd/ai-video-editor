@@ -1,0 +1,30 @@
+{
+  "processing_settings": {
+    "quality": "high",
+    "resolution": "1080p",
+    "fps": 30,
+    "use_ai_director": true,
+    "mock_ai": false,
+    "default_content_type": "general",
+    "default_style": "dynamic"
+  },
+  "content_detection": {
+    "devotional_keywords": ["bhajan", "devotional", "spiritual", "religious", "mantra", "aarti", "kirtan", "ram", "krishna", "shiva"],
+    "educational_keywords": ["tutorial", "lesson", "education", "learn", "course", "training", "how-to"],
+    "music_keywords": ["song", "music", "audio", "track", "album", "melody"]
+  },
+  "output_settings": {
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "audio_bitrate": "128k",
+    "video_bitrate": "5000k"
+  },
+  "ai_settings": {
+    "whisper_model": "large",
+    "enable_audio_enhancement": true,
+    "enable_scene_detection": true,
+    "enable_face_detection": true,
+    "segment_duration": 4.0,
+    "add_transitions": true
+  }
+}

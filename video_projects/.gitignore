@@ -1,0 +1,27 @@
+# Generated files
+transcripts/
+ai_plans/
+timelines/
+outputs/
+temp/
+logs/
+
+# Keep directories but ignore contents
+!transcripts/.gitkeep
+!ai_plans/.gitkeep
+!timelines/.gitkeep
+!outputs/.gitkeep
+!temp/.gitkeep
+!logs/.gitkeep
+
+# Input clips (optional - you may want to track these)
+# input_clips/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# OS files
+.DS_Store
+Thumbs.db

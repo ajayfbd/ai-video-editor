@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import sys
+import time
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 
@@ -28,16 +29,42 @@ logger = get_logger(__name__)
 @click.option("--analyze-scenes", is_flag=True, help="Perform scene detection and analysis")
 @click.option("--detect-faces", is_flag=True, help="Detect faces and expressions")
 @click.option("--quality-threshold", type=float, default=0.3, help="Scene change detection threshold")
+@click.option("--ai-director", is_flag=True, help="Use AI Director for sophisticated analysis and planning")
+@click.option("--content-type", type=click.Choice(["educational", "music", "general"]), default="general",
+              help="Content type for AI Director optimization")
+@click.option("--mock-ai", is_flag=True, help="Use mock AI Director for testing (no API calls)")
 def generate_plan_cmd(video_file: Path, transcript_json: Optional[Path], output_path: Path, style: str, 
                       segment_duration: float, add_transitions: bool, detect_chorus: bool,
-                      analyze_scenes: bool, detect_faces: bool, quality_threshold: float):
+                      analyze_scenes: bool, detect_faces: bool, quality_threshold: float,
+                      ai_director: bool, content_type: str, mock_ai: bool):
     """Generate intelligent editing plan from video analysis and transcript.
     
     Analyzes the actual video content (scenes, faces, motion) combined with 
     transcript timing to create smart editing decisions.
+    
+    Use --ai-director for sophisticated AI-powered analysis and planning.
     """
     try:
         click.echo(f"[INFO] Analyzing video: {video_file}")
+        
+        # Check if AI Director mode is requested
+        if ai_director:
+            if mock_ai:
+                click.echo("[INFO] 🤖 Using Mock AI Director for testing (no API calls)")
+                ai_plan = _generate_mock_ai_director_plan(
+                    video_file, transcript_json, output_path, style, content_type,
+                    segment_duration, add_transitions, detect_chorus, analyze_scenes, detect_faces
+                )
+            else:
+                click.echo("[INFO] 🤖 Using AI Director for sophisticated analysis and planning")
+                ai_plan = _generate_ai_director_plan(
+                    video_file, transcript_json, output_path, style, content_type,
+                    segment_duration, add_transitions, detect_chorus, analyze_scenes, detect_faces
+                )
+            return
+        
+        # Original implementation for backward compatibility
+        click.echo("[INFO] Using basic analysis mode (use --ai-director for enhanced AI planning)")
         
         # Load or generate transcript
         if transcript_json:
@@ -95,6 +122,493 @@ def generate_plan_cmd(video_file: Path, transcript_json: Optional[Path], output_
     except Exception as e:
         logger.error(f"Plan generation failed: {e}")
         click.echo(f"[ERROR] Plan generation failed: {e}")
+        sys.exit(1)
+
+
+def _generate_mock_ai_director_plan(video_file: Path, transcript_json: Optional[Path], output_path: Path,
+                                   style: str, content_type: str, segment_duration: float, 
+                                   add_transitions: bool, detect_chorus: bool, analyze_scenes: bool, 
+                                   detect_faces: bool) -> None:
+    """Generate mock AI Director plan for testing without API calls."""
+    try:
+        from ai_video_editor.core.content_context import ContentContext, ContentType, UserPreferences
+        from ai_video_editor.modules.content_analysis.content_analyzer import create_content_analyzer
+        from ai_video_editor.core.cache_manager import CacheManager
+        
+        # Create ContentContext
+        content_type_enum = ContentType(content_type)
+        user_prefs = UserPreferences()
+        user_prefs.editing_style = style
+        
+        context = ContentContext(
+            project_id=f"mock_plan_{int(time.time())}",
+            video_files=[str(video_file)],
+            content_type=content_type_enum,
+            user_preferences=user_prefs
+        )
+        
+        click.echo("[INFO] 🔍 Performing local content analysis...")
+        
+        # Load transcript if provided
+        if transcript_json:
+            transcript_data = load_json(transcript_json)
+            click.echo(f"[INFO] Using provided transcript: {transcript_json}")
+            
+            # Convert transcript to ContentContext format
+            if transcript_data.get("segments"):
+                from ai_video_editor.modules.content_analysis.audio_analyzer import TranscriptSegment, Transcript
+                
+                segments = []
+                for seg in transcript_data["segments"]:
+                    segments.append(TranscriptSegment(
+                        text=seg.get("text", ""),
+                        start=seg.get("start", 0.0),
+                        end=seg.get("end", 0.0),
+                        confidence=seg.get("confidence", 0.8)
+                    ))
+                
+                transcript = Transcript(
+                    text=transcript_data.get("text", ""),
+                    segments=segments,
+                    confidence=transcript_data.get("confidence", 0.8),
+                    language=transcript_data.get("language", "unknown"),
+                    processing_time=transcript_data.get("processing_time", 0.0),
+                    model_used=transcript_data.get("model_used", "unknown")
+                )
+                
+                context.audio_transcript = transcript
+        
+        # Perform local analysis
+        cache_manager = CacheManager()
+        analyzer = create_content_analyzer(cache_manager)
+        
+        # Analyze the content locally
+        context = analyzer.analyze_content(context)
+        
+        click.echo("[INFO] 🤖 Generating mock AI Director editing plan...")
+        
+        # Generate mock intelligent editing decisions
+        editing_decisions = []
+        broll_plans = []
+        
+        # Create intelligent cuts based on content analysis
+        if hasattr(context, 'audio_transcript') and context.audio_transcript:
+            segments = context.audio_transcript.segments
+            for i, segment in enumerate(segments):
+                # Create smart cuts at natural breaks
+                if segment.confidence > 0.7:  # High confidence segments
+                    editing_decisions.append({
+                        "decision_id": f"mock_ai_cut_{i:03d}",
+                        "decision_type": "cut",
+                        "timestamp": segment.start,
+                        "duration": segment.end - segment.start,
+                        "parameters": {
+                            "confidence": 0.9,
+                            "reason": f"High-confidence segment: {segment.text[:50]}...",
+                            "ai_director": True,
+                            "mock_mode": True,
+                            "engagement_impact": 0.8
+                        }
+                    })
+                
+                # Generate content-aware B-roll
+                text = segment.text.lower()
+                if any(word in text for word in ["राम", "कृष्ण", "गोपाल", "भगवान"]):
+                    broll_plans.append({
+                        "broll_id": f"mock_deity_{i:03d}",
+                        "timestamp": segment.start,
+                        "duration": min(segment.end - segment.start, 3.0),
+                        "content_type": "deity_imagery",
+                        "description": f"AI-detected deity reference: {segment.text[:50]}...",
+                        "parameters": {
+                            "confidence": 0.85,
+                            "visual_impact": 0.9,
+                            "ai_director": True,
+                            "mock_mode": True,
+                            "style": style
+                        }
+                    })
+                elif any(word in text for word in ["भक्त", "पुकार", "प्रार्थना"]):
+                    broll_plans.append({
+                        "broll_id": f"mock_devotional_{i:03d}",
+                        "timestamp": segment.start,
+                        "duration": min(segment.end - segment.start, 2.5),
+                        "content_type": "devotional_scene",
+                        "description": f"AI-detected devotional content: {segment.text[:50]}...",
+                        "parameters": {
+                            "confidence": 0.8,
+                            "visual_impact": 0.7,
+                            "ai_director": True,
+                            "mock_mode": True,
+                            "style": style
+                        }
+                    })
+        
+        # Add emotional peak-based decisions
+        if hasattr(context, 'emotional_markers') and context.emotional_markers:
+            for i, peak in enumerate(context.emotional_markers):
+                if peak.intensity > 0.6:
+                    editing_decisions.append({
+                        "decision_id": f"mock_emotional_{i:03d}",
+                        "decision_type": "emphasis",
+                        "timestamp": peak.timestamp,
+                        "duration": 1.0,
+                        "parameters": {
+                            "confidence": 0.9,
+                            "reason": f"AI-detected emotional peak: {peak.emotion} ({peak.intensity:.1%})",
+                            "ai_director": True,
+                            "mock_mode": True,
+                            "engagement_impact": peak.intensity
+                        }
+                    })
+        
+        # Create comprehensive plan
+        total_duration = context.audio_transcript.segments[-1].end if (hasattr(context, 'audio_transcript') and context.audio_transcript and context.audio_transcript.segments) else _get_video_duration(video_file)
+        
+        cli_plan = {
+            "editing_decisions": editing_decisions,
+            "broll_plans": broll_plans,
+            "metadata_strategy": {
+                "style": style,
+                "content_type": content_type,
+                "ai_director_used": True,
+                "mock_mode": True,
+                "confidence": 0.85,
+                "engagement_score": 0.75,
+                "target_duration": total_duration,
+                "optimization_focus": "engagement",
+                "seo_keywords": ["devotional", "spiritual", "bhajan", "religious"],
+                "thumbnail_concepts": ["deity imagery", "devotional scene", "spiritual moment"]
+            }
+        }
+        
+        # Save the plan
+        save_json(cli_plan, output_path)
+        
+        # Display results
+        click.echo(f"[OK] ✨ Mock AI Director plan written to {output_path}")
+        click.echo(f"[INFO] 🎬 Generated {len(cli_plan['editing_decisions'])} AI-powered editing decisions")
+        click.echo(f"[INFO] 🎨 Generated {len(cli_plan['broll_plans'])} intelligent B-roll opportunities")
+        
+        if hasattr(context, 'key_concepts') and context.key_concepts:
+            click.echo(f"[INFO] 🔍 Identified {len(context.key_concepts)} key concepts")
+        
+        if hasattr(context, 'emotional_markers') and context.emotional_markers:
+            high_peaks = [p for p in context.emotional_markers if p.intensity > 0.7]
+            click.echo(f"[INFO] 😊 Detected {len(high_peaks)} high-intensity emotional peaks")
+        
+        if hasattr(context, 'visual_highlights') and context.visual_highlights:
+            click.echo(f"[INFO] 👁️ Found {len(context.visual_highlights)} visual highlights")
+        
+        confidence = cli_plan["metadata_strategy"].get("confidence", 0.0)
+        engagement = cli_plan["metadata_strategy"].get("engagement_score", 0.0)
+        click.echo(f"[INFO] 📊 Plan confidence: {confidence:.1%}, Engagement score: {engagement:.1%}")
+        click.echo(f"[INFO] 🧪 Mock mode - no API calls made")
+        
+    except Exception as e:
+        logger.error(f"Mock AI Director plan generation failed: {e}")
+        click.echo(f"[ERROR] Mock AI Director planning failed: {e}")
+        sys.exit(1)
+
+
+def _generate_enhanced_local_plan(context, style: str, content_type: str):
+    """Generate enhanced local plan when AI Director API is unavailable."""
+    from ai_video_editor.modules.intelligence.ai_director import AIDirectorPlan, EditingDecision, BRollPlan, MetadataStrategy
+    from datetime import datetime
+    
+    editing_decisions = []
+    broll_plans = []
+    
+    # Generate intelligent decisions based on local analysis
+    if hasattr(context, 'audio_transcript') and context.audio_transcript:
+        segments = context.audio_transcript.segments
+        for i, segment in enumerate(segments):
+            if segment.confidence > 0.7:
+                editing_decisions.append(EditingDecision(
+                    timestamp=segment.start,
+                    decision_type="cut",
+                    parameters={
+                        "start_time": segment.start,
+                        "end_time": segment.end,
+                        "segment_text": segment.text[:50] + "...",
+                        "local_analysis": True
+                    },
+                    rationale=f"High-confidence transcript segment: {segment.text[:30]}...",
+                    confidence=0.85,
+                    priority=7
+                ))
+                
+                # Content-aware B-roll based on local analysis
+                text = segment.text.lower()
+                if any(word in text for word in ["राम", "कृष्ण", "गोपाल", "भगवान"]):
+                    broll_plans.append(BRollPlan(
+                        timestamp=segment.start,
+                        duration=min(segment.end - segment.start, 3.0),
+                        content_type="deity_imagery",
+                        description=f"Deity reference detected: {segment.text[:40]}...",
+                        visual_elements=["deity_image", "spiritual_background"],
+                        animation_style="fade_overlay",
+                        priority=8
+                    ))
+    
+    # Add emotional peak decisions
+    if hasattr(context, 'emotional_markers') and context.emotional_markers:
+        for peak in context.emotional_markers:
+            if peak.intensity > 0.6:
+                editing_decisions.append(EditingDecision(
+                    timestamp=peak.timestamp,
+                    decision_type="emphasis",
+                    parameters={
+                        "emotion": peak.emotion,
+                        "intensity": peak.intensity,
+                        "local_analysis": True
+                    },
+                    rationale=f"Emotional peak detected: {peak.emotion} ({peak.intensity:.1%})",
+                    confidence=0.8,
+                    priority=6
+                ))
+    
+    # Create metadata strategy
+    metadata_strategy = MetadataStrategy(
+        primary_title=f"Devotional Content - {style.title()} Style",
+        title_variations=[
+            "Spiritual Journey - Divine Moments",
+            "Sacred Verses - Devotional Experience",
+            "Divine Blessings - Spiritual Content"
+        ],
+        description=f"Enhanced {content_type} content with {style} styling and local AI analysis",
+        tags=["devotional", "spiritual", "religious", "bhajan", "divine"],
+        thumbnail_concepts=["deity imagery", "spiritual moment", "devotional scene"],
+        hook_text="Experience divine moments",
+        target_keywords=["devotional", "spiritual", "religious content"]
+    )
+    
+    # Create AI Director plan structure
+    plan = AIDirectorPlan(
+        editing_decisions=editing_decisions,
+        broll_plans=broll_plans,
+        metadata_strategy=metadata_strategy,
+        quality_enhancements=["audio_clarity", "visual_enhancement"],
+        pacing_adjustments=[{"type": "natural_flow", "confidence": 0.8}],
+        engagement_hooks=[{"type": "emotional_peak", "count": len([p for p in context.emotional_markers if p.intensity > 0.6]) if hasattr(context, 'emotional_markers') else 0}],
+        created_at=datetime.now(),
+        confidence_score=0.8,
+        processing_time=1.0,
+        model_used="local_analysis"
+    )
+    
+    return plan
+
+
+def _generate_ai_director_plan(video_file: Path, transcript_json: Optional[Path], output_path: Path,
+                              style: str, content_type: str, segment_duration: float, 
+                              add_transitions: bool, detect_chorus: bool, analyze_scenes: bool, 
+                              detect_faces: bool) -> None:
+    """Generate AI Director plan using the full AI Video Editor pipeline."""
+    try:
+        from ai_video_editor.core.content_context import ContentContext, ContentType, UserPreferences
+        from ai_video_editor.modules.content_analysis.content_analyzer import create_content_analyzer
+        from ai_video_editor.modules.intelligence.ai_director import FinancialVideoEditor
+        from ai_video_editor.modules.intelligence.gemini_client import GeminiClient
+        from ai_video_editor.core.cache_manager import CacheManager
+        
+        # Create ContentContext
+        content_type_enum = ContentType(content_type)
+        user_prefs = UserPreferences()
+        user_prefs.editing_style = style
+        
+        context = ContentContext(
+            project_id=f"generate_plan_{int(time.time())}",
+            video_files=[str(video_file)],
+            content_type=content_type_enum,
+            user_preferences=user_prefs
+        )
+        
+        click.echo("[INFO] 🔍 Performing comprehensive multi-modal analysis...")
+        
+        # Load transcript if provided
+        if transcript_json:
+            transcript_data = load_json(transcript_json)
+            click.echo(f"[INFO] Using provided transcript: {transcript_json}")
+            
+            # Convert transcript to ContentContext format
+            if transcript_data.get("segments"):
+                from ai_video_editor.modules.content_analysis.audio_analyzer import TranscriptSegment, Transcript
+                
+                segments = []
+                for seg in transcript_data["segments"]:
+                    segments.append(TranscriptSegment(
+                        text=seg.get("text", ""),
+                        start=seg.get("start", 0.0),
+                        end=seg.get("end", 0.0),
+                        confidence=seg.get("confidence", 0.8)
+                    ))
+                
+                transcript = Transcript(
+                    text=transcript_data.get("text", ""),
+                    segments=segments,
+                    confidence=transcript_data.get("confidence", 0.8),
+                    language=transcript_data.get("language", "unknown"),
+                    processing_time=transcript_data.get("processing_time", 0.0),
+                    model_used=transcript_data.get("model_used", "unknown")
+                )
+                
+                context.audio_transcript = transcript
+        
+        # Perform comprehensive analysis using MultiModalContentAnalyzer
+        cache_manager = CacheManager()
+        analyzer = create_content_analyzer(cache_manager)
+        
+        # Analyze the content
+        context = analyzer.analyze_content(context)
+        
+        click.echo("[INFO] 🤖 Generating AI Director editing plan...")
+        
+        # Initialize AI Director with enhanced configuration
+        from ai_video_editor.modules.intelligence.gemini_client import GeminiConfig
+        
+        # Configure Gemini client for CLI usage
+        gemini_config = GeminiConfig(
+            model="gemini-2.0-flash-exp",
+            temperature=0.7,
+            max_output_tokens=4000  # Limit output for faster response
+        )
+        
+        gemini_client = GeminiClient(
+            default_config=gemini_config,
+            timeout=30.0,  # Shorter timeout for CLI
+            max_retries=2,  # Fewer retries for faster feedback
+            enable_caching=True
+        )
+        ai_director = FinancialVideoEditor(gemini_client, cache_manager)
+        
+        # Generate comprehensive editing plan with timeout and fallback
+        import asyncio
+        
+        async def _run_ai_director():
+            try:
+                # Try AI Director with timeout
+                click.echo("[INFO] ⏱️ Calling AI Director (30s timeout)...")
+                ai_plan = await asyncio.wait_for(
+                    ai_director.generate_editing_plan(context),
+                    timeout=30.0
+                )
+                click.echo("[INFO] ✅ AI Director plan generated successfully")
+                return ai_plan, True
+                
+            except asyncio.TimeoutError:
+                click.echo("[WARNING] ⏰ AI Director timed out, falling back to enhanced local analysis")
+                return None, False
+                
+            except Exception as api_error:
+                click.echo(f"[WARNING] 🔄 AI Director API failed: {str(api_error)[:100]}...")
+                click.echo("[INFO] 🔧 Falling back to enhanced local analysis")
+                return None, False
+        
+        # Run the AI Director
+        ai_plan, api_success = asyncio.run(_run_ai_director())
+        
+        if not api_success:
+            ai_plan = _generate_enhanced_local_plan(context, style, content_type)
+        
+        # Convert AI Director plan to CLI format
+        cli_plan = {
+            "editing_decisions": [],
+            "broll_plans": [],
+            "metadata_strategy": {
+                "style": style,
+                "content_type": content_type,
+                "ai_director_used": True,
+                "confidence": getattr(ai_plan, 'confidence', 0.8),
+                "engagement_score": getattr(ai_plan, 'engagement_score', 0.0)
+            }
+        }
+        
+        # Convert editing decisions
+        if hasattr(ai_plan, 'editing_decisions'):
+            for i, decision in enumerate(ai_plan.editing_decisions):
+                # Calculate duration from parameters or use default
+                duration = 0.5  # Default duration for cuts
+                if hasattr(decision, 'parameters') and decision.parameters:
+                    if 'end_time' in decision.parameters and 'start_time' in decision.parameters:
+                        duration = decision.parameters['end_time'] - decision.parameters['start_time']
+                    elif 'duration' in decision.parameters:
+                        duration = decision.parameters['duration']
+                
+                cli_decision = {
+                    "decision_id": f"ai_director_{i:03d}",
+                    "decision_type": decision.decision_type,
+                    "timestamp": decision.timestamp,
+                    "duration": duration,
+                    "parameters": {
+                        "confidence": decision.confidence,
+                        "reason": decision.rationale,  # Use rationale instead of reason
+                        "priority": decision.priority,
+                        "ai_director": True,
+                        "parameters": decision.parameters
+                    }
+                }
+                cli_plan["editing_decisions"].append(cli_decision)
+        
+        # Convert B-roll plans
+        if hasattr(ai_plan, 'broll_plans'):
+            for i, broll in enumerate(ai_plan.broll_plans):
+                cli_broll = {
+                    "broll_id": f"ai_broll_{i:03d}",
+                    "timestamp": broll.timestamp,
+                    "duration": broll.duration,
+                    "content_type": broll.content_type,
+                    "description": broll.description,
+                    "parameters": {
+                        "visual_elements": broll.visual_elements,
+                        "animation_style": broll.animation_style,
+                        "priority": broll.priority,
+                        "ai_director": True,
+                        "style": style
+                    }
+                }
+                cli_plan["broll_plans"].append(cli_broll)
+        
+        # Add metadata strategy from AI Director
+        if hasattr(ai_plan, 'metadata_strategy'):
+            metadata = ai_plan.metadata_strategy
+            cli_plan["metadata_strategy"].update({
+                "target_duration": getattr(metadata, 'target_duration', 0.0),
+                "optimization_focus": getattr(metadata, 'optimization_focus', 'engagement'),
+                "seo_keywords": getattr(metadata, 'seo_keywords', []),
+                "thumbnail_concepts": getattr(metadata, 'thumbnail_concepts', [])
+            })
+        
+        # Save the enhanced plan
+        save_json(cli_plan, output_path)
+        
+        # Display results
+        click.echo(f"[OK] ✨ AI Director plan written to {output_path}")
+        click.echo(f"[INFO] 🎬 Generated {len(cli_plan['editing_decisions'])} AI-powered editing decisions")
+        click.echo(f"[INFO] 🎨 Generated {len(cli_plan['broll_plans'])} intelligent B-roll opportunities")
+        
+        if hasattr(context, 'key_concepts') and context.key_concepts:
+            click.echo(f"[INFO] 🔍 Identified {len(context.key_concepts)} key concepts")
+        
+        if hasattr(context, 'emotional_markers') and context.emotional_markers:
+            high_peaks = [p for p in context.emotional_markers if p.intensity > 0.7]
+            click.echo(f"[INFO] 😊 Detected {len(high_peaks)} high-intensity emotional peaks")
+        
+        if hasattr(context, 'visual_highlights') and context.visual_highlights:
+            click.echo(f"[INFO] 👁️ Found {len(context.visual_highlights)} visual highlights")
+        
+        confidence = cli_plan["metadata_strategy"].get("confidence", 0.0)
+        engagement = cli_plan["metadata_strategy"].get("engagement_score", 0.0)
+        click.echo(f"[INFO] 📊 Plan confidence: {confidence:.1%}, Engagement score: {engagement:.1%}")
+        
+    except ImportError as e:
+        click.echo(f"[ERROR] Missing AI Director dependencies: {e}")
+        click.echo("[INFO] Install required packages or use basic mode without --ai-director")
+        sys.exit(1)
+    except Exception as e:
+        logger.error(f"AI Director plan generation failed: {e}")
+        click.echo(f"[ERROR] AI Director planning failed: {e}")
+        click.echo("[INFO] Try using basic mode without --ai-director flag")
         sys.exit(1)
 
 

@@ -1,0 +1,217 @@
+{
+  "editing_decisions": [
+    {
+      "decision_id": "ai_director_000",
+      "decision_type": "cut",
+      "timestamp": 0.0,
+      "duration": 2.86,
+      "parameters": {
+        "confidence": 0.85,
+        "reason": "High-confidence transcript segment: अहमकार की ज्वाला, दानव का राज ...",
+        "priority": 7,
+        "ai_director": true,
+        "parameters": {
+          "start_time": 0.0,
+          "end_time": 2.86,
+          "segment_text": "अहमकार की ज्वाला, दानव का राज था, धर्ती...",
+          "local_analysis": true
+        }
+      }
+    },
+    {
+      "decision_id": "ai_director_001",
+      "decision_type": "cut",
+      "timestamp": 2.86,
+      "duration": 2.8700000000000006,
+      "parameters": {
+        "confidence": 0.85,
+        "reason": "High-confidence transcript segment: थी प्यासी, सर पे नताज था, असुर...",
+        "priority": 7,
+        "ai_director": true,
+        "parameters": {
+          "start_time": 2.86,
+          "end_time": 5.73,
+          "segment_text": "थी प्यासी, सर पे नताज था, असुर के...",
+          "local_analysis": true
+        }
+      }
+    },
+    {
+      "decision_id": "ai_director_002",
+      "decision_type": "cut",
+      "timestamp": 5.73,
+      "duration": 2.8599999999999994,
+      "parameters": {
+        "confidence": 0.85,
+        "reason": "High-confidence transcript segment: वर्दान का कैसा ये जाल है, भक्त...",
+        "priority": 7,
+        "ai_director": true,
+        "parameters": {
+          "start_time": 5.73,
+          "end_time": 8.59,
+          "segment_text": "वर्दान का कैसा ये जाल है, भक्त की...",
+          "local_analysis": true
+        }
+      }
+    },
+    {
+      "decision_id": "ai_director_003",
+      "decision_type": "cut",
+      "timestamp": 8.59,
+      "duration": 2.8599999999999994,
+      "parameters": {
+        "confidence": 0.85,
+        "reason": "High-confidence transcript segment: पुकार पे चुप क्यों गोपाल है, प...",
+        "priority": 7,
+        "ai_director": true,
+        "parameters": {
+          "start_time": 8.59,
+          "end_time": 11.45,
+          "segment_text": "पुकार पे चुप क्यों गोपाल है, पुछे हिन्यक...",
+          "local_analysis": true
+        }
+      }
+    },
+    {
+      "decision_id": "ai_director_004",
+      "decision_type": "cut",
+      "timestamp": 11.45,
+      "duration": 2.860000000000001,
+      "parameters": {
+        "confidence": 0.85,
+        "reason": "High-confidence transcript segment: शिपू बोल तेरा राम कहा, हसे प्र...",
+        "priority": 7,
+        "ai_director": true,
+        "parameters": {
+          "start_time": 11.45,
+          "end_time": 14.31,
+          "segment_text": "शिपू बोल तेरा राम कहा, हसे प्रालाद बोले...",
+          "local_analysis": true
+        }
+      }
+    },
+    {
+      "decision_id": "ai_director_005",
+      "decision_type": "cut",
+      "timestamp": 14.31,
+      "duration": 2.51,
+      "parameters": {
+        "confidence": 0.85,
+        "reason": "High-confidence transcript segment: प्रबू तो है यहां वहां, इस खं...",
+        "priority": 7,
+        "ai_director": true,
+        "parameters": {
+          "start_time": 14.31,
+          "end_time": 16.82,
+          "segment_text": "प्रबू तो है यहां वहां, इस खं...",
+          "local_analysis": true
+        }
+      }
+    },
+    {
+      "decision_id": "ai_director_006",
+      "decision_type": "cut",
+      "timestamp": 16.82,
+      "duration": 3.1799999999999997,
+      "parameters": {
+        "confidence": 0.85,
+        "reason": "High-confidence transcript segment: खंबे में है, इसी में वास है, ग...",
+        "priority": 7,
+        "ai_director": true,
+        "parameters": {
+          "start_time": 16.82,
+          "end_time": 20.0,
+          "segment_text": "खंबे में है, इसी में वास है, गदा का...",
+          "local_analysis": true
+        }
+      }
+    },
+    {
+      "decision_id": "ai_director_007",
+      "decision_type": "cut",
+      "timestamp": 20.0,
+      "duration": 3.1799999999999997,
+      "parameters": {
+        "confidence": 0.85,
+        "reason": "High-confidence transcript segment: प्रहार, अब समय का नाश है, खंब ...",
+        "priority": 7,
+        "ai_director": true,
+        "parameters": {
+          "start_time": 20.0,
+          "end_time": 23.18,
+          "segment_text": "प्रहार, अब समय का नाश है, खंब खौर के...",
+          "local_analysis": true
+        }
+      }
+    },
+    {
+      "decision_id": "ai_director_008",
+      "decision_type": "cut",
+      "timestamp": 23.18,
+      "duration": 1.0599999999999987,
+      "parameters": {
+        "confidence": 0.85,
+        "reason": "High-confidence transcript segment: गरजे देखो नरसे...",
+        "priority": 7,
+        "ai_director": true,
+        "parameters": {
+          "start_time": 23.18,
+          "end_time": 24.24,
+          "segment_text": "गरजे देखो नरसे...",
+          "local_analysis": true
+        }
+      }
+    }
+  ],
+  "broll_plans": [
+    {
+      "broll_id": "ai_broll_000",
+      "timestamp": 8.59,
+      "duration": 2.8599999999999994,
+      "content_type": "deity_imagery",
+      "description": "Deity reference detected: पुकार पे चुप क्यों गोपाल है, पुछे हिन्यक...",
+      "parameters": {
+        "visual_elements": [
+          "deity_image",
+          "spiritual_background"
+        ],
+        "animation_style": "fade_overlay",
+        "priority": 8,
+        "ai_director": true,
+        "style": "devotional"
+      }
+    },
+    {
+      "broll_id": "ai_broll_001",
+      "timestamp": 11.45,
+      "duration": 2.860000000000001,
+      "content_type": "deity_imagery",
+      "description": "Deity reference detected: शिपू बोल तेरा राम कहा, हसे प्रालाद बोले...",
+      "parameters": {
+        "visual_elements": [
+          "deity_image",
+          "spiritual_background"
+        ],
+        "animation_style": "fade_overlay",
+        "priority": 8,
+        "ai_director": true,
+        "style": "devotional"
+      }
+    }
+  ],
+  "metadata_strategy": {
+    "style": "devotional",
+    "content_type": "music",
+    "ai_director_used": true,
+    "confidence": 0.8,
+    "engagement_score": 0.0,
+    "target_duration": 0.0,
+    "optimization_focus": "engagement",
+    "seo_keywords": [],
+    "thumbnail_concepts": [
+      "deity imagery",
+      "spiritual moment",
+      "devotional scene"
+    ]
+  }
+}

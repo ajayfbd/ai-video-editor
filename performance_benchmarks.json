@@ -41,6 +41,34 @@
       "cpu_usage_percent": 194.25882352941176,
       "frames_per_second": 6.337715732746935,
       "quality_score_accuracy": 0.8092998254896727
+    },
+    {
+      "video_duration": 32.716916,
+      "video_resolution": [
+        1280,
+        720
+      ],
+      "frames_analyzed": 17,
+      "processing_time": 2.6260132789611816,
+      "memory_peak_usage": 593338368,
+      "memory_average_usage": 588206762.6666666,
+      "cpu_usage_percent": 183.28235294117647,
+      "frames_per_second": 6.473691559825238,
+      "quality_score_accuracy": 0.8092998254896727
+    },
+    {
+      "video_duration": 32.716916,
+      "video_resolution": [
+        1280,
+        720
+      ],
+      "frames_analyzed": 17,
+      "processing_time": 2.646892786026001,
+      "memory_peak_usage": 591577088,
+      "memory_average_usage": 586290289.7777778,
+      "cpu_usage_percent": 195.73529411764707,
+      "frames_per_second": 6.422625083172902,
+      "quality_score_accuracy": 0.8092998254896727
     }
   ],
   "targets": {

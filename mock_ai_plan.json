@@ -1,0 +1,186 @@
+{
+  "editing_decisions": [
+    {
+      "decision_id": "mock_ai_cut_000",
+      "decision_type": "cut",
+      "timestamp": 0.0,
+      "duration": 2.86,
+      "parameters": {
+        "confidence": 0.9,
+        "reason": "High-confidence segment: अहमकार की ज्वाला, दानव का राज था, धर्ती...",
+        "ai_director": true,
+        "mock_mode": true,
+        "engagement_impact": 0.8
+      }
+    },
+    {
+      "decision_id": "mock_ai_cut_001",
+      "decision_type": "cut",
+      "timestamp": 2.86,
+      "duration": 2.8700000000000006,
+      "parameters": {
+        "confidence": 0.9,
+        "reason": "High-confidence segment: थी प्यासी, सर पे नताज था, असुर के...",
+        "ai_director": true,
+        "mock_mode": true,
+        "engagement_impact": 0.8
+      }
+    },
+    {
+      "decision_id": "mock_ai_cut_002",
+      "decision_type": "cut",
+      "timestamp": 5.73,
+      "duration": 2.8599999999999994,
+      "parameters": {
+        "confidence": 0.9,
+        "reason": "High-confidence segment: वर्दान का कैसा ये जाल है, भक्त की...",
+        "ai_director": true,
+        "mock_mode": true,
+        "engagement_impact": 0.8
+      }
+    },
+    {
+      "decision_id": "mock_ai_cut_003",
+      "decision_type": "cut",
+      "timestamp": 8.59,
+      "duration": 2.8599999999999994,
+      "parameters": {
+        "confidence": 0.9,
+        "reason": "High-confidence segment: पुकार पे चुप क्यों गोपाल है, पुछे हिन्यक...",
+        "ai_director": true,
+        "mock_mode": true,
+        "engagement_impact": 0.8
+      }
+    },
+    {
+      "decision_id": "mock_ai_cut_004",
+      "decision_type": "cut",
+      "timestamp": 11.45,
+      "duration": 2.860000000000001,
+      "parameters": {
+        "confidence": 0.9,
+        "reason": "High-confidence segment: शिपू बोल तेरा राम कहा, हसे प्रालाद बोले...",
+        "ai_director": true,
+        "mock_mode": true,
+        "engagement_impact": 0.8
+      }
+    },
+    {
+      "decision_id": "mock_ai_cut_005",
+      "decision_type": "cut",
+      "timestamp": 14.31,
+      "duration": 2.51,
+      "parameters": {
+        "confidence": 0.9,
+        "reason": "High-confidence segment: प्रबू तो है यहां वहां, इस खं...",
+        "ai_director": true,
+        "mock_mode": true,
+        "engagement_impact": 0.8
+      }
+    },
+    {
+      "decision_id": "mock_ai_cut_006",
+      "decision_type": "cut",
+      "timestamp": 16.82,
+      "duration": 3.1799999999999997,
+      "parameters": {
+        "confidence": 0.9,
+        "reason": "High-confidence segment: खंबे में है, इसी में वास है, गदा का...",
+        "ai_director": true,
+        "mock_mode": true,
+        "engagement_impact": 0.8
+      }
+    },
+    {
+      "decision_id": "mock_ai_cut_007",
+      "decision_type": "cut",
+      "timestamp": 20.0,
+      "duration": 3.1799999999999997,
+      "parameters": {
+        "confidence": 0.9,
+        "reason": "High-confidence segment: प्रहार, अब समय का नाश है, खंब खौर के...",
+        "ai_director": true,
+        "mock_mode": true,
+        "engagement_impact": 0.8
+      }
+    },
+    {
+      "decision_id": "mock_ai_cut_008",
+      "decision_type": "cut",
+      "timestamp": 23.18,
+      "duration": 1.0599999999999987,
+      "parameters": {
+        "confidence": 0.9,
+        "reason": "High-confidence segment: गरजे देखो नरसे...",
+        "ai_director": true,
+        "mock_mode": true,
+        "engagement_impact": 0.8
+      }
+    }
+  ],
+  "broll_plans": [
+    {
+      "broll_id": "mock_devotional_002",
+      "timestamp": 5.73,
+      "duration": 2.5,
+      "content_type": "devotional_scene",
+      "description": "AI-detected devotional content: वर्दान का कैसा ये जाल है, भक्त की...",
+      "parameters": {
+        "confidence": 0.8,
+        "visual_impact": 0.7,
+        "ai_director": true,
+        "mock_mode": true,
+        "style": "devotional"
+      }
+    },
+    {
+      "broll_id": "mock_deity_003",
+      "timestamp": 8.59,
+      "duration": 2.8599999999999994,
+      "content_type": "deity_imagery",
+      "description": "AI-detected deity reference: पुकार पे चुप क्यों गोपाल है, पुछे हिन्यक...",
+      "parameters": {
+        "confidence": 0.85,
+        "visual_impact": 0.9,
+        "ai_director": true,
+        "mock_mode": true,
+        "style": "devotional"
+      }
+    },
+    {
+      "broll_id": "mock_deity_004",
+      "timestamp": 11.45,
+      "duration": 2.860000000000001,
+      "content_type": "deity_imagery",
+      "description": "AI-detected deity reference: शिपू बोल तेरा राम कहा, हसे प्रालाद बोले...",
+      "parameters": {
+        "confidence": 0.85,
+        "visual_impact": 0.9,
+        "ai_director": true,
+        "mock_mode": true,
+        "style": "devotional"
+      }
+    }
+  ],
+  "metadata_strategy": {
+    "style": "devotional",
+    "content_type": "music",
+    "ai_director_used": true,
+    "mock_mode": true,
+    "confidence": 0.85,
+    "engagement_score": 0.75,
+    "target_duration": 24.24,
+    "optimization_focus": "engagement",
+    "seo_keywords": [
+      "devotional",
+      "spiritual",
+      "bhajan",
+      "religious"
+    ],
+    "thumbnail_concepts": [
+      "deity imagery",
+      "devotional scene",
+      "spiritual moment"
+    ]
+  }
+}
