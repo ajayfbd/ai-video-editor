@@ -8,20 +8,30 @@ exclude = ["tests*", "docs*", "examples*", "archive*", "workspace*", "config*", 
 
 [project]
 name = "ai-video-editor"
-version = "0.1.0"
-description = "AI-assisted video editing and production coaching system"
-authors = [{name = "AI Video Editor Team"}]
-license = "MIT"
+version = "1.0.0"
+description = "AI-driven content creation system that transforms raw video into professionally edited, engaging, and highly discoverable content packages"
+authors = [{name = "AI Video Editor Contributors"}]
+license = {text = "MIT"}
 readme = "README.md"
+homepage = "https://github.com/your-username/ai-video-editor"
+repository = "https://github.com/your-username/ai-video-editor"
+documentation = "https://github.com/your-username/ai-video-editor/blob/main/docs/README.md"
+keywords = ["video-editing", "ai", "content-creation", "automation", "gemini", "whisper"]
 requires-python = ">=3.9"
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Multimedia :: Video :: Conversion",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
     "movis",

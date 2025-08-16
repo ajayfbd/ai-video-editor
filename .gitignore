@@ -138,7 +138,15 @@ out/
 # AI Video Editor specific
 logs/
 output/
+outputs/
 temp/
+out/
+workspace/
+video_projects/
+transcripts/
+transcription/output/
+broll/
+media/
 *.mp4
 *.avi
 *.mov
@@ -152,6 +160,16 @@ temp/
 *.flac
 *.ogg
 *.m4a
+
+# Development and testing files
+.kiro/
+.agent.md
+archive/
+performance_benchmarks.json
+validation_report.md
+*_plan.json
+test_*.json
+mock_*.json
 
 # IDE
 .vscode/

@@ -139,7 +139,7 @@ For issues and questions:
 3. Search existing issues
 4. Create a new issue with detailed information
 
-> **Note**: Some documentation files have been consolidated and archived. If you're looking for previously referenced files like `quick-guide.md` or analysis reports, they can be found in the `archive/` directory.
+
 
 ## 📚 Documentation
 
