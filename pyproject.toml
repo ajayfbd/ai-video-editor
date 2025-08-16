@@ -13,9 +13,9 @@ description = "AI-driven content creation system that transforms raw video into 
 authors = [{name = "AI Video Editor Contributors"}]
 license = {text = "MIT"}
 readme = "README.md"
-homepage = "https://github.com/your-username/ai-video-editor"
-repository = "https://github.com/your-username/ai-video-editor"
-documentation = "https://github.com/your-username/ai-video-editor/blob/main/docs/README.md"
+homepage = "https://github.com/ajayfbd/ai-video-editor"
+repository = "https://github.com/ajayfbd/ai-video-editor"
+documentation = "https://github.com/ajayfbd/ai-video-editor/blob/main/docs/README.md"
 keywords = ["video-editing", "ai", "content-creation", "automation", "gemini", "whisper"]
 requires-python = ">=3.9"
 classifiers = [
